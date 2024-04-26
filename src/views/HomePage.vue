@@ -30,6 +30,7 @@
         <div class="grid grid-cols-4 gap-6 text-center">
           <div class="">
             <div class="flex flex-col items-center justify-center space-y-2">
+              <ion-router-outlet></ion-router-outlet>
               <ion-button id="absensi-button" href="/tabs/absensi">
                 <ion-icon class="text-2xl" :icon="cameraOutline"></ion-icon>
               </ion-button>
@@ -88,11 +89,7 @@
           </div>
         </div>
         <!-- End of swipe -->
-
       </div>
-      <footer class="bg-transparent-400 py-4 px-6">
-        <p class="text-xs font-bold text-center">© PT. Sinergi Global Service 2024. All rights reserved.</p>
-      </footer>
     </ion-content>
   </ion-page>
 </template>
