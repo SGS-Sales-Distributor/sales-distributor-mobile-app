@@ -1,0 +1,7 @@
+{
+  "name": "sgs-sales-distributor-app",
+  "integrations": {
+    "capacitor": {}
+  },
+  "type": "vue-vite"
+}
