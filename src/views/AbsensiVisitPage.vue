@@ -22,7 +22,7 @@
         </div>
       </header>
       <!-- End of header -->
-      <div class="flex min-h-full flex-col px-6 py-5 space-y-2">
+      <div class="flex min-h-full flex-col p-6 space-y-2">
         <ion-card-header>
           <div class="flex flex-col items-center justify-center space-y-2">
             <ion-card-subtitle class="text-xs">Lokasi Saat Ini</ion-card-subtitle>
@@ -41,12 +41,21 @@
           </div>
         </ion-card-content>
         <div class="flex w-full px-4 pb-2 space-x-4">
-          <ion-button id="check-in-button" class="w-full py-2 rounded-lg text-50 font-bold text-nowrap">
+          <ion-button
+          @click="takePicture" 
+          id="check-in-button" 
+          class="w-full py-2 rounded-lg text-50 font-bold text-nowrap">
             Check-In
           </ion-button>
+          <!-- <ion-button 
+          id="check-in-button" 
+          class="w-full py-2 rounded-lg text-50 font-bold text-nowrap">
+            Check-In
+          </ion-button> -->
           <ion-button :disabled="true" id="check-out-button" class="w-full py-2 rounded-lg text-gray-50 font-bold text-nowrap">
             Check-Out
           </ion-button>
+          <ion-button v-if="render" @click="saveImage">Save</ion-button>
         </div>
         <div class="flex flex-col space-y-2">
           <div class="flex space-x-2 items-center px-5">
@@ -61,57 +70,49 @@
             <table class="w-full text-sm text-left rtl:text-right text-gray-500">
                 <thead class="text-xs text-gray-700 uppercase bg-gray-50">
                     <tr>
-                        <th scope="col" class="p-4">
-                            <!-- <div class="flex items-center">
-                                <input id="checkbox-all-search" type="checkbox" class="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-800 dark:focus:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600">
-                            </div> -->
+                        <th scope="col" class="px-6 py-3 whitespace-nowrap">
+                          Pengguna
                         </th>
-                        <th scope="col" class="px-6 py-3">
-                            Product name
+                        <th scope="col" class="px-6 py-3 whitespace-nowrap">
+                            Nama Toko
+                        </th>
+                        <th scope="col" class="px-6 py-3 whitespace-nowrap">
+                          Check-In Date
+                        </th>
+                        <th scope="col" class="px-6 py-3 whitespace-nowrap">
+                          Check-Out Date
+                        </th>
+                        <th scope="col" class="px-6 py-3 whitespace-nowrap">
+                          Approval
                         </th>
                     </tr>
                 </thead>
                 <tbody>
-                    <tr class="bg-white border-b dark:bg-gray-800 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-600">
-                        <td class="w-4 p-4">
-                            <div class="flex items-center">
-                                <input id="checkbox-table-search-1" type="checkbox" class="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-800 dark:focus:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600">
-                                <label for="checkbox-table-search-1" class="sr-only">checkbox</label>
-                            </div>
-                        </td>
-                        <th scope="row" class="px-6 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-white">
-                            Apple MacBook Pro 17"
+                    <tr v-for="store in storeInfoDistri" :key="store.store_id" class="bg-white border-b hover:bg-gray-50">
+                        <th v-if="authUser.fullname === store.user" scope="row" class="px-6 py-4 font-medium text-gray-900 whitespace-nowrap">
+                            {{ store.user }}
                         </th>
-                        <td class="px-6 py-4">
-                            Silver
+                        <td v-if="authUser.fullname === store.user" class="px-6 py-4 font-medium text-gray-900 whitespace-nowrap">
+                          {{ store.store_name }}
                         </td>
-                        <td class="flex items-center px-6 py-4">
-                            <a href="#" class="font-medium text-blue-600 dark:text-blue-500 hover:underline">Edit</a>
-                            <a href="#" class="font-medium text-red-600 dark:text-red-500 hover:underline ms-3">Remove</a>
+                        <td v-if="authUser.fullname === store.user" class="px-6 py-4 font-medium text-gray-900 whitespace-nowrap">
+                          {{ store.time_in }}
+                        </td>
+                        <td v-if="authUser.fullname === store.user" class="px-6 py-4 font-medium text-gray-900 whitespace-nowrap">
+                          {{ store.time_out }}
+                        </td>
+                        <td v-if="authUser.fullname === store.user" class="flex items-center px-6 py-4">
+                            <span v-if="store.approval === 1" class="font-medium text-green-600">
+                              Disetujui
+                            </span>
+                            <span v-else class="font-medium text-rose-600">
+                              Belum Disetujui
+                            </span>
                         </td>
                     </tr>
                 </tbody>
             </table>
           </div>
-
-          <!-- <div class="relative overflow-x-auto">
-            <table class="min-w-full divide-y divide-gray-200 table-auto">
-              <thead>
-                <tr>
-                  <th>Nama Toko</th>
-                  <th>Check-In</th>
-                  <th>Check-Out</th>
-                </tr>
-              </thead>
-              <tbody class="bg-white divide-y divide-gray-200">
-                <tr v-for="store in storeInfoDistri" :key="store.store_id">
-                  <td class="px-6 py-4 whitespace-nowrap">{{ store.store_name }}</td>
-                  <td class="px-6 py-4 whitespace-nowrap">{{ store.modtime }}</td>
-                  <td class="px-6 py-4 whitespace-nowrap">{{ store.modtime }}</td>
-                </tr>
-              </tbody>
-            </table>
-          </div> -->
         </div>
       </div>
     </ion-content>
@@ -124,18 +125,65 @@ import {
   notificationsOutline,
 } from 'ionicons/icons';
 
+import { Camera, CameraResultType, CameraSource } from '@capacitor/camera';
+import { Filesystem, Directory } from '@capacitor/filesystem';
+
 export default {
   data() {
+    const authUser = JSON.parse(localStorage.getItem('userData'));
+
     return {
+      render: false,
+      imageUrl: '',
       notificationsOutline,
       masterCallPlan: [],
       storeInfoDistri: [],
+      authUser,
     } 
   },
   components: {},
   methods: {
+    async takePicture() {
+      const image = await Camera.getPhoto({
+        quality: 100,
+        allowEditing: true,
+        source: CameraSource.Camera,
+        resultType: CameraResultType.Uri,
+      }).then((image) => {
+        this.render = true;
+        this.imageUrl = image.webPath.toString();
+      })
+
+      const filename = Date.now() + '.jpeg';
+      await this.savePicture(image, filename);
+
+      console.log(`Captured photo path ${image.webPath}`);
+    },
+    convertBlobToBase64(blob) {
+      return new Promise((resolve, reject) => {
+        const reader = new FileReader();
+        reader.onerror = reject;
+        reader.onload = () => {
+          resolve(reader.result);
+        };
+        reader.readAsDataURL(blob);
+      });
+    },
+    async saveImage() {
+      const response = await fetch(this.imageUrl);
+      const blob = await response.blob();
+      const base64Data = await this.convertBlobToBase64(blob);
+      
+      console.log("url", base64Data);
+      
+      await Filesystem.writeFile({
+        path: new Date().getTime() + ".jpeg",
+        data: base64Data,
+        directory: Directory.Documents,
+      });
+    },
     async getMasterCallPlanData() {
-      await this.$axios.get(`${this.$root.API_URL}/api/v1/master-call-plan`)
+      await this.$axios.get(`${this.$root.API_URL}/api/v1/master-call-plans`)
       .then((response) => {
 				this.masterCallPlan = response.data.resource.data;
 
@@ -149,13 +197,11 @@ export default {
 			});
     },
     async getStoreData() {
-      await this.$axios.get(`${this.$root.API_URL}/api/v1/store-info-distri`)
+      await this.$axios.get(`${this.$root.API_URL}/api/v1/stores/visits`)
       .then((response) => {
 				this.storeInfoDistri = response.data.resource.data;
 
         console.log(this.storeInfoDistri);
-				// console.log(response.message, this.masterCallPlan);
-				// return this.students;
 			})
 			.catch((error) => {
 				console.log('Failed to fetch master call plan data', error.message);
@@ -164,7 +210,7 @@ export default {
     },
   },
   mounted() {
-    this.getMasterCallPlanData();
+    // this.getMasterCallPlanData();
     this.getStoreData();
   }
 }

@@ -9,9 +9,9 @@ import ProfilePage from '@/views/ProfilePage.vue';
 const routes: Array<RouteRecordRaw> = [
   {
     path: '/',
-    redirect: '/tabs/home',
+    redirect: '/login',
     meta: {
-      title: 'Home',
+      title: 'Login',
     }
   },
   {
@@ -30,7 +30,7 @@ const routes: Array<RouteRecordRaw> = [
   //   },
   // },
   {
-    path: '/tabs/',
+    path: '/',
     component: TabsPage,
     children: [
       {

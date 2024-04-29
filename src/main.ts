@@ -1,6 +1,7 @@
 import { createApp } from 'vue'
 import App from './App.vue'
 import router from './router';
+import { defineCustomElements } from '@ionic/pwa-elements/loader';
 
 import { 
   IonicVue,
@@ -120,6 +121,8 @@ app.component('ion-img', IonImg);
 app.component('vee-form', Form);
 app.component('vee-field', Field);
 app.component('vee-error-message', ErrorMessage);
+
+defineCustomElements(window);
 
 router.isReady().then(() => {
   app.mount('#app');

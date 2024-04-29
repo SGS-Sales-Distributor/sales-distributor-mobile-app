@@ -3,7 +3,7 @@
     <ion-content :fullscreen="true">
       
       <!-- Header -->
-      <header class="bg-blue-500 py-10 px-6 rounded-b-3xl">
+      <header class="bg-blue-500 p-6 rounded-b-3xl">
         <div class="flex justify-between">
           <div>
             <a href="/home" class="flex items-center space-x-3 rtl:space-x-reverse">
@@ -24,20 +24,21 @@
       </header>
       <!-- End of header -->
       
-      <div class="flex min-h-full flex-col justify-start px-4 py-6">
-        
+      <div class="flex min-h-full flex-col justify-start px-4 py-8">
+        <div class="flex w-full h-full justify-normal pb-4">
+          <p class="text-md">Welcome Back! <span class="font-bold">{{ userData.fullname }}</span></p>
+        </div>
         <!-- Main feature -->
         <div class="grid grid-cols-4 gap-6 text-center">
-          <div class="">
+          <div>
             <div class="flex flex-col items-center justify-center space-y-2">
-              <ion-router-outlet></ion-router-outlet>
               <ion-button id="absensi-button" href="/tabs/absensi">
                 <ion-icon class="text-2xl" :icon="cameraOutline"></ion-icon>
               </ion-button>
               <ion-label class="text-sm font-semibold">Absensi Visit</ion-label>
             </div>
           </div>
-          <div class="">
+          <div>
             <div class="flex flex-col items-center justify-center space-y-2">
               <ion-button id="registrasi-toko-button" color="success">
                 <ion-icon class="text-2xl" :icon="storefrontOutline"></ion-icon>
@@ -45,7 +46,7 @@
               <ion-label class="text-sm font-semibold">Registrasi Toko</ion-label>
             </div>
           </div>
-          <div class="">
+          <div>
             <div class="flex flex-col items-center justify-center space-y-2">
               <ion-button id="katalog-produk-button" color="secondary">
                 <ion-icon class="text-2xl" :icon="cubeOutline"></ion-icon>
@@ -53,7 +54,7 @@
               <ion-label class="text-sm font-semibold">Katalog Produk</ion-label>
             </div>
           </div>
-          <div class="">
+          <div>
             <div class="flex flex-col items-center justify-center space-y-2">
               <ion-button id="purchase-order-button" color="tertiary">
                 <ion-icon class="text-2xl" :icon="basketOutline"></ion-icon>
@@ -61,7 +62,7 @@
               <ion-label class="text-sm font-semibold">Purchase Order</ion-label>
             </div>
           </div>
-          <div class="">
+          <div>
             <div class="flex flex-col items-center justify-center space-y-2">
               <ion-button color="warning" id="achievement-button">
                 <ion-icon class="text-2xl" :icon="trophyOutline"></ion-icon>
@@ -73,18 +74,20 @@
         <!-- End main feature -->
 
         <!-- Swipe to right and left -->
-        <h1 class="pt-6 pb-4 lg:px-20 md:px-10 lg:mx-40 md:mx-20 font-bold text-3xl text-gray-800">Promo Terkini</h1>
-        <div class="flex overflow-x-scroll pb-4 hide-scroll-bar">
-          <div class="flex flex-nowrap lg:ml-40 md:ml-20 space-x-4">
-            <!-- Repeat this div for each item in your list -->
-            <div class="w-80 h-48 max-w-xs overflow-hidden border rounded-lg shadow-md bg-white hover:shadow-xl transition-shadow duration-300 ease-in-out">
-              <img src="/public/8d2ia-banner website 1587x621.jpg" alt="promo-pertama" class="w-full h-full object-cover">
-            </div>
-            <div class="w-80 h-48 max-w-xs overflow-hidden border rounded-lg shadow-md bg-white hover:shadow-xl transition-shadow duration-300 ease-in-out">
-              <img src="/public/08e2b-banner-website-SA.png" alt="promo-pertama" class="w-full h-full object-cover">
-            </div>
-            <div class="w-80 h-48 max-w-xs overflow-hidden border rounded-lg shadow-md bg-white hover:shadow-xl transition-shadow duration-300 ease-in-out">
-              <img src="/public/33jh8-blemish 1587x621.jpg" alt="promo-pertama" class="w-full h-full object-cover">
+        <div class="py-6">
+          <h1 class="lg:px-20 md:px-10 lg:mx-40 md:mx-20 font-bold text-3xl text-gray-800">Promo Terkini</h1>
+          <div class="flex overflow-x-scroll pb-4 hide-scroll-bar">
+            <div class="flex flex-nowrap lg:ml-40 md:ml-20 space-x-4">
+              <!-- Repeat this div for each item in your list -->
+              <div class="w-80 h-48 max-w-xs overflow-hidden border rounded-lg shadow-md bg-white hover:shadow-xl transition-shadow duration-300 ease-in-out">
+                <img src="/public/8d2ia-banner website 1587x621.jpg" alt="promo-pertama" class="w-full h-full object-cover">
+              </div>
+              <div class="w-80 h-48 max-w-xs overflow-hidden border rounded-lg shadow-md bg-white hover:shadow-xl transition-shadow duration-300 ease-in-out">
+                <img src="/public/08e2b-banner-website-SA.png" alt="promo-pertama" class="w-full h-full object-cover">
+              </div>
+              <div class="w-80 h-48 max-w-xs overflow-hidden border rounded-lg shadow-md bg-white hover:shadow-xl transition-shadow duration-300 ease-in-out">
+                <img src="/public/33jh8-blemish 1587x621.jpg" alt="promo-pertama" class="w-full h-full object-cover">
+              </div>
             </div>
           </div>
         </div>
@@ -109,6 +112,8 @@ import {
 
 export default {
   data() {
+    const userData = JSON.parse(localStorage.getItem('userData'));
+
     return {
       cameraOutline,
       storefrontOutline,
@@ -117,6 +122,7 @@ export default {
       trophyOutline,
       notificationsOutline,
       cubeOutline,
+      userData,
     }
   },
   components: {}
@@ -131,4 +137,6 @@ export default {
   .hide-scroll-bar::-webkit-scrollbar {
     display: none;
   }
+
+  
 </style>

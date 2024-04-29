@@ -3,30 +3,30 @@
     <ion-tabs>
       <ion-router-outlet></ion-router-outlet>
       <ion-tab-bar slot="bottom">
-        <ion-tab-button tab="home" href="/tabs/home">
+        <ion-tab-button tab="home" href="/home">
           <ion-icon class="text-2xl" aria-hidden="true" :icon="homeOutline" />
           <ion-label>Home</ion-label>
         </ion-tab-button>
 
-        <ion-tab-button tab="absensi" href="/tabs/absensi">
+        <ion-tab-button tab="absensi" href="/absensi">
           <ion-icon class="text-2xl" aria-hidden="true" :icon="cameraOutline" />
           <ion-label>Absensi</ion-label>
         </ion-tab-button>
 
-        <ion-tab-button tab="profile" href="/tabs/profile">
+        <ion-tab-button tab="profile" href="/profile">
           <ion-icon class="text-2xl" aria-hidden="true" :icon="personOutline" />
           <ion-label class="text-md">Profile</ion-label>
         </ion-tab-button>
 
-        <!-- <vee-form 
-        action="#" 
+        <vee-form 
+        action="/login" 
         method="post"
         @click="logout">
           <ion-tab-button tab="logout">
             <ion-icon class="text-3xl" aria-hidden="true" :icon="logOutOutline" />
             <ion-label>Keluar</ion-label>
           </ion-tab-button>
-        </vee-form> -->
+        </vee-form>
 
       </ion-tab-bar>
     </ion-tabs>
@@ -63,11 +63,13 @@ export default {
       }, 500);
     },
     async logout() {
-      await this.$axios.post(`${import.meta.env.API_URL}/api/v1/auth/logout`)
+      await this.$axios.post(`${this.$root.API_URL}/api/v1/auth/logout`)
       .then((response) => {
-          this.redirectToLogin();
+        localStorage.removeItem('userData');
+        
+        this.redirectToLogin();
 
-          console.log('Successfully logout', response);
+        console.log('Successfully logout', response);
       })
       .catch((error) => {
           console.log('Failed to logout', error.message);

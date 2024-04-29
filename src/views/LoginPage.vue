@@ -108,7 +108,7 @@
                     </vee-form>
                     <div class="mt-10 flex items-center justify-between">
                         <div class="text-sm">
-                            <a href="/tabs/registrasi" class="font-semibold text-gray-900 underline underline-offset-2 hover:text-gray-600">Belum Punya Akun?</a>
+                            <a href="/registrasi" class="font-semibold text-gray-900 underline underline-offset-2 hover:text-gray-600">Belum Punya Akun?</a>
                         </div>
                         <div class="text-sm">
                             <a href="#" class="font-semibold text-gray-900 underline underline-offset-2 hover:text-gray-600">Ubah Password</a>
@@ -154,20 +154,24 @@ export default {
         redirectToHome() {
             setTimeout(() => {
                 this.$router.push({
-                    path: '/tabs/home'
+                    path: '/home'
                 })
             }, 500);
         },
         async login() {
             await this.$axios.post(`${this.$root.API_URL}/api/v1/auth/login`, this.formData)
             .then((response) => {
+                const userData = response.data.resource;
+
+                localStorage.setItem('userData', JSON.stringify(userData));
+
                 this.redirectToHome();
 
-                console.log('Successfully store new data', response);
+                console.log('Successfully login', response);
             })
             .catch((error) => {
-                console.log('Failed to store new data', error.message);
-                throw new Error('Failed to store new data', error.message);
+                console.log('Failed to login', error.message);
+                throw new Error('Failed to login', error.message);
             })
         }
     }
