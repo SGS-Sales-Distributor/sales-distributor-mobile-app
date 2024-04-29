@@ -25,9 +25,6 @@
       <!-- End of header -->
       
       <div class="flex min-h-full flex-col justify-start px-4 py-8">
-        <div class="flex w-full h-full justify-normal pb-4">
-          <p class="text-md">Welcome Back! <span class="font-bold">{{ userData.fullname }}</span></p>
-        </div>
         <!-- Main feature -->
         <div class="grid grid-cols-4 gap-6 text-center">
           <div>
@@ -112,8 +109,6 @@ import {
 
 export default {
   data() {
-    const userData = JSON.parse(localStorage.getItem('userData'));
-
     return {
       cameraOutline,
       storefrontOutline,
@@ -122,10 +117,8 @@ export default {
       trophyOutline,
       notificationsOutline,
       cubeOutline,
-      userData,
     }
   },
-  components: {}
 }
 </script>
 
@@ -137,6 +130,4 @@ export default {
   .hide-scroll-bar::-webkit-scrollbar {
     display: none;
   }
-
-  
 </style>

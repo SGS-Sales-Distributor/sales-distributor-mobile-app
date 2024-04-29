@@ -18,15 +18,10 @@
           <ion-label class="text-md">Profile</ion-label>
         </ion-tab-button>
 
-        <vee-form 
-        action="/login" 
-        method="post"
-        @click="logout">
-          <ion-tab-button tab="logout">
-            <ion-icon class="text-3xl" aria-hidden="true" :icon="logOutOutline" />
-            <ion-label>Keluar</ion-label>
-          </ion-tab-button>
-        </vee-form>
+        <ion-tab-button tab="logout" @click="logout">
+          <ion-icon class="text-2xl" aria-hidden="true" :icon="logOutOutline" />
+          <ion-label class="text-md">Logout</ion-label>
+        </ion-tab-button>
 
       </ion-tab-bar>
     </ion-tabs>
@@ -55,27 +50,24 @@ export default {
     }
   },
   methods: {
-    redirectToLogin() {
+    redirectToLoginPage() {
       setTimeout(() => {
         this.$router.push({
           path: '/login'
         })
-      }, 500);
+      }, 100);
     },
     async logout() {
-      await this.$axios.post(`${this.$root.API_URL}/api/v1/auth/logout`)
-      .then((response) => {
-        localStorage.removeItem('userData');
+      try {
+        localStorage.removeItem('tokens');
+        this.redirectToLoginPage();
         
-        this.redirectToLogin();
-
-        console.log('Successfully logout', response);
-      })
-      .catch((error) => {
-          console.log('Failed to logout', error.message);
-          throw new Error('Failed to logout', error.message);
-      })
-    }
+        console.log("Successfully logout");
+      } catch (error) {
+        console.log('Failed to logout', error.message);
+        throw new Error('Failed to logout', error.message);
+      }
+    },
   }
 }
 </script>

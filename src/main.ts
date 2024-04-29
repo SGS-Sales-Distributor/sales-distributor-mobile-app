@@ -38,7 +38,8 @@ import {
   IonTabs, 
   IonLabel, 
   IonIcon, 
-  IonRouterOutlet
+  IonRouterOutlet,
+  IonModal
 } from '@ionic/vue';
 
 /* Core CSS required for Ionic components to work properly */
@@ -84,6 +85,7 @@ app.config.globalProperties.$axios = axios;
 
 // ionic components
 app.component('ion-page', IonPage);
+app.component('ion-modal', IonModal);
 app.component('ion-title', IonTitle);
 app.component('ion-card-title', IonCardTitle);
 app.component('ion-back-button', IonBackButton);
