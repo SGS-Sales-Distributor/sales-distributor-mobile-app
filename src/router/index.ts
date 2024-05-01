@@ -7,6 +7,7 @@ import AbsensiVisitPage from '@/views/AbsensiVisitPage.vue';
 import ProfilePage from '@/views/ProfilePage.vue';
 import StoreDetailPage from '@/views/StoreDetailPage.vue';
 import { isAuthenticated } from '@/services/auth';
+import "maplibre-gl/dist/maplibre-gl.css";
 
 const routes: Array<RouteRecordRaw> = [
   {

@@ -28,17 +28,10 @@
   </ion-page>
 </template>
 
-<script>
+<script setup>
 // import ExploreContainer from '@/components/ExploreContainer.vue';
-import { chevronBackOutline, ellipsisVerticalOutline } from 'ionicons/icons';
-
-export default {
-  data() {
-    return {
-      chevronBackOutline,
-      ellipsisVerticalOutline,
-    }
-  },
-  components: {}
-}
+import { 
+  chevronBackOutline, 
+  ellipsisVerticalOutline 
+} from 'ionicons/icons';
 </script>

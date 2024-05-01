@@ -28,46 +28,42 @@
   </ion-page>
 </template>
 
-<script>
+<script setup>
+import router from '@/router';
 import { 
   cameraOutline, 
   homeOutline, 
-  settingsOutline,
   logOutOutline,
-  menuOutline,
   personOutline,
 } from 'ionicons/icons';
+import { toastController } from '@ionic/vue';
 
-export default {
-  data() {
-    return {
-      cameraOutline, 
-      homeOutline, 
-      settingsOutline,
-      logOutOutline,
-      menuOutline,
-      personOutline,
-    }
-  },
-  methods: {
-    redirectToLoginPage() {
-      setTimeout(() => {
-        this.$router.push({
-          path: '/login'
-        })
-      }, 100);
-    },
-    async logout() {
-      try {
-        localStorage.removeItem('tokens');
-        this.redirectToLoginPage();
-        
-        console.log("Successfully logout");
-      } catch (error) {
-        console.log('Failed to logout', error.message);
-        throw new Error('Failed to logout', error.message);
-      }
-    },
+function redirectToLoginPage() {
+  setTimeout(() => {
+    router.push({
+      path: '/login'
+    })
+  }, 1000);
+}
+
+async function logout() {
+  try {
+    localStorage.clear();
+    
+    const toast = await toastController.create({
+      message: "Terima kasih, telah menggunakan aplikasi kami. Sampai berjumpa kembali...",
+      duration: 3000,
+      position: "top",
+      color: 'primary',
+    });
+
+    await toast.present();
+    redirectToLoginPage();
+    
+    console.log("Successfully logout");
+  } catch (error) {
+    console.error(`Failed to logout: ${error.message}`);
+    throw new Error(`Failed to logout: ${error.message}`);
   }
 }
 </script>

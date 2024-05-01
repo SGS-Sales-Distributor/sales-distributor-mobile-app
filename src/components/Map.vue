@@ -5,39 +5,48 @@
 </template>
 
 <script>
-import { Map, MapStyle, config } from '@maptiler/sdk';
-import { shallowRef, onMounted, onUnmounted, markRaw } from 'vue';
+import { Map, Marker, config } from '@maptiler/sdk';
+import { shallowRef, onMounted, onUnmounted, markRaw, ref } from 'vue';
+import { printCurrentPosition } from '@/services/getCurrentLocation';
 import '@maptiler/sdk/dist/maptiler-sdk.css';
 
 export default {
-  name: "Map",
+  name: 'MapComponent',
   setup() {
     const mapContainer = shallowRef(null);
     const map = shallowRef(null);
+    const latitude = ref(0);
+    const longitude = ref(0);
 
-    onMounted(() => {
-      const apiKey = "q9nu1iewFiPuvR0fompw";
+    onMounted(async () => {
+      const currentPositions = await printCurrentPosition();
 
-      const initialState = { lng: 106.9086318, lat: -6.1946754, zoom: 16 };
+      const [currentLatitude, currentLongitude] = currentPositions;
+      const myApiKey = import.meta.env.VITE_MAPTILER_API_KEY;
+
+      config.apiKey = myApiKey;
+
+      latitude.value = currentLatitude;
+      longitude.value = currentLongitude;
 
       map.value = markRaw(
         new Map({
           container: mapContainer.value,
-          style: `https://api.maptiler.com/maps/streets-v2/style.json?key=${apiKey}`,
-          center: [initialState.lng, initialState.lat],
-          zoom: initialState.zoom,
+          style: `https://api.maptiler.com/maps/basic-v2/style.json?key=${myApiKey}`,
+          center: [longitude, latitude],
+          zoom: 16,
         })
       );
 
       // map.value.addControl(new NavigationControl(), "top-right");
 
       new Marker({ color: "#FF0000" })
-        .setLngLat([106.9086318, -6.1946754])
+        .setLngLat([longitude, latitude])
         .addTo(map.value);
     }),
-      onUnmounted(() => {
-        map.value?.remove();
-      });
+    onUnmounted(() => {
+      map.value?.remove();
+    });
 
     return {
       map,

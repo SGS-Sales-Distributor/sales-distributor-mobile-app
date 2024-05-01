@@ -39,7 +39,10 @@ import {
   IonLabel, 
   IonIcon, 
   IonRouterOutlet,
-  IonModal
+  IonModal,
+  IonInfiniteScroll,
+  IonProgressBar,
+  IonBadge
 } from '@ionic/vue';
 
 /* Core CSS required for Ionic components to work properly */
@@ -75,6 +78,18 @@ import './theme/variables.css';
 import './tailwind.css';
 import { ErrorMessage, Field, Form } from 'vee-validate';
 import axios from 'axios';
+import { toastController } from '@ionic/vue';
+
+async function presentErrorMessageToast(errorMsg: string, duration: number) {
+  const toast = await toastController.create({
+    message: errorMsg,
+    duration: duration,
+    position: "top",
+    color: 'danger',
+  });
+
+  await toast.present();
+}
 
 const app = createApp(App)
   .use(IonicVue)
@@ -82,6 +97,10 @@ const app = createApp(App)
 
 // provide all global properties
 app.config.globalProperties.$axios = axios;
+
+app.config.errorHandler = function (err, vm, info) {
+  presentErrorMessageToast(info, 3000);
+}
 
 // ionic components
 app.component('ion-page', IonPage);
@@ -118,6 +137,9 @@ app.component('ion-tabs', IonTabs);
 app.component('ion-router-outlet', IonRouterOutlet);
 app.component('ion-menu', IonMenu);
 app.component('ion-img', IonImg);
+app.component('ion-infinite-scroll', IonInfiniteScroll);
+app.component('ion-progress-bar', IonProgressBar);
+app.component('ion-badge', IonBadge);
 
 // vee-validate components
 app.component('vee-form', Form);

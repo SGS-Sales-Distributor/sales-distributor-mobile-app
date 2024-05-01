@@ -6,7 +6,5 @@ export async function printCurrentPosition() {
     const latitude = coordinates.coords.latitude;
     const longitude = coordinates.coords.longitude;
     
-    console.log("Your current position: ", coordinates);
-    
     return [latitude, longitude];
 }

@@ -1,7 +1,7 @@
 <template>
   <ion-page>
     <ion-content :fullscreen="true">
-      
+
       <!-- Header -->
       <header class="bg-blue-500 p-6 rounded-b-3xl">
         <div class="flex justify-between">
@@ -29,7 +29,7 @@
         <div class="grid grid-cols-4 gap-6 text-center">
           <div>
             <div class="flex flex-col items-center justify-center space-y-2">
-              <ion-button id="absensi-button" href="/tabs/absensi">
+              <ion-button id="absensi-button" href="/absensi">
                 <ion-icon class="text-2xl" :icon="cameraOutline"></ion-icon>
               </ion-button>
               <ion-label class="text-sm font-semibold">Absensi Visit</ion-label>
@@ -94,32 +94,55 @@
   </ion-page>
 </template>
 
-<script>
+<script setup>
 import { 
   cameraOutline, 
   storefrontOutline, 
   basketOutline,
-  fileTrayFullOutline,
   trophyOutline,
   notificationsOutline,
   cubeOutline,
 } from 'ionicons/icons';
+import { refreshAccessTokenHandler } from '@/services/auth.js';
+import { onMounted } from 'vue';
+import axios from 'axios';
 
-// import ExploreContainer from '@/components/ExploreContainer.vue';
+const API_URL = `${import.meta.env.VITE_API_HOST}:${parseInt(import.meta.env.VITE_API_PORT)}`;
 
-export default {
-  data() {
-    return {
-      cameraOutline,
-      storefrontOutline,
-      basketOutline,
-      fileTrayFullOutline,
-      trophyOutline,
-      notificationsOutline,
-      cubeOutline,
-    }
-  },
+async function refreshToken() {
+  refreshAccessTokenHandler();
 }
+
+async function fetchAuthUser() {
+  try {
+    refreshToken();
+
+    const tokens = localStorage.getItem("tokens") ? JSON.parse(localStorage.getItem("tokens")) : null;
+
+    if (!tokens) {
+      console.error('Access Token and Refresh Token not found.');
+      return;
+    }
+
+    const headers = {
+      'Content-Type': 'application/json',
+      'Authorization': `Bearer ${tokens.access_token}`,
+    };
+
+    const response = await axios.get(`${API_URL}/api/v1/auth/me`, { headers: headers })
+
+    const authUserData = response.data.resource.data;
+
+    localStorage.setItem("user", JSON.stringify(authUserData));
+  } catch (error) {
+      console.error(`Failed to fetch auth user: ${error.message}`);
+      throw new Error(`Failed to fetch auth user: ${error.message}`)
+  }
+}
+
+onMounted(() => {
+  fetchAuthUser();
+})
 </script>
 
 <style scoped>

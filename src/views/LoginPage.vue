@@ -117,59 +117,75 @@
     </ion-page>
 </template>
 
-<script>
+<script setup>
 import * as Yup from 'yup';
+import { ref } from 'vue';
+import axios from 'axios';
+import router from '@/router';
+import { toastController } from '@ionic/vue';
 
-export default {
-    data() {
-        const formValidate = Yup.object().shape({
-            email: Yup.string()
-                .required('Email diperlukan, tidak dapat kosong!')
-                .max(255, 'Email tidak boleh lebih dari 255 karakter')
-                .email('Email tidak valid, gunakan format email yang resmi!'),
-            password: Yup.string()
-                .required('Password diperlukan, tidak dapat kosong!')
-                .max(100, 'Password tidak boleh lebih dari 100 karakter')
-                .min(8, 'Password harus minimal memiliki 8 karakter')
-                // .matches(/^(?=.*\d)(?=.*[a-z])(?=.*[A-Z])(?=.*[a-zA-Z]).{8,}$/),
-        });
+const API_URL = `${import.meta.env.VITE_API_HOST}:${parseInt(import.meta.env.VITE_API_PORT)}`;
 
-        return {
-            formValidate,
-            formData: {
-                email: null,
-                password: null,
-            },
-        }
-    },
-    methods: {
-        redirectToHomePage() {
-            setTimeout(() => {
-                this.$router.push({
-                    path: '/home'
-                })
-            }, 100);
-        },
-        async login() {
-            try {
-                const response = await this.$axios.post(`${this.$root.API_URL}/api/v1/auth/login`, this.formData);
-                
-                const tokens = response.data.resource.tokens;
-                localStorage.setItem('tokens', JSON.stringify(tokens));
-                console.log("Successfully logged in: ", tokens);
+const formValidate = Yup.object().shape({
+  email: Yup.string()
+  .required('Email diperlukan, tidak dapat kosong!')
+  .max(255, 'Email tidak boleh lebih dari 255 karakter')
+  .email('Email tidak valid, gunakan format email yang resmi!'),
+  password: Yup.string()
+  .required('Password diperlukan, tidak dapat kosong!')
+  .max(100, 'Password tidak boleh lebih dari 100 karakter')
+  .min(8, 'Password harus minimal memiliki 8 karakter')
+  // .matches(/^(?=.*\d)(?=.*[a-z])(?=.*[A-Z])(?=.*[a-zA-Z]).{8,}$/),
+});
 
-                this.redirectToHomePage();
+const formData = ref({
+  email: null,
+  password: null,
+});
 
-                return tokens;
-            } catch (error) {
-                console.log('Failed to logged in', error.message);
-                throw new Error('Failed to logged in', error.message);
-            }
-        }
-    }
+function redirectToHomePage() {
+  setTimeout(() => {
+    router.push({
+      path: '/home'
+    })
+  }, 1000);
+}
+
+async function login() {
+  try {
+    const response = await axios.post(`${API_URL}/api/v1/auth/login`, {
+      email: formData.value.email,
+      password: formData.value.password,
+    });
+    
+    const tokens = response.data.resource.tokens;
+
+    const accessToken = tokens.access_token;
+    const refreshToken = tokens.refresh_token;
+
+    localStorage.setItem("tokens", JSON.stringify(tokens));
+    localStorage.setItem("accessToken", accessToken);
+    localStorage.setItem("refreshToken", refreshToken);
+    
+    console.log("Successfully logged in: ", response);
+
+    const toast = await toastController.create({
+      message: "Login berhasil, selamat datang kembali...",
+      duration: 3000,
+      position: "top",
+      color: 'success',
+    });
+
+    await toast.present();
+
+    redirectToHomePage();
+  } catch (error) {
+    console.log('Failed to logged in', error.message);
+    throw new Error('Failed to logged in', error.message);
+  }
 }
 </script>
 
-<style>
+<style scoped>
 
 </style>
