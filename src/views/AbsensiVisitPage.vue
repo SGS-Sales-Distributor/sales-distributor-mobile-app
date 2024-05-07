@@ -93,11 +93,6 @@
                             <span class="underline underline-offset-2 font-normal transition-all hover:text-blue-500 hover:font-normal">{{ store.store_name }}</span>
                           </router-link>
                         </td> -->
-                <router-link :to="{ name: 'storeDetail', params: { id: detailStoreInfoDistri.id_toko } }">
-                  <ion-button :disabled="disabledPurchaseOrderBtn">
-                    Purchase Order
-                  </ion-button>
-                </router-link>
               </ion-card-subtitle>
             </ion-card-header>
         
@@ -111,13 +106,16 @@
                     <dd class="mt-1 text-sm text-gray-900 sm:mt-0 sm:col-span-2">
                       {{ detailStoreInfoDistri.nama_toko }}
                     </dd>
+                    <dd class="mt-1 text-sm text-gray-900 sm:mt-0 sm:col-span-2">
+                      {{ detailStoreInfoDistri.visit_id }}
+                    </dd>
                   </div>
                   <div class="bg-sky-100 p-4 sm:grid-cols-3 sm:gap-4 sm:px-6">
                     <dt class="text-md font-bold text-gray-900">
                       Nama Alias Toko
                     </dt>
                     <dd class="mt-1 text-sm text-gray-900 sm:mt-0 sm:col-span-2">
-                      {{ detailStoreInfoDistri.nama_alias_toko }}
+                      {{ detailStoreInfoDistri.alias_toko }}
                     </dd>
                   </div>
                   <div class="bg-sky-50 p-4 sm:grid-cols-3 sm:gap-4 sm:px-6">
@@ -224,9 +222,6 @@
                             Nama Toko
                         </th>
                         <th scope="col" class="px-6 py-3 whitespace-nowrap">
-                            Nama Owner
-                        </th>
-                        <th scope="col" class="px-6 py-3 whitespace-nowrap">
                           Tanggal Visit
                         </th>
                         <th scope="col" class="px-6 py-3 whitespace-nowrap">
@@ -246,13 +241,21 @@
                             {{ index+1 }}
                         </th>
                         <td class="px-6 py-4">
-                          <button id="nama-toko-btn" @click="fetchOneStoreData(store.store_id)">
-                            <span class="text-gray-900 font-medium whitespace-nowrap underline underline-offset-1 transition-all hover:text-blue-500 hover:font-normal">{{ store.store_name }}</span>
-                          </button>
+                          <!-- <button id="nama-toko-btn" @click="fetchOneStoreData(store.store_id)"></button> -->
+                          <ion-button
+                          :disabled="store.statusx"
+                          @click="fetchOneStoreData(store.store_id)" 
+                          id="check-in-button" 
+                          class="w-28 py-2 rounded-lg text-10 font-bold text-nowrap">
+                            x
+                          </ion-button>
+                          <router-link :to="{ name: 'storeDetail', params: { id: detailStoreInfoDistri.store_id } }">
+                            <ion-button :disabled="disabledPurchaseOrderBtn">
+                              Purchase Order
+                            </ion-button>
+                          </router-link>
+                          <span class="text-gray-900 font-medium whitespace-nowrap underline underline-offset-1 transition-all hover:text-blue-500 hover:font-normal">{{ store.nama_toko }}</span>
                         </td>
-                        <td class="px-6 py-4">
-                          <span>{{ store.owners.owner }}</span>
-                        </td> 
                         <td v-if="store.tanggal_visit" class="px-6 py-4 font-medium text-gray-900 whitespace-nowrap">
                           {{ new Date(store.tanggal_visit).toLocaleDateString('id-ID', {
                             year: 'numeric',
@@ -264,21 +267,21 @@
                         <td v-else class="px-6 py-4 font-medium text-gray-900 whitespace-nowrap">
                           <ion-badge color="danger">Belum Visit</ion-badge>
                         </td>
-                        <td v-if="store.waktu_check_in" class="px-6 py-4 font-medium text-gray-900 whitespace-nowrap">
-                          {{ store.waktu_check_in }} WIB
+                        <td v-if="store.waktu_masuk" class="px-6 py-4 font-medium text-gray-900 whitespace-nowrap">
+                          {{ store.waktu_masuk }} WIB
                         </td>
                         <td v-else class="px-6 py-4 font-medium text-gray-900 whitespace-nowrap">
                           <ion-badge color="danger">Belum Check-In Visit</ion-badge>
                         </td>
-                        <td v-if="store.waktu_check_out" class="px-6 py-4 font-medium text-gray-900 whitespace-nowrap">
-                          {{ store.waktu_check_out }} WIB
+                        <td v-if="store.waktu_keluar" class="px-6 py-4 font-medium text-gray-900 whitespace-nowrap">
+                          {{ store.waktu_keluar }} WIB
                         </td>
                         <td v-else class="px-6 py-4 font-medium text-gray-900 whitespace-nowrap">
                           <ion-badge color="danger">Belum Check-Out Visit</ion-badge>
                           <!-- <span class="font-bold text-rose-600"></span> -->
                         </td>
                         <td class="px-6 py-4">
-                          <div v-if="store.status_approval === 1" class="flex items-center">
+                          <div v-if="store.approval === 1" class="flex items-center">
                             <div class="h-2.5 w-2.5 rounded-full bg-green-500 me-2"></div>
                             <ion-badge color="success">Disetujui</ion-badge>
                           </div>
@@ -314,14 +317,14 @@ import { config } from '@maptiler/sdk';
 import { refreshAccessTokenHandler } from '@/services/auth.js';
 import '@maptiler/sdk/dist/maptiler-sdk.css';
 import axios from 'axios';
-import { toastController } from '@ionic/vue';
+import { toastController, loadingController } from '@ionic/vue';
 // import router from '@/router';
 
-const isLocationPermissionAllowed = ref(false);
 // const isOpen = ref(false);
 // const setOpen = (open) => {
 //   isOpen.value = open;
 // };
+const isLocationPermissionAllowed = ref(false);
 const mapContainer = shallowRef(null);
 const user = JSON.parse(localStorage.getItem("user"));
 const renderModCheckInBtn = ref(false);
@@ -336,11 +339,27 @@ const latitude = ref(0);
 const longitude = ref(0);
 const map = ref(null);
 const imageUrl = shallowRef("");
+const lokasi_gambar2 = ref(null);
+const loading = ref(null);
 
 const API_URL = `${import.meta.env.VITE_API_HOST}:${parseInt(import.meta.env.VITE_API_PORT)}`;
 
 async function refreshToken() {
   refreshAccessTokenHandler();
+}
+
+function showStoreDetailCardHandler() {
+  if (detailStoreInfoDistri.value.waktu_masuk !== null) {
+    disabledCheckIn.value = true;
+    disabledCheckOut.value = false;
+  } else {
+    disabledCheckIn.value = false;
+    disabledCheckOut.value = true;
+
+    const storeDetailCard = document.getElementById("store-detail-card"); 
+    storeDetailCard.classList.add("show");
+    storeDetailCard.style.display = 'block';
+  }
 }
 
 function closeButtonHandler() {
@@ -356,14 +375,6 @@ function closeButtonHandler() {
       storeDetailCard.style.display = 'none';
     }, 300);
   })
-}
-
-function showStoreDetailCardHandler() {
-  disabledCheckIn.value = false;
-
-  const storeDetailCard = document.getElementById("store-detail-card"); 
-  storeDetailCard.classList.add("show");
-  storeDetailCard.style.display = 'block';
 }
 
 async function checkLocationAccess() {
@@ -457,6 +468,23 @@ async function fetchStoresData() {
     });
 
     storeInfoDistri.value = response.data.resource.data;
+    let x = false;
+    Object.keys(storeInfoDistri.value).forEach(key => {
+      const value = storeInfoDistri.value[key];
+      if ( x == false){
+        if ( value.waktu_keluar == null || value.waktu_masuk == null)
+        {
+          value.statusx = false;
+          x = true;
+        }else {
+          value.statusx = true;
+        }
+      }else{
+        value.statusx = true;
+      }
+    });
+
+    console.log(storeInfoDistri.value);
 
     console.log("Successfully fetch store data: ", storeInfoDistri.value);
   } catch (error) {
@@ -466,8 +494,6 @@ async function fetchStoresData() {
 
 async function fetchOneStoreData(id) {
   refreshToken();
-
-  showStoreDetailCardHandler();
 
   const tokens = localStorage.getItem("tokens") ? JSON.parse(localStorage.getItem("tokens")) : null;
 
@@ -483,7 +509,11 @@ async function fetchOneStoreData(id) {
 
     detailStoreInfoDistri.value = response.data.resource;
 
-    console.log(`Successfully fetch store ${id}:`, detailStoreInfoDistri.value);
+    showStoreDetailCardHandler();
+
+    document.getElementById("check-in-button").focus();
+
+    console.log(`Successfully fetch store ${id}:`, response);
   } catch (error) {
     console.error(`Failed to fetch store ${id}: `, error);
   }
@@ -496,24 +526,25 @@ async function saveCheckInImage() {
   console.log("url", base64Data);
   imageUrl.value = base64Data;
 
-  await Filesystem.writeFile({
-    path: new Date().getTime() + ".jpeg",
-    data: base64Data,
-    directory: Directory.Documents,
-  });
+  // await Filesystem.writeFile({
+  //   path: new Date().getTime() + ".jpeg",
+  //   data: base64Data,
+  //   directory: Directory.Documents,
+  // });
 
   console.log(user);
 
-  await saveCheckInPicture(user.number, imageUrl.value);
+  uploadFile(user.number);
+  // await saveCheckInPicture(user.number, imageUrl.value);
 
-  const toast = await toastController.create({
-    message: "Absen Check-In Berhasil! Yuk Lakukan PO...",
-    duration: 3000,
-    position: "top",
-    color: 'success',
-  });
+  // const toast = await toastController.create({
+  //   message: "Absen Check-In Berhasil! Yuk Lakukan PO...",
+  //   duration: 3000,
+  //   position: "top",
+  //   color: 'success',
+  // });
 
-  await toast.present();
+  // await toast.present();
 
   disabledPurchaseOrderBtn.value = false;
 
@@ -523,37 +554,146 @@ async function saveCheckInImage() {
     renderModCheckInBtn.value = false;
   }
 
-  const previewPhoto = document.getElementById("preview-photo");
-  previewPhoto.style.display = "none";
 
   if (disabledCheckOut.value) {
     disabledCheckOut.value = false;
   }
 }
 
-async function saveCheckInPicture(userNumber, fileUrl) {
-  refreshToken();
+function presentLoading() {
+  loading.value = loadingController
+    .create({
+      message: "Loading...",
+    })
+    .then((a) => a.present());
+  return loading.value;
+}
 
-  const tokens = localStorage.getItem("tokens") ? JSON.parse(localStorage.getItem("tokens")) : null;
-      
-  const headers = {
-    'Content-Type': 'application/json',
-    'Authorization': `Bearer ${tokens.access_token}`
-  };
+function stopLoading() {
+  //this.loading.dismiss();
 
+  setTimeout(() => {
+    loadingController.dismiss();
+  }, 1);
+}
+
+async function uploadFile(userNumber) {
   try {
-    const response = await axios.post(`${API_URL}/api/v2/salesmen/${userNumber}/visits`, {
-      store_id: detailStoreInfoDistri.value.id_toko,
-      photo_visit: fileUrl,
-      lat_in: latitude.value,
-      long_in: longitude.value,
-    }, {
-      headers: headers
-    });
+    // const response = await axios.post("/bezkoder.com/upload", formData, {
+    //   headers: {
+    //     "Content-Type": "multipart/form-data",
+    //   },
+    // });
+    // console.log(response);
 
-    console.log(`Successfully store check in visit pictures: ${response}`);
-  } catch (error) {
-    console.error("Failed to store check in visit pictures: ", error); 
+    presentLoading();
+
+    refreshToken();
+
+    const URL = `${API_URL}/api/v2/salesmen/${userNumber}/visits`;
+
+    const tokens = localStorage.getItem("tokens") ? JSON.parse(localStorage.getItem("tokens")) : null;
+
+    let formData = new FormData();
+    formData.append("image", lokasi_gambar2.value);
+    formData.append("store_id", detailStoreInfoDistri.value.store_id);
+    formData.append("lat_in", latitude.value);
+    formData.append("long_in", longitude.value);
+
+    const config = {
+      headers: {
+        'Authorization': `Bearer ${tokens.access_token}`,
+        "Content-Type": "multipart/form-data",
+      },
+    };
+    
+    await axios.post(URL, formData, config).then(async (res) => {
+      imageUrl.value = null;
+
+      fetchStoresData();
+
+      stopLoading();
+
+      storeInfoDistri.value = null;
+
+      detailStoreInfoDistri.value = null;
+
+      disabledCheckOut.value = true;
+
+      const toast = await toastController.create({
+        message: "Sukses upload",
+        duration: 5000,
+        position: "top",
+        color: "success",
+      });
+        toast.present();
+      })
+      .catch(function (error) {
+        alert("(" + error + ")");
+        stopLoading();
+        console.error(error);
+      });
+  } catch (e) {
+    alert("[" + e + "]");
+  }
+}
+
+async function uploadFileCheckOut(userNumber) {
+  try {
+    // const response = await axios.post("/bezkoder.com/upload", formData, {
+    //   headers: {
+    //     "Content-Type": "multipart/form-data",
+    //   },
+    // });
+    // console.log(response);
+
+    presentLoading();
+
+    refreshToken();
+
+    const URL = `${API_URL}/api/v2/salesmen/${userNumber}/visits/${detailStoreInfoDistri.value.visit_id}`;
+
+    const tokens = localStorage.getItem("tokens") ? JSON.parse(localStorage.getItem("tokens")) : null;
+
+    let formData = new FormData();
+    formData.append("image", lokasi_gambar2.value);
+    formData.append("lat_out", latitude.value);
+    formData.append("long_out", longitude.value);
+
+    const config = {
+      headers: {
+        'Authorization': `Bearer ${tokens.access_token}`,
+        "Content-Type": "multipart/form-data",
+      },
+    };
+    await axios
+      .post(URL, formData, config)
+      .then(async (res) => {
+        imageUrl.value = null;
+
+        fetchStoresData();
+        
+        stopLoading();
+
+        storeInfoDistri.value = null;
+
+        detailStoreInfoDistri.value = null;
+
+        const toast = await toastController.create({
+          message: "Sukses upload",
+          duration: 5000,
+          position: "top",
+          color: "success",
+        });
+        toast.present();
+      })
+      .catch(function (error) {
+        alert("(" + error + ")");
+        stopLoading();
+        console.error(error);
+      });
+  } catch (e) {
+    alert("[" + e + "]");
   }
 }
 
@@ -564,22 +704,22 @@ async function saveCheckOutImage() {
   console.log("url", base64Data);
   imageUrl.value = base64Data;
 
-  await Filesystem.writeFile({
-    path: new Date().getTime() + ".jpeg",
-    data: base64Data,
-    directory: Directory.Documents,
-  });
+  // await Filesystem.writeFile({
+  //   path: new Date().getTime() + ".jpeg",
+  //   data: base64Data,
+  //   directory: Directory.Documents,
+  // });
 
-  await saveCheckOutPicture(user.number, imageUrl.value);
+  uploadFileCheckOut(user.number);
 
-  const toast = await toastController.create({
-    message: "Absen Check-Out Berhasil! Lanjut Visit ke Toko lainnya",
-    duration: 3000,
-    position: "top",
-    color: 'success',
-  });
+  // const toast = await toastController.create({
+  //   message: "Absen Check-Out Berhasil! Lanjut Visit ke Toko lainnya",
+  //   duration: 3000,
+  //   position: "top",
+  //   color: 'success',
+  // });
 
-  await toast.present();
+  // await toast.present();
 
   disabledCheckOut.value = true;
 
@@ -589,31 +729,6 @@ async function saveCheckOutImage() {
 
   const previewPhoto = document.getElementById("preview-photo");
   previewPhoto.style.display = "none";
-}
-
-async function saveCheckOutPicture(userNumber, fileUrl) {
-  refreshToken();
-
-  const tokens = localStorage.getItem("tokens") ? JSON.parse(localStorage.getItem("tokens")) : null;
-      
-  const headers = {
-    'Content-Type': 'application/json',
-    'Authorization': `Bearer ${tokens.access_token}`
-  };
-
-  try {
-    const response = await axios.put(`${API_URL}/api/v2/salesmen/${userNumber}/visits/${detailStoreInfoDistri.value.visit_id}`, {
-      photo_visit_out: fileUrl,
-      lat_out: latitude.value,
-      long_out: longitude.value,
-    }, {
-      headers: headers
-    });
-
-    console.log("Successfully store check out visit pictures: ", response);
-  } catch (error) {
-    console.error("Failed to store check out visit pictures: ", error);
-  }
 }
 
 async function takeCheckInPicture() {
@@ -629,6 +744,12 @@ async function takeCheckInPicture() {
       renderModCheckInBtn.value = true;
       imageUrl.value = image.webPath.toString();
       console.log(`Captured photo path: ${imageUrl.value}`);
+
+      // const previewPhoto = document.getElementById("preview-photo");
+      // previewPhoto.style.display = "block";
+
+      lokasi_gambar2.value = await fetch(image.webPath).then((r) => r.blob());
+      console.log(lokasi_gambar2.value);
 
     } else {
       console.error('Failed to capture photo or image path is missing');
@@ -652,8 +773,11 @@ async function takeCheckOutPicture() {
       imageUrl.value = image.webPath.toString();
       console.log(`Captured photo path: ${imageUrl.value}`);
 
-      const previewPhoto = document.getElementById("preview-photo");
-      previewPhoto.style.display = "block";
+      // const previewPhoto = document.getElementById("preview-photo");
+      // previewPhoto.style.display = "block";
+
+      lokasi_gambar2.value = await fetch(image.webPath).then((r) => r.blob());
+      console.log(lokasi_gambar2.value);
 
     } else {
       console.error('Failed to capture photo or image path is missing');
@@ -725,6 +849,57 @@ async function renderPositionToAddress() {
   } catch (error) {
     
     console.error('Error when getting address: ', error);
+  }
+}
+
+async function saveCheckOutPicture(userNumber, fileUrl) {
+  refreshToken();
+
+  const tokens = localStorage.getItem("tokens") ? JSON.parse(localStorage.getItem("tokens")) : null;
+      
+  const headers = {
+    'Content-Type': 'application/json',
+    'Authorization': `Bearer ${tokens.access_token}`
+  };
+
+  try {
+    const response = await axios.put(`${API_URL}/api/v2/salesmen/${userNumber}/visits/${detailStoreInfoDistri.value.visit_id}`, {
+      photo_visit_out: fileUrl,
+      lat_out: latitude.value,
+      long_out: longitude.value,
+    }, {
+      headers: headers
+    });
+
+    console.log("Successfully store check out visit pictures: ", response);
+  } catch (error) {
+    console.error("Failed to store check out visit pictures: ", error);
+  }
+}
+
+async function saveCheckInPicture(userNumber, fileUrl) {
+  refreshToken();
+
+  const tokens = localStorage.getItem("tokens") ? JSON.parse(localStorage.getItem("tokens")) : null;
+      
+  const headers = {
+    'Content-Type': 'application/json',
+    'Authorization': `Bearer ${tokens.access_token}`
+  };
+
+  try {
+    const response = await axios.post(`${API_URL}/api/v2/salesmen/${userNumber}/visits`, {
+      store_id: detailStoreInfoDistri.value.id_toko,
+      photo_visit: fileUrl,
+      lat_in: latitude.value,
+      long_in: longitude.value,
+    }, {
+      headers: headers
+    });
+
+    console.log(`Successfully store check in visit pictures: ${response}`);
+  } catch (error) {
+    console.error("Failed to store check in visit pictures: ", error); 
   }
 }
 
