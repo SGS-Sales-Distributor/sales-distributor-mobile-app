@@ -36,7 +36,7 @@ import {
   logOutOutline,
   personOutline,
 } from 'ionicons/icons';
-import { toastController } from '@ionic/vue';
+import { catchToast, catchToastError } from '@/services/toastHandler';
 
 function redirectToLoginPage() {
   setTimeout(() => {
@@ -49,21 +49,14 @@ function redirectToLoginPage() {
 async function logout() {
   try {
     localStorage.clear();
-    
-    const toast = await toastController.create({
-      message: "Terima kasih, telah menggunakan aplikasi kami. Sampai berjumpa kembali...",
-      duration: 3000,
-      position: "top",
-      color: 'primary',
-    });
 
-    await toast.present();
+    catchToast("Logout successful, see ya!", 3000);
+
     redirectToLoginPage();
-    
-    console.log("Successfully logout");
   } catch (error) {
+    catchToastError(error.message, 3000);
+
     console.error(`Failed to logout: ${error.message}`);
-    throw new Error(`Failed to logout: ${error.message}`);
   }
 }
 </script>

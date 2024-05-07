@@ -105,17 +105,13 @@ import {
 } from 'ionicons/icons';
 import { refreshAccessTokenHandler } from '@/services/auth.js';
 import { onMounted } from 'vue';
+import { catchToastError } from '@/services/toastHandler';
 import axios from 'axios';
-
-const API_URL = `${import.meta.env.VITE_API_HOST}:${parseInt(import.meta.env.VITE_API_PORT)}`;
-
-async function refreshToken() {
-  refreshAccessTokenHandler();
-}
+import { API_URL } from '@/services/globalVariables';
 
 async function fetchAuthUser() {
   try {
-    refreshToken();
+    refreshAccessTokenHandler();
 
     const tokens = localStorage.getItem("tokens") ? JSON.parse(localStorage.getItem("tokens")) : null;
 
@@ -129,14 +125,15 @@ async function fetchAuthUser() {
       'Authorization': `Bearer ${tokens.access_token}`,
     };
 
-    const response = await axios.get(`${API_URL}/api/v2/auth/me`, { headers: headers })
+    const response = await axios.get(`${API_URL.value}/api/v2/auth/me`, { headers: headers })
 
     const authUserData = response.data.resource.data;
 
     localStorage.setItem("user", JSON.stringify(authUserData));
   } catch (error) {
+      catchToastError(error.message);
+      
       console.error(`Failed to fetch auth user: ${error.message}`);
-      throw new Error(`Failed to fetch auth user: ${error.message}`)
   }
 }
 

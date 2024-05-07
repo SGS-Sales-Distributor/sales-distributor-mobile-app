@@ -1,5 +1,5 @@
 <template>
-    <vee-form 
+    <form
     novalidate 
     class="space-y-6" 
     method="post"
@@ -90,10 +90,19 @@
             </button>
         </div>
         <!-- End of Submit Button -->
-    </vee-form>
+    </form>
 </template>
 
 <script setup>
+import * as Yup from 'yup';
+import router from '@/router';
+import { catchToast, catchToastError } from '@/services/toastHandler'; 
+import axios from 'axios';
+import { ref } from 'vue';
+import { API_URL } from '@/services/globalVariables';
+import { loadingController } from '@ionic/vue';
+
+const renderLoading = ref(null);
 
 const formData = ref({
   email: null,
@@ -111,20 +120,34 @@ const formLoginValidate = Yup.object().shape({
     .min(8, 'Password harus minimal memiliki 8 karakter')
 });
 
-const toastHandler = async (responseMsg, duration) => {
-    const toast = await toastController.create({
-      message: `${responseMsg}`,
-      duration: duration,
-      position: "top",
-      color: 'success',
-    });
+function redirectToHomePage() {
+  setTimeout(() => {
+    router.push({
+      path: '/home'
+    })
+  }, 1000);
+}
 
-    await toast.present();
+function presentLoading() {
+  renderLoading.value = loadingController.create({
+      message: "Loading...",
+    })
+    .then((a) => a.present());
+  
+    return renderLoading.value;
+}
+
+function stopLoading() {
+  setTimeout(() => {
+    loadingController.dismiss();
+  }, 100);
 }
 
 async function login() {
   try {
-    const response = await axios.post(`${API_URL}/api/v2/auth/login`, formData.value);
+    presentLoading();
+
+    const response = await axios.post(`${API_URL.value}/api/v2/auth/login`, formData.value);
     
     const tokens = response.data.resource.tokens;
     const accessToken = tokens.access_token;
@@ -134,15 +157,17 @@ async function login() {
     localStorage.setItem("accessToken", accessToken);
     localStorage.setItem("refreshToken", refreshToken);
 
-    toastHandler(response);
+    stopLoading();
+    
+    catchToast(response.data.message, 3000);
 
     redirectToHomePage();
   } catch (error) {
+    catchToastError(error.message, 3000);
+    
     console.error('Failed to logged in: ', error);
+  } finally {
+    stopLoading();
   }
 }
 </script>
-
-<style scoped>
-
-</style>

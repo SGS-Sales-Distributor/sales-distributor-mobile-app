@@ -76,34 +76,20 @@ import '@ionic/vue/css/display.css';
 import './theme/variables.css';
 
 import './tailwind.css';
-import { ErrorMessage, Field, Form } from 'vee-validate';
 import axios from 'axios';
-import { toastController } from '@ionic/vue';
-
-async function presentErrorMessageToast(errorMsg: string, duration: number) {
-  const toast = await toastController.create({
-    message: errorMsg,
-    duration: duration,
-    position: "top",
-    color: 'danger',
-  });
-
-  await toast.present();
-}
+import { ErrorMessage, Field, Form } from 'vee-validate';
+import { catchToastError } from '@/services/toastHandler';
 
 const app = createApp(App)
   .use(IonicVue)
   .use(router);
 
-// provide all global properties
-app.config.globalProperties.$axios = axios;
-
-app.config.errorHandler = function (err, instance, info) {
-  // presentErrorMessageToast(info, 3000);
-
-  console.error("Error: ", err);
-  console.log("Vue Instance: ", instance);
+app.config.errorHandler = function (error, vm, info) {
+  console.error("Error: ", error);
+  console.log("Vue Instance: ", vm);
   console.log("Info", info);
+
+  catchToastError(error, 3000);
 }
 
 // ionic components

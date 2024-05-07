@@ -24,16 +24,20 @@
           <div>
             <a href="/home" class="flex items-center space-x-3 rtl:space-x-reverse">
               <img src="/public/1630597076257.jpeg" class="h-12 rounded-full" alt="Sinergi Global Service" />
-              <span class="self-center text-md font-semibold whitespace-nowrap dark:text-white">PT. Sinergi Global Service</span>
+              <span class="self-center text-md font-semibold whitespace-nowrap dark:text-white">PT. Sinergi Global
+                Service</span>
             </a>
-          </div>          
+          </div>
           <div>
-            <button type="button" class="relative inline-flex items-center p-2 text-sm font-medium text-center text-white bg-blue-700 rounded-lg hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 dark:hover:bg-blue-700 dark:focus:ring-blue-800">
+            <button type="button"
+              class="relative inline-flex items-center p-2 text-sm font-medium text-center text-white bg-blue-700 rounded-lg hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 dark:hover:bg-blue-700 dark:focus:ring-blue-800">
               <icon-button>
                 <ion-icon class="text-2xl" :icon="notificationsOutline"></ion-icon>
               </icon-button>
               <span class="sr-only">Notifications</span>
-                <div class="absolute inline-flex items-center justify-center w-6 h-6 text-xs font-bold text-white bg-red-500 border-0 border-white rounded-full -top-2 -end-2">20</div>
+              <div
+                class="absolute inline-flex items-center justify-center w-6 h-6 text-xs font-bold text-white bg-red-500 border-0 border-white rounded-full -top-2 -end-2">
+                20</div>
             </button>
           </div>
         </div>
@@ -44,8 +48,10 @@
       <div class="flex min-h-full flex-col p-6">
         <!-- Card Header -->
         <ion-card-header>
-          <div v-if="checkLocationAccess" class="flex flex-col items-center justify-center pb-3" id="geo-address">
-            <ion-card-subtitle class="text-md text-gray-900 font-bold pb-2 text-center">Lokasi Anda Terkini</ion-card-subtitle>
+          <div v-if="checkLocationAccess && statusGPS" class="flex flex-col items-center justify-center pb-3"
+            id="geo-address">
+            <ion-card-subtitle class="text-md text-gray-900 font-bold pb-2 text-center">Lokasi Anda
+              Terkini</ion-card-subtitle>
             <li class="list-none">
               <ion-card-subtitle class="text-blue-500 font-bold text-center">
                 <span class="text-gray-900 font-semibold text-xs">{{ currentAddress }}</span>
@@ -54,12 +60,14 @@
           </div>
         </ion-card-header>
         <!-- End of Card Header -->
-    
+
         <!-- Card Content -->
         <ion-card-content>
           <!-- Map -->
           <div v-if="checkLocationAccess" class="flex flex-col items-center justify-center pb-3" id="geo-map">
-            <ion-card-subtitle class="text-md text-gray-900 font-bold pb-2 text-center">Lokasi Berdasarkan Peta</ion-card-subtitle>
+            <ion-card-subtitle v-if="statusGPS" class="text-md text-gray-900 font-bold pb-2 text-center">Lokasi
+              Berdasarkan
+              Peta</ion-card-subtitle>
             <li class="list-none map-wrap flex">
               <div class="map" ref="mapContainer"></div>
             </li>
@@ -76,9 +84,12 @@
                 <ion-card-title>
                   <span class="font-bold text-gray-900 text-2xl">Data Detail Toko</span>
                 </ion-card-title>
-                <button id="close-btn" @click="closeButtonHandler" class="text-gray-900 hover:text-gray-700 transition-all">
-                  <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" class="bi bi-x-lg" viewBox="0 0 16 16">
-                    <path d="M2.146 2.854a.5.5 0 1 1 .708-.708L8 7.293l5.146-5.147a.5.5 0 0 1 .708.708L8.707 8l5.147 5.146a.5.5 0 0 1-.708.708L8 8.707l-5.146 5.147a.5.5 0 0 1-.708-.708L7.293 8z"/>
+                <button id="close-btn" @click="closeButtonHandler"
+                  class="text-gray-900 hover:text-gray-700 transition-all">
+                  <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" class="bi bi-x-lg"
+                    viewBox="0 0 16 16">
+                    <path
+                      d="M2.146 2.854a.5.5 0 1 1 .708-.708L8 7.293l5.146-5.147a.5.5 0 0 1 .708.708L8.707 8l5.147 5.146a.5.5 0 0 1-.708.708L8 8.707l-5.146 5.147a.5.5 0 0 1-.708-.708L7.293 8z" />
                   </svg>
                 </button>
               </div>
@@ -95,13 +106,13 @@
                         </td> -->
               </ion-card-subtitle>
             </ion-card-header>
-        
+
             <ion-card-content>
               <div class="border-t border-gray-200">
                 <dl>
                   <div class="bg-sky-50 p-4 sm:grid-cols-3 sm:gap-4 sm:px-6">
                     <dt class="text-md font-bold text-gray-900">
-                      Nama Toko  
+                      Nama Toko
                     </dt>
                     <dd class="mt-1 text-sm text-gray-900 sm:mt-0 sm:col-span-2">
                       {{ detailStoreInfoDistri.nama_toko }}
@@ -154,7 +165,8 @@
                     <dt class="text-md font-bold text-gray-900">
                       Nama Pemilik Toko
                     </dt>
-                    <dd v-if="detailStoreInfoDistri.nama_pemilik_toko" class="mt-1 text-sm text-gray-900 sm:mt-0 sm:col-span-2">
+                    <dd v-if="detailStoreInfoDistri.nama_pemilik_toko"
+                      class="mt-1 text-sm text-gray-900 sm:mt-0 sm:col-span-2">
                       {{ detailStoreInfoDistri.nama_pemilik_toko }}
                     </dd>
                     <dd v-else class="mt-1 text-sm text-gray-900 sm:mt-0 sm:col-span-2">
@@ -165,7 +177,8 @@
                     <dt class="text-md font-bold text-gray-900">
                       Email Pemilik Toko
                     </dt>
-                    <dd v-if="detailStoreInfoDistri.email_pemilik_toko" class="mt-1 text-sm text-gray-900 sm:mt-0 sm:col-span-2">
+                    <dd v-if="detailStoreInfoDistri.email_pemilik_toko"
+                      class="mt-1 text-sm text-gray-900 sm:mt-0 sm:col-span-2">
                       {{ detailStoreInfoDistri.email_pemilik_toko }}
                     </dd>
                     <dd v-else class="mt-1 text-sm text-gray-900 sm:mt-0 sm:col-span-2">
@@ -179,37 +192,28 @@
         </div>
         <!-- End of Detail Store Card -->
 
-        <div class="flex w-full px-4 pb-2 space-x-4">
-          <ion-button
-          :disabled="disabledCheckIn"
-          @click="takeCheckInPicture" 
-          id="check-in-button" 
-          class="w-full py-2 rounded-lg text-50 font-bold text-nowrap">
+        <div v-if="statusGPS" class="flex w-full px-4 pb-2 space-x-4">
+          <ion-button :disabled="disabledCheckIn" @click="takeCheckInPicture" id="check-in-button"
+            class="w-full py-2 rounded-lg font-bold text-nowrap">
             Check-In
           </ion-button>
-          <ion-button 
-          :disabled="disabledCheckOut"
-          @click="takeCheckOutPicture" 
-          id="check-out-button" 
-          class="w-full py-2 rounded-lg text-gray-50 font-bold text-nowrap">
+          <ion-button :disabled="disabledCheckOut" @click="takeCheckOutPicture" id="check-out-button"
+            class="w-full py-2 rounded-lg font-bold text-nowrap">
             Check-Out
           </ion-button>
         </div>
         <div class="flex w-full items-center justify-center px-4 pb-2">
-          <img v-if="imageUrl" :src="imageUrl" id="preview-photo" alt="Captured Photo" style="max-width: 100%; height: 400px;" />
+          <img v-if="imageUrl" :src="imageUrl" id="preview-photo" alt="Captured Photo"
+            style="max-width: 100%; height: 400px;" />
         </div>
         <ion-grid :fixed="true">
           <ion-row v-if="renderModCheckInBtn">
             <ion-col style="margin: 20px">
-              <ion-button
-                @click="presentAlert_checkIn"
-                >Save</ion-button
-              ></ion-col
-            >
+              <ion-button @click="presentAlert_checkIn">Save</ion-button></ion-col>
             <ion-col></ion-col>
             <ion-col style="margin: 20px">
               <ion-button @click="clearImage">Clear</ion-button>
-              </ion-col>
+            </ion-col>
           </ion-row>
           <ion-row v-if="renderModeCheckOutBtn">
             <ion-col style="margin: 20px">
@@ -224,7 +228,7 @@
             <ion-col style="margin: 20px">
               <ion-button @click="clearImage">Clear</ion-button>
               <!-- <a class="btn btn-danger w-100" @click="clearImage" href="javascript:void(0);">Clear</a> -->
-              </ion-col>
+            </ion-col>
           </ion-row>
         </ion-grid>
         <!-- <div v-if="renderModCheckInBtn" class="flex flex-row items-center justify-center pb-2">
@@ -242,92 +246,95 @@
           </div>
           <div class="relative overflow-x-auto shadow-lg shadow-gray-300 rounded-lg">
             <table class="w-full text-sm text-center rtl:text-right text-gray-500">
-                <thead class="text-xs text-gray-50 font-bold uppercase bg-blue-400">
-                    <tr>
-                        <th scope="col" class="px-6 py-3 whitespace-nowrap">
-                          ID
-                        </th>
-                        <th scope="col" class="px-6 py-3 whitespace-nowrap">
-                          Aksi
-                        </th>
-                        <th scope="col" class="px-6 py-3 whitespace-nowrap">
-                            Nama Toko
-                        </th>
-                        <th scope="col" class="px-6 py-3 whitespace-nowrap">
-                          Tanggal Visit
-                        </th>
-                        <th scope="col" class="px-6 py-3 whitespace-nowrap">
-                          Waktu Check-In
-                        </th>
-                        <th scope="col" class="px-6 py-3 whitespace-nowrap">
-                          Waktu Check-Out
-                        </th>
-                        <th scope="col" class="px-6 py-3 whitespace-nowrap">
-                          Status Approval
-                        </th>
-                    </tr>
-                </thead>
-                <tbody>
-                    <tr v-for="(store, index) in storeInfoDistri" :key="index+1" class="odd:bg-sky-50 even:bg-blue-100 border-b border-gray-100 hover:bg-gray-50 transition-all">
-                        <th scope="row" class="px-6 py-4 font-bold text-gray-900 whitespace-nowrap">
-                            {{ index+1 }}
-                        </th>
-                        <td class="px-6 py-4">
+              <thead class="text-xs text-gray-50 font-bold uppercase bg-blue-400">
+                <tr>
+                  <th scope="col" class="px-6 py-3 whitespace-nowrap">
+                    ID
+                  </th>
+                  <th scope="col" class="px-6 py-3 whitespace-nowrap">
+                    Aksi
+                  </th>
+                  <th scope="col" class="px-6 py-3 whitespace-nowrap">
+                    Nama Toko
+                  </th>
+                  <th scope="col" class="px-6 py-3 whitespace-nowrap">
+                    Tanggal Visit
+                  </th>
+                  <th scope="col" class="px-6 py-3 whitespace-nowrap">
+                    Waktu Check-In
+                  </th>
+                  <th scope="col" class="px-6 py-3 whitespace-nowrap">
+                    Waktu Check-Out
+                  </th>
+                  <th scope="col" class="px-6 py-3 whitespace-nowrap">
+                    Status Approval
+                  </th>
+                </tr>
+              </thead>
+              <tbody v-if="storeInfoDistri.length > 0 && statusGPS">
+                <tr v-for="(store, index) in storeInfoDistri" :key="index + 1"
+                  class="odd:bg-sky-50 even:bg-blue-100 border-b border-gray-100 hover:bg-gray-50 transition-all">
+                  <th scope="row" class="px-6 py-4 font-bold text-gray-900 whitespace-nowrap">
+                    {{ index + 1 }}
+                  </th>
+                  <td class="px-6 py-4">
 
-                          <ion-button :disabled="store.statusx" @click="fetchOneStoreData(store.store_id)" 
-                          id="check-in-button" size="small">
-                            <ion-icon slot="start" :icon="camera"></ion-icon>
-                            Absen
-                            <!-- <img src="/public/icons8-purchase-50.png" alt="Sinergi Global Service" /> -->
-                          </ion-button>
+                    <ion-button :disabled="store.disabledAbsenBtn" @click="fetchOneStoreData(store.store_id)"
+                      id="check-in-button" size="small">
+                      <ion-icon slot="start" :icon="camera"></ion-icon>
+                      Absen
+                      <!-- <img src="/public/icons8-purchase-50.png" alt="Sinergi Global Service" /> -->
+                    </ion-button>
 
-                          <router-link :to="{ name: 'storeDetail', params: { id: store.store_id } }">
-                            <ion-button :disabled="store.statusy" size="small">
-                              <ion-icon slot="start" :icon="document"></ion-icon>
-                               PO
-                              <!-- <img src="/public/icons8-purchase-50.png" alt="Sinergi Global Service" /> -->
-                            </ion-button>
-                          </router-link>
-                        </td>
-                        <td class="px-6 py-4">
-                          <span class="text-gray-900 font-medium whitespace-nowrap transition-all hover:text-blue-500 hover:font-normal">{{ store.nama_toko }}</span>
-                        </td>
-                        <td v-if="store.tanggal_visit" class="px-6 py-4 font-medium text-gray-900 whitespace-nowrap">
-                          {{ new Date(store.tanggal_visit).toLocaleDateString('id-ID', {
-                            year: 'numeric',
-                            month: "long",
-                            day: "2-digit",
-                            weekday: "long"
-                          }) }}
-                        </td>
-                        <td v-else class="px-6 py-4 font-medium text-gray-900 whitespace-nowrap">
-                          <ion-badge color="danger">Belum Visit</ion-badge>
-                        </td>
-                        <td v-if="store.waktu_masuk" class="px-6 py-4 font-medium text-gray-900 whitespace-nowrap">
-                          {{ store.waktu_masuk }} WIB
-                        </td>
-                        <td v-else class="px-6 py-4 font-medium text-gray-900 whitespace-nowrap">
-                          <ion-badge color="danger">Belum Check-In Visit</ion-badge>
-                        </td>
-                        <td v-if="store.waktu_keluar" class="px-6 py-4 font-medium text-gray-900 whitespace-nowrap">
-                          {{ store.waktu_keluar }} WIB
-                        </td>
-                        <td v-else class="px-6 py-4 font-medium text-gray-900 whitespace-nowrap">
-                          <ion-badge color="danger">Belum Check-Out Visit</ion-badge>
-                          <!-- <span class="font-bold text-rose-600"></span> -->
-                        </td>
-                        <td class="px-6 py-4">
-                          <div v-if="store.approval === 1" class="flex items-center">
-                            <div class="h-2.5 w-2.5 rounded-full bg-green-500 me-2"></div>
-                            <ion-badge color="success">Disetujui</ion-badge>
-                          </div>
-                          <div v-else class="flex items-center">
-                            <div class="h-2.5 w-2.5 rounded-full bg-rose-600 me-2"></div>
-                            <ion-badge color="danger">Belum Disetujui</ion-badge>
-                          </div>
-                        </td>
-                    </tr>
-                </tbody>
+                    <router-link :to="{ name: 'storeDetail', params: { id: store.store_id } }">
+                      <ion-button :disabled="store.disabledPurchaseOrderBtn" size="small">
+                        <ion-icon slot="start" :icon="documentAttach"></ion-icon>
+                        Purchase Order
+                        <!-- <img src="/public/icons8-purchase-50.png" alt="Sinergi Global Service" /> -->
+                      </ion-button>
+                    </router-link>
+                  </td>
+                  <td class="px-6 py-4">
+                    <span
+                      class="text-gray-900 font-medium whitespace-nowrap transition-all hover:text-blue-500 hover:font-normal">{{
+                        store.nama_toko }}</span>
+                  </td>
+                  <td v-if="store.tanggal_visit" class="px-6 py-4 font-medium text-gray-900 whitespace-nowrap">
+                    {{ new Date(store.tanggal_visit).toLocaleDateString('id-ID', {
+                      year: 'numeric',
+                      month: "long",
+                      day: "2-digit",
+                      weekday: "long"
+                    }) }}
+                  </td>
+                  <td v-else class="px-6 py-4 font-medium text-gray-900 whitespace-nowrap">
+                    <ion-badge color="danger">Belum Visit</ion-badge>
+                  </td>
+                  <td v-if="store.waktu_masuk" class="px-6 py-4 font-medium text-gray-900 whitespace-nowrap">
+                    {{ store.waktu_masuk }} WIB
+                  </td>
+                  <td v-else class="px-6 py-4 font-medium text-gray-900 whitespace-nowrap">
+                    <ion-badge color="danger">Belum Check-In Visit</ion-badge>
+                  </td>
+                  <td v-if="store.waktu_keluar" class="px-6 py-4 font-medium text-gray-900 whitespace-nowrap">
+                    {{ store.waktu_keluar }} WIB
+                  </td>
+                  <td v-else class="px-6 py-4 font-medium text-gray-900 whitespace-nowrap">
+                    <ion-badge color="danger">Belum Check-Out Visit</ion-badge>
+                    <!-- <span class="font-bold text-rose-600"></span> -->
+                  </td>
+                  <td class="px-6 py-4">
+                    <div v-if="store.approval === 1" class="flex items-center">
+                      <div class="h-2.5 w-2.5 rounded-full bg-green-500 me-2"></div>
+                      <ion-badge color="success">Disetujui</ion-badge>
+                    </div>
+                    <div v-else class="flex items-center">
+                      <div class="h-2.5 w-2.5 rounded-full bg-rose-600 me-2"></div>
+                      <ion-badge color="danger">Belum Disetujui</ion-badge>
+                    </div>
+                  </td>
+                </tr>
+              </tbody>
             </table>
           </div>
         </div>
@@ -338,24 +345,25 @@
 
 <script setup>
 // import ExploreContainer from '@/components/ExploreContainer.vue';
-import { 
+// import { Filesystem, Directory } from '@capacitor/filesystem';
+import {
   notificationsOutline,
   listOutline,
-  document,
+  documentAttach,
   camera
 } from 'ionicons/icons';
 import { Camera, CameraResultType, CameraSource } from '@capacitor/camera';
 import { Geolocation } from '@capacitor/geolocation';
 import { Capacitor } from '@capacitor/core';
-import { Filesystem, Directory } from '@capacitor/filesystem';
 import { onMounted, ref, shallowRef } from 'vue';
 import { printCurrentPosition } from '@/services/getCurrentLocation';
-import { Map, Marker, GeolocateControl, NavigationControl} from "maplibre-gl";
+import { Map, Marker, GeolocateControl, NavigationControl } from "maplibre-gl";
 import { config } from '@maptiler/sdk';
 import { refreshAccessTokenHandler } from '@/services/auth.js';
 import '@maptiler/sdk/dist/maptiler-sdk.css';
 import axios from 'axios';
 import { toastController, loadingController, alertController } from '@ionic/vue';
+import { catchToast, catchToastError } from '@/services/toastHandler';
 // import router from '@/router';
 
 // const isOpen = ref(false);
@@ -380,12 +388,9 @@ const imageUrl = shallowRef("");
 const lokasi_gambar2 = ref(null);
 const loading = ref(null);
 const statusGPS = ref(false);
+const enabledFirstAbsenBtn = ref(false);
 
 const API_URL = `${import.meta.env.VITE_API_HOST}:${parseInt(import.meta.env.VITE_API_PORT)}`;
-
-async function refreshToken() {
-  refreshAccessTokenHandler();
-}
 
 function showStoreDetailCardHandler() {
   if (detailStoreInfoDistri.value.waktu_masuk !== null) {
@@ -395,7 +400,7 @@ function showStoreDetailCardHandler() {
     disabledCheckIn.value = false;
     disabledCheckOut.value = true;
 
-    const storeDetailCard = document.getElementById("store-detail-card"); 
+    const storeDetailCard = document.getElementById("store-detail-card");
     storeDetailCard.classList.add("show");
     storeDetailCard.style.display = 'block';
   }
@@ -404,7 +409,7 @@ function showStoreDetailCardHandler() {
 function closeButtonHandler() {
   disabledCheckIn.value = true;
   disabledCheckOut.value = true;
-  
+
   const storeDetailCard = document.getElementById("store-detail-card");
 
   document.getElementById("close-btn").addEventListener("click", function () {
@@ -422,40 +427,33 @@ async function checkLocationAccess() {
       const hasPermission = await Geolocation.checkPermissions();
 
       if (hasPermission.location === 'granted') {
-        const toast = await toastController.create({
-          message: "Akses Lokasi Diterima, jangan lupa melakukan Absensi Visit ya!",
-          duration: 3000,
-          position: "top",
-          color: 'success',
-        });
-
-        await toast.present();
-
+        catchToast("Akses Lokasi Diterima!", 3000);
+        
         isLocationPermissionAllowed.value = true;
         statusGPS.value = true;
-
-        document.getElementById("geo-address").style.display = 'block';
-        document.getElementById("geo-map").style.display = 'block';
       } else {
-        const toast = await toastController.create({
-          message: "Akses Lokasi Ditolak, mohon nyalakan GPS secara manual!",
-          duration: 3000,
-          position: "top",
-          color: 'danger',
-        });
-
-        await toast.present();
-
+        catchToastError("Akses Lokasi Ditolak, mohon nyalakan GPS secara manual!", 3000);
+        
         isLocationPermissionAllowed.value = false;
         statusGPS.value = false;
+      }
 
-        document.getElementById("geo-address").style.display = 'none';
-        document.getElementById("geo-map").style.display = 'none';
+      // Check if the elements exist before accessing their styles
+      const geoAddress = document.getElementById("geo-address");
+      const geoMap = document.getElementById("geo-map");
+
+      if (geoAddress && geoMap) {
+        geoAddress.style.display = hasPermission.location === 'granted' ? 'block' : 'none';
+        geoMap.style.display = hasPermission.location === 'granted' ? 'block' : 'none';
+      } else {
+        console.error("Error: Elements 'geo-address' or 'geo-map' not found in the DOM.");
       }
     } else {
       console.warn('Geolocation not supported on web platform.');
     }
   } catch (error) {
+    catchToastError(error.message, 3000);
+
     console.error(`Error checking location access: ${error.message}`);
   }
 }
@@ -482,7 +480,7 @@ function clearImage() {
 function convertBlobToBase64(blob) {
   return new Promise((resolve, reject) => {
     const reader = new FileReader();
-    
+
     reader.onerror = reject;
     reader.onload = () => {
       resolve(reader.result);
@@ -552,7 +550,7 @@ function presentAlert_checkOut() {
 
 // rest api (backend server)
 async function fetchStoresData() {
-  refreshToken();
+  refreshAccessTokenHandler();
 
   const tokens = localStorage.getItem("tokens") ? JSON.parse(localStorage.getItem("tokens")) : null;
 
@@ -562,51 +560,77 @@ async function fetchStoresData() {
   };
 
   try {
+    presentLoading();
+
     const response = await axios.get(`${API_URL}/api/v2/stores`, {
       headers: headers
     });
 
     storeInfoDistri.value = response.data.resource.data;
-    let x = false;
+
     Object.keys(storeInfoDistri.value).forEach(key => {
       const value = storeInfoDistri.value[key];
-      if ( x == false){
-        if ( value.waktu_keluar == null || value.waktu_masuk == null)
-        {
-          value.statusx = false;
-          x = true;
-        }else {
-          value.statusx = true; 
-        }
-      }else{
-        value.statusx = true;
+
+      if (!enabledFirstAbsenBtn.value) {
+        // Enable first Absen button for the first row
+        value.disabledAbsenBtn = false;
+
+        enabledFirstAbsenBtn.value = true;
+      } else {
+        // Disable Absen button for subsequent rows
+        value.disabledAbsenBtn = true;
       }
 
-      if ( value.waktu_masuk == null )
-        {
-          value.statusy= true;
-          x = true;
-        }else {
-          value.statusy = false;
-        }
+      // Disable Purchase Order button if waktu_masuk is null
+      value.disabledPurchaseOrderBtn = value.waktu_masuk === null;
 
-
-        if (statusGPS.value == false) {
-          value.statusy = true;
-          value.statusx = true;
-          }
+      // Disable buttons if GPS status is true
+      // if (statusGPS.value) {
+      //   value.disabledAbsenBtn = true;
+      //   value.disabledPurchaseOrderBtn = true;
+      // }
     });
+    // Object.keys(storeInfoDistri.value).forEach(key => {
+    //   const value = storeInfoDistri.value[key];
+
+    //   if (enableFirstAbsenBtn.value) {
+    //     if (!value.waktu_keluar && !value.waktu_masuk) {
+    //       value.statusx = false;
+    //       enableFirstAbsenBtn.value = true;
+    //     } else {
+    //       value.statusx = true;
+    //     }
+    //   } else {
+    //     value.statusx = true;
+    //   }
+
+    //   if (!value.waktu_masuk) {
+    //     value.statusy = true;
+    //     enableFirstAbsenBtn.value = true;
+    //   } else {
+    //     value.statusy = false;
+    //   }
+
+    //   if (statusGPS.value) {
+    //     value.statusy = true;
+    //     value.statusx = true;
+    //   }
+    // });
+
+    stopLoading();
 
     console.log(storeInfoDistri.value);
-
-    console.log("Successfully fetch store data: ", storeInfoDistri.value);
   } catch (error) {
+    catchToastError(error.message, 3000);
+
     console.error('Failed to fetch store data: ', error);
+  } finally {
+    stopLoading();
   }
 }
 
 async function fetchOneStoreData(id) {
-  refreshToken();
+  refreshAccessTokenHandler();
 
   const tokens = localStorage.getItem("tokens") ? JSON.parse(localStorage.getItem("tokens")) : null;
 
@@ -616,19 +640,25 @@ async function fetchOneStoreData(id) {
   };
 
   try {
+    presentLoading();
+
     const response = await axios.get(`${API_URL}/api/v2/stores/${id}`, {
       headers: headers
     });
 
     detailStoreInfoDistri.value = response.data.resource;
 
+    stopLoading();
+
     showStoreDetailCardHandler();
 
     document.getElementById("check-in-button").focus();
-
-    console.log(`Successfully fetch store ${id}:`, response);
   } catch (error) {
+    catchToastError(error.message, 3000);
+
     console.error(`Failed to fetch store ${id}: `, error);
+  } finally {
+    stopLoading();
   }
 }
 
@@ -683,11 +713,9 @@ function presentLoading() {
 }
 
 function stopLoading() {
-  //this.loading.dismiss();
-
   setTimeout(() => {
     loadingController.dismiss();
-  }, 1);
+  }, 100);
 }
 
 async function uploadFile(userNumber) {
@@ -701,7 +729,7 @@ async function uploadFile(userNumber) {
 
     presentLoading();
 
-    refreshToken();
+    refreshAccessTokenHandler();
 
     const URL = `${API_URL}/api/v2/salesmen/${userNumber}/visits`;
 
@@ -719,7 +747,7 @@ async function uploadFile(userNumber) {
         "Content-Type": "multipart/form-data",
       },
     };
-    
+
     await axios.post(URL, formData, config).then(async (res) => {
       imageUrl.value = null;
 
@@ -739,8 +767,8 @@ async function uploadFile(userNumber) {
         position: "top",
         color: "success",
       });
-        toast.present();
-      })
+      toast.present();
+    })
       .catch(function (error) {
         alert("(" + error + ")");
         stopLoading();
@@ -762,7 +790,7 @@ async function uploadFileCheckOut(userNumber) {
 
     presentLoading();
 
-    refreshToken();
+    refreshAccessTokenHandler();
 
     const URL = `${API_URL}/api/v2/salesmen/${userNumber}/visits/${detailStoreInfoDistri.value.visit_id}`;
 
@@ -785,7 +813,7 @@ async function uploadFileCheckOut(userNumber) {
         imageUrl.value = null;
 
         fetchStoresData();
-        
+
         stopLoading();
 
         storeInfoDistri.value = null;
@@ -896,14 +924,14 @@ async function takeCheckOutPicture() {
       console.error('Failed to capture photo or image path is missing');
     }
   } catch (error) {
-      console.error('Error when capturing photo: ', error);
-  }      
+    console.error('Error when capturing photo: ', error);
+  }
 }
 
 async function renderMap() {
   const currentPositions = await printCurrentPosition();
   const [currentLatitude, currentLongitude] = currentPositions;
-  const myApiKey = import.meta.env.VITE_MAPTILER_API_KEY; 
+  const myApiKey = import.meta.env.VITE_MAPTILER_API_KEY;
 
   config.apiKey = myApiKey;
   latitude.value = currentLatitude;
@@ -917,29 +945,29 @@ async function renderMap() {
       zoom: 16,
       hash: false
     })
-    .addControl(
-      new GeolocateControl({
-        positionOptions: {
-          enableHighAccuracy: true,
-        },
-        trackUserLocation: true
-      })
-    ).addControl(
-      new NavigationControl({
-        showCompass: true,
-        showZoom: true,
-        visualizePitch: true,
-      })
-    )
+      .addControl(
+        new GeolocateControl({
+          positionOptions: {
+            enableHighAccuracy: true,
+          },
+          trackUserLocation: true
+        })
+      ).addControl(
+        new NavigationControl({
+          showCompass: true,
+          showZoom: true,
+          visualizePitch: true,
+        })
+      )
 
     new Marker({
       color: "#FF0000"
     })
-    .setLngLat([
-      longitude.value, 
-      latitude.value
-    ])
-    .addTo(map.value);
+      .setLngLat([
+        longitude.value,
+        latitude.value
+      ])
+      .addTo(map.value);
   } catch (error) {
     console.error('Failed to render map: ', error);
   }
@@ -960,16 +988,16 @@ async function renderPositionToAddress() {
 
     console.log("Successfully fetch current address: ", currentAddress.value);
   } catch (error) {
-    
+
     console.error('Error when getting address: ', error);
   }
 }
 
 async function saveCheckOutPicture(userNumber, fileUrl) {
-  refreshToken();
+  refreshAccessTokenHandler();
 
   const tokens = localStorage.getItem("tokens") ? JSON.parse(localStorage.getItem("tokens")) : null;
-      
+
   const headers = {
     'Content-Type': 'application/json',
     'Authorization': `Bearer ${tokens.access_token}`
@@ -991,10 +1019,10 @@ async function saveCheckOutPicture(userNumber, fileUrl) {
 }
 
 async function saveCheckInPicture(userNumber, fileUrl) {
-  refreshToken();
+  refreshAccessTokenHandler();
 
   const tokens = localStorage.getItem("tokens") ? JSON.parse(localStorage.getItem("tokens")) : null;
-      
+
   const headers = {
     'Content-Type': 'application/json',
     'Authorization': `Bearer ${tokens.access_token}`
@@ -1012,12 +1040,12 @@ async function saveCheckInPicture(userNumber, fileUrl) {
 
     console.log(`Successfully store check in visit pictures: ${response}`);
   } catch (error) {
-    console.error("Failed to store check in visit pictures: ", error); 
+    console.error("Failed to store check in visit pictures: ", error);
   }
 }
 
 onMounted(() => {
-  refreshToken();
+  refreshAccessTokenHandler();
   fetchStoresData();
   renderMap();
   renderPositionToAddress();
@@ -1052,8 +1080,10 @@ ion-button {
 }
 
 ion-button[disabled] {
-  --background: #E4DEBE
+  --background: rgb(228, 228, 228);
+  --color: rgb(126, 126, 126);
 }
+
 
 /* .map-wrap {
   position: relative;
