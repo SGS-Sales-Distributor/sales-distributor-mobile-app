@@ -47,9 +47,9 @@
           <div v-if="checkLocationAccess" class="flex flex-col items-center justify-center pb-3" id="geo-address">
             <ion-card-subtitle class="text-md text-gray-900 font-bold pb-2 text-center">Lokasi Anda Terkini</ion-card-subtitle>
             <li class="list-none">
-              <ion-card-title class="text-blue-500 font-bold text-center">
-                <span class="text-gray-900 font-semibold">{{ currentAddress }}</span>
-              </ion-card-title>
+              <ion-card-subtitle class="text-blue-500 font-bold text-center">
+                <span class="text-gray-900 font-semibold text-xs">{{ currentAddress }}</span>
+              </ion-card-subtitle>
             </li>
           </div>
         </ion-card-header>
@@ -61,7 +61,7 @@
           <div v-if="checkLocationAccess" class="flex flex-col items-center justify-center pb-3" id="geo-map">
             <ion-card-subtitle class="text-md text-gray-900 font-bold pb-2 text-center">Lokasi Berdasarkan Peta</ion-card-subtitle>
             <li class="list-none map-wrap flex">
-              <div class="map" ref="mapContainer" style="width: 100%; height: 100%;"></div>
+              <div class="map" ref="mapContainer"></div>
             </li>
           </div>
           <!-- End of Map -->
@@ -198,14 +198,43 @@
         <div class="flex w-full items-center justify-center px-4 pb-2">
           <img v-if="imageUrl" :src="imageUrl" id="preview-photo" alt="Captured Photo" style="max-width: 100%; height: 400px;" />
         </div>
-        <div v-if="renderModCheckInBtn" class="flex flex-row items-center justify-center pb-2">
+        <ion-grid :fixed="true">
+          <ion-row v-if="renderModCheckInBtn">
+            <ion-col style="margin: 20px">
+              <ion-button
+                @click="presentAlert_checkIn"
+                >Save</ion-button
+              ></ion-col
+            >
+            <ion-col></ion-col>
+            <ion-col style="margin: 20px">
+              <ion-button @click="clearImage">Clear</ion-button>
+              </ion-col>
+          </ion-row>
+          <ion-row v-if="renderModeCheckOutBtn">
+            <ion-col style="margin: 20px">
+              <ion-button @click="presentAlert_checkOut">Save</ion-button>
+              <!-- <a
+                class="btn btn-success w-100"
+                @click="saveCheckOutImage"
+                href="javascript:void(0);"
+                >Save</a> -->
+            </ion-col>
+            <ion-col></ion-col>
+            <ion-col style="margin: 20px">
+              <ion-button @click="clearImage">Clear</ion-button>
+              <!-- <a class="btn btn-danger w-100" @click="clearImage" href="javascript:void(0);">Clear</a> -->
+              </ion-col>
+          </ion-row>
+        </ion-grid>
+        <!-- <div v-if="renderModCheckInBtn" class="flex flex-row items-center justify-center pb-2">
           <ion-button @click="saveCheckInImage">Save</ion-button>
           <ion-button @click="clearImage">Clear</ion-button>
         </div>
         <div v-if="renderModeCheckOutBtn" class="flex flex-row items-center justify-center pb-2">
           <ion-button @click="saveCheckOutImage">Save</ion-button>
           <ion-button @click="clearImage">Clear</ion-button>
-        </div>
+        </div> -->
         <div class="flex flex-col space-y-2">
           <div class="flex items-center justify-center space-x-2 px-5">
             <ion-icon class="text-xl" :icon="listOutline"></ion-icon>
@@ -217,6 +246,9 @@
                     <tr>
                         <th scope="col" class="px-6 py-3 whitespace-nowrap">
                           ID
+                        </th>
+                        <th scope="col" class="px-6 py-3 whitespace-nowrap">
+                          Aksi
                         </th>
                         <th scope="col" class="px-6 py-3 whitespace-nowrap">
                             Nama Toko
@@ -241,20 +273,24 @@
                             {{ index+1 }}
                         </th>
                         <td class="px-6 py-4">
-                          <!-- <button id="nama-toko-btn" @click="fetchOneStoreData(store.store_id)"></button> -->
-                          <ion-button
-                          :disabled="store.statusx"
-                          @click="fetchOneStoreData(store.store_id)" 
-                          id="check-in-button" 
-                          class="w-28 py-2 rounded-lg text-10 font-bold text-nowrap">
-                            x
+
+                          <ion-button :disabled="store.statusx" @click="fetchOneStoreData(store.store_id)" 
+                          id="check-in-button" size="small">
+                            <ion-icon slot="start" :icon="camera"></ion-icon>
+                            Absen
+                            <!-- <img src="/public/icons8-purchase-50.png" alt="Sinergi Global Service" /> -->
                           </ion-button>
-                          <router-link :to="{ name: 'storeDetail', params: { id: detailStoreInfoDistri.store_id } }">
-                            <ion-button :disabled="disabledPurchaseOrderBtn">
-                              Purchase Order
+
+                          <router-link :to="{ name: 'storeDetail', params: { id: store.store_id } }">
+                            <ion-button :disabled="store.statusy" size="small">
+                              <ion-icon slot="start" :icon="document"></ion-icon>
+                               PO
+                              <!-- <img src="/public/icons8-purchase-50.png" alt="Sinergi Global Service" /> -->
                             </ion-button>
                           </router-link>
-                          <span class="text-gray-900 font-medium whitespace-nowrap underline underline-offset-1 transition-all hover:text-blue-500 hover:font-normal">{{ store.nama_toko }}</span>
+                        </td>
+                        <td class="px-6 py-4">
+                          <span class="text-gray-900 font-medium whitespace-nowrap transition-all hover:text-blue-500 hover:font-normal">{{ store.nama_toko }}</span>
                         </td>
                         <td v-if="store.tanggal_visit" class="px-6 py-4 font-medium text-gray-900 whitespace-nowrap">
                           {{ new Date(store.tanggal_visit).toLocaleDateString('id-ID', {
@@ -305,6 +341,8 @@
 import { 
   notificationsOutline,
   listOutline,
+  document,
+  camera
 } from 'ionicons/icons';
 import { Camera, CameraResultType, CameraSource } from '@capacitor/camera';
 import { Geolocation } from '@capacitor/geolocation';
@@ -317,7 +355,7 @@ import { config } from '@maptiler/sdk';
 import { refreshAccessTokenHandler } from '@/services/auth.js';
 import '@maptiler/sdk/dist/maptiler-sdk.css';
 import axios from 'axios';
-import { toastController, loadingController } from '@ionic/vue';
+import { toastController, loadingController, alertController } from '@ionic/vue';
 // import router from '@/router';
 
 // const isOpen = ref(false);
@@ -341,6 +379,7 @@ const map = ref(null);
 const imageUrl = shallowRef("");
 const lokasi_gambar2 = ref(null);
 const loading = ref(null);
+const statusGPS = ref(false);
 
 const API_URL = `${import.meta.env.VITE_API_HOST}:${parseInt(import.meta.env.VITE_API_PORT)}`;
 
@@ -393,6 +432,7 @@ async function checkLocationAccess() {
         await toast.present();
 
         isLocationPermissionAllowed.value = true;
+        statusGPS.value = true;
 
         document.getElementById("geo-address").style.display = 'block';
         document.getElementById("geo-map").style.display = 'block';
@@ -407,6 +447,7 @@ async function checkLocationAccess() {
         await toast.present();
 
         isLocationPermissionAllowed.value = false;
+        statusGPS.value = false;
 
         document.getElementById("geo-address").style.display = 'none';
         document.getElementById("geo-map").style.display = 'none';
@@ -451,6 +492,64 @@ function convertBlobToBase64(blob) {
   });
 }
 
+function presentAlert_checkIn() {
+  return alertController
+    .create({
+      header: "Konfirmasi Absen Check In",
+      //subHeader: "",
+      //cssClass: "alertDanger",
+      message: "Apakah kamu yakin?",
+      buttons: [
+        {
+          text: "No",
+          cssClass: "alert-button-cancel",
+          handler: () => {
+            console.log("send otp no");
+          },
+        },
+        {
+          text: "Yes",
+          cssClass: "alert-button-confirm",
+          handler: () => {
+            console.log("send otp yes");
+            saveCheckInImage();
+          },
+        },
+      ],
+    })
+    .then((a) => a.present());
+  //alert(message);
+}
+
+function presentAlert_checkOut() {
+  return alertController
+    .create({
+      header: "Konfirmasi Absen Check Out",
+      //subHeader: "",
+      //cssClass: "alertDanger",
+      message: "Apakah kamu yakin?",
+      buttons: [
+        {
+          text: "No",
+          cssClass: "alert-button-cancel",
+          handler: () => {
+            console.log("send otp no");
+          },
+        },
+        {
+          text: "Yes",
+          cssClass: "alert-button-confirm",
+          handler: () => {
+            console.log("send otp yes");
+            saveCheckOutImage();
+          },
+        },
+      ],
+    })
+    .then((a) => a.present());
+  //alert(message);
+}
+
 // rest api (backend server)
 async function fetchStoresData() {
   refreshToken();
@@ -477,11 +576,25 @@ async function fetchStoresData() {
           value.statusx = false;
           x = true;
         }else {
-          value.statusx = true;
+          value.statusx = true; 
         }
       }else{
         value.statusx = true;
       }
+
+      if ( value.waktu_masuk == null )
+        {
+          value.statusy= true;
+          x = true;
+        }else {
+          value.statusy = false;
+        }
+
+
+        if (statusGPS.value == false) {
+          value.statusy = true;
+          value.statusx = true;
+          }
     });
 
     console.log(storeInfoDistri.value);
@@ -934,7 +1047,15 @@ ion-modal ion-toolbar {
   --color: white;
 }
 
-.map-wrap {
+ion-button {
+  --background: #40A2D8;
+}
+
+ion-button[disabled] {
+  --background: #E4DEBE
+}
+
+/* .map-wrap {
   position: relative;
   width: 100%;
   height: calc(
@@ -946,6 +1067,18 @@ ion-modal ion-toolbar {
   position: absolute;
   width: 100%;
   height: 50%;
+} */
+
+.map-wrap {
+  position: relative;
+  width: 100%;
+  height: 300px;
+}
+
+.map {
+  position: absolute;
+  width: 100%;
+  height: 100%;
 }
 
 .watermark {
