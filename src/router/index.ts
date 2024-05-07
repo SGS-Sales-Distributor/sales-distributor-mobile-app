@@ -42,7 +42,7 @@ const routes: Array<RouteRecordRaw> = [
         component: HomePage,
       },
       {
-        path: '/stores/:id',
+        path: '/store/:id',
         name: 'storeDetail',
         component: StoreDetailPage,
       },

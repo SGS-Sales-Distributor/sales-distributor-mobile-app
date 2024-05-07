@@ -102,15 +102,15 @@
                         </div>
                         <!-- End of Submit Button -->
                     </vee-form>
-                    <div class="mt-10 flex items-center justify-between">
-                        <div class="text-sm">
+                    <div class="mt-5 flex items-center justify-end">
+                        <!-- <div class="text-sm">
                             <a href="/registrasi" class="font-semibold text-gray-900 underline underline-offset-2 hover:text-gray-600">Belum Punya Akun?</a>
-                        </div>
+                        </div> -->
                         <div class="text-sm">
                             <a href="#" class="font-semibold text-gray-900 underline underline-offset-2 hover:text-gray-600">Ubah Password</a>
                         </div>
                     </div>
-                    <p class="mt-10 text-center text-xs font-normal text-gray-900">© PT. Sinergi Global Service 2024. All rights reserved.</p>
+                    <p class="mt-10 text-center align-text-bottom text-xs font-normal text-gray-900">© PT. Sinergi Global Service 2024. All rights reserved.</p>
                 </div>
             </div>
         </ion-content>
@@ -153,7 +153,7 @@ function redirectToHomePage() {
 
 async function login() {
   try {
-    const response = await axios.post(`${API_URL}/api/v1/auth/login`, {
+    const response = await axios.post(`${API_URL}/api/v2/auth/login`, {
       email: formData.value.email,
       password: formData.value.password,
     });
@@ -170,7 +170,7 @@ async function login() {
     console.log("Successfully logged in: ", response);
 
     const toast = await toastController.create({
-      message: "Login berhasil, selamat datang kembali...",
+      message: `${response.data.message}`,
       duration: 3000,
       position: "top",
       color: 'success',
@@ -180,8 +180,7 @@ async function login() {
 
     redirectToHomePage();
   } catch (error) {
-    console.log('Failed to logged in', error.message);
-    throw new Error('Failed to logged in', error.message);
+    console.error('Failed to logged in: ', error);
   }
 }
 </script>

@@ -10,7 +10,7 @@ async function refreshAccessToken(refreshToken) {
     const API_URL = `${import.meta.env.VITE_API_HOST}:${parseInt(import.meta.env.VITE_API_PORT)}`;
 
     try {
-        const response = await axios.post(`${API_URL}/api/v1/auth/refresh`, {
+        const response = await axios.post(`${API_URL}/api/v2/auth/refresh`, {
             refresh_token: refreshToken
         });
 

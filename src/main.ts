@@ -98,8 +98,12 @@ const app = createApp(App)
 // provide all global properties
 app.config.globalProperties.$axios = axios;
 
-app.config.errorHandler = function (err, vm, info) {
+app.config.errorHandler = function (err, instance, info) {
   presentErrorMessageToast(info, 3000);
+
+  console.error("Error: ", err);
+  console.log("Vue Instance: ", instance);
+  console.log("Info", info);
 }
 
 // ionic components

@@ -129,7 +129,7 @@ async function fetchAuthUser() {
       'Authorization': `Bearer ${tokens.access_token}`,
     };
 
-    const response = await axios.get(`${API_URL}/api/v1/auth/me`, { headers: headers })
+    const response = await axios.get(`${API_URL}/api/v2/auth/me`, { headers: headers })
 
     const authUserData = response.data.resource.data;
 
@@ -141,8 +141,10 @@ async function fetchAuthUser() {
 }
 
 onMounted(() => {
+  refreshAccessTokenHandler();
   fetchAuthUser();
-})
+});
+
 </script>
 
 <style scoped>

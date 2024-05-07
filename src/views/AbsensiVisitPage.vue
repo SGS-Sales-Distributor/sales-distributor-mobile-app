@@ -3,7 +3,7 @@
     <ion-content :fullscreen="true">
 
       <!-- Modal -->
-      <ion-modal :is-open="isOpen">
+      <!-- <ion-modal :is-open="isOpen">
         <ion-header>
           <ion-toolbar>
             <ion-title>Link URL Gambar</ion-title>
@@ -15,7 +15,7 @@
         <ion-content class="ion-padding">
           <p style="user-select: all;">{{ imageUrl }}</p>
         </ion-content>
-      </ion-modal>
+      </ion-modal> -->
       <!-- End of Modal -->
 
       <!-- Header -->
@@ -86,6 +86,18 @@
                 <span class="font-medium text-gray-900">
                   Data dari toko <span class="font-bold">{{ detailStoreInfoDistri.nama_toko }}</span> secara detail.
                 </span>
+              </ion-card-subtitle>
+              <ion-card-subtitle>
+                <!-- <td class="px-6 py-4 font-medium text-gray-900 whitespace-nowrap">
+                          <router-link :to="{ name: 'storeDetail', params: { id: store.store_id } }">
+                            <span class="underline underline-offset-2 font-normal transition-all hover:text-blue-500 hover:font-normal">{{ store.store_name }}</span>
+                          </router-link>
+                        </td> -->
+                <router-link :to="{ name: 'storeDetail', params: { id: detailStoreInfoDistri.id_toko } }">
+                  <ion-button :disabled="disabledPurchaseOrderBtn">
+                    Purchase Order
+                  </ion-button>
+                </router-link>
               </ion-card-subtitle>
             </ion-card-header>
         
@@ -212,6 +224,9 @@
                             Nama Toko
                         </th>
                         <th scope="col" class="px-6 py-3 whitespace-nowrap">
+                            Nama Owner
+                        </th>
+                        <th scope="col" class="px-6 py-3 whitespace-nowrap">
                           Tanggal Visit
                         </th>
                         <th scope="col" class="px-6 py-3 whitespace-nowrap">
@@ -230,16 +245,14 @@
                         <th scope="row" class="px-6 py-4 font-bold text-gray-900 whitespace-nowrap">
                             {{ index+1 }}
                         </th>
-                        <!-- <td class="px-6 py-4 font-medium text-gray-900 whitespace-nowrap">
-                          <router-link :to="{ name: 'storeDetail', params: { id: store.store_id } }">
-                            <span class="underline underline-offset-2 font-normal transition-all hover:text-blue-500 hover:font-normal">{{ store.store_name }}</span>
-                          </router-link>
-                        </td> -->
                         <td class="px-6 py-4">
-                          <button @click="fetchOneStoreData(store.id_toko)">
-                            <span class="text-gray-900 font-medium whitespace-nowrap underline underline-offset-1 transition-all hover:text-blue-500 hover:font-normal">{{ store.nama_toko }}</span>
+                          <button id="nama-toko-btn" @click="fetchOneStoreData(store.store_id)">
+                            <span class="text-gray-900 font-medium whitespace-nowrap underline underline-offset-1 transition-all hover:text-blue-500 hover:font-normal">{{ store.store_name }}</span>
                           </button>
                         </td>
+                        <td class="px-6 py-4">
+                          <span>{{ store.owners.owner }}</span>
+                        </td> 
                         <td v-if="store.tanggal_visit" class="px-6 py-4 font-medium text-gray-900 whitespace-nowrap">
                           {{ new Date(store.tanggal_visit).toLocaleDateString('id-ID', {
                             year: 'numeric',
@@ -305,25 +318,24 @@ import { toastController } from '@ionic/vue';
 // import router from '@/router';
 
 const isLocationPermissionAllowed = ref(false);
-const isOpen = ref(false);
-const setOpen = (open) => {
-  isOpen.value = open;
-};
+// const isOpen = ref(false);
+// const setOpen = (open) => {
+//   isOpen.value = open;
+// };
 const mapContainer = shallowRef(null);
 const user = JSON.parse(localStorage.getItem("user"));
 const renderModCheckInBtn = ref(false);
 const renderModeCheckOutBtn = ref(false);
-// const disabledSelectStoreBtn = ref(false);
 const disabledCheckIn = ref(true);
 const disabledCheckOut = ref(true);
+const disabledPurchaseOrderBtn = ref(true);
 const currentAddress = ref('');
-const errorMessage = ref('');
 const storeInfoDistri = ref([]);
 const detailStoreInfoDistri = ref(null);
 const latitude = ref(0);
 const longitude = ref(0);
 const map = ref(null);
-const imageUrl = ref("");
+const imageUrl = shallowRef("");
 
 const API_URL = `${import.meta.env.VITE_API_HOST}:${parseInt(import.meta.env.VITE_API_PORT)}`;
 
@@ -390,10 +402,8 @@ async function checkLocationAccess() {
       }
     } else {
       console.warn('Geolocation not supported on web platform.');
-      errorMessage.value = 'Geolocation not supported on web platform.';
     }
   } catch (error) {
-    errorMessage.value = error.message;
     console.error(`Error checking location access: ${error.message}`);
   }
 }
@@ -441,21 +451,17 @@ async function fetchStoresData() {
     'Authorization': `Bearer ${tokens.access_token}`
   };
 
-  await axios.get(`${API_URL}/api/v1/stores`, {
-    headers: headers
-  })
-  .then((response) => {
+  try {
+    const response = await axios.get(`${API_URL}/api/v2/stores`, {
+      headers: headers
+    });
+
     storeInfoDistri.value = response.data.resource.data;
 
     console.log("Successfully fetch store data: ", storeInfoDistri.value);
-    return storeInfoDistri.value;
-  })
-  .catch((error) => {
-    errorMessage.value = error.message;
-
-    console.error(`Failed to fetch store data: ${error.message}`);
-    throw new Error(`Failed to fetch store data: ${error.message}`);
-  });
+  } catch (error) {
+    console.error('Failed to fetch store data: ', error);
+  }
 }
 
 async function fetchOneStoreData(id) {
@@ -470,21 +476,17 @@ async function fetchOneStoreData(id) {
     'Authorization': `Bearer ${tokens.access_token}`
   };
 
-  await axios.get(`${API_URL}/api/v1/stores/${id}`, {
-    headers: headers  
-  })
-  .then((response) => {
+  try {
+    const response = await axios.get(`${API_URL}/api/v2/stores/${id}`, {
+      headers: headers
+    });
+
     detailStoreInfoDistri.value = response.data.resource;
 
     console.log(`Successfully fetch store ${id}:`, detailStoreInfoDistri.value);
-    return detailStoreInfoDistri;
-  })
-  .catch((error) => {
-    errorMessage.value = error.message;
-
-    console.error(`Failed to fetch store ${id}: ${error.message}`);
-    throw new Error (`Failed to fetch store ${id}: ${error.message}`);
-  });
+  } catch (error) {
+    console.error(`Failed to fetch store ${id}: `, error);
+  }
 }
 
 async function saveCheckInImage() {
@@ -500,16 +502,20 @@ async function saveCheckInImage() {
     directory: Directory.Documents,
   });
 
+  console.log(user);
+
   await saveCheckInPicture(user.number, imageUrl.value);
 
   const toast = await toastController.create({
-    message: "Absen Check-In Berhasil! Lanjut Check-Out...",
+    message: "Absen Check-In Berhasil! Yuk Lakukan PO...",
     duration: 3000,
     position: "top",
     color: 'success',
   });
 
   await toast.present();
+
+  disabledPurchaseOrderBtn.value = false;
 
   disabledCheckIn.value = true;
 
@@ -535,23 +541,20 @@ async function saveCheckInPicture(userNumber, fileUrl) {
     'Authorization': `Bearer ${tokens.access_token}`
   };
 
-  await axios.post(`${API_URL}/api/v1/salesmen/${userNumber}/visits`, {
-    store_id: detailStoreInfoDistri.value.id_toko,
-    photo_visit: fileUrl,
-    lat_in: latitude.value,
-    long_in: longitude.value,
-  }, {
-    headers: headers
-  })
-  .then((response) => {
-    console.log(`Successfully store check in visit pictures: ${response}`);
-  })
-  .catch((error) => {
-    errorMessage.value = error.message;
+  try {
+    const response = await axios.post(`${API_URL}/api/v2/salesmen/${userNumber}/visits`, {
+      store_id: detailStoreInfoDistri.value.id_toko,
+      photo_visit: fileUrl,
+      lat_in: latitude.value,
+      long_in: longitude.value,
+    }, {
+      headers: headers
+    });
 
-    console.error(`Failed to store check in visit pictures: ${error}`);
-    throw new Error(`Failed to store check in visit pictures: ${error}`);
-  });
+    console.log(`Successfully store check in visit pictures: ${response}`);
+  } catch (error) {
+    console.error("Failed to store check in visit pictures: ", error); 
+  }
 }
 
 async function saveCheckOutImage() {
@@ -598,22 +601,19 @@ async function saveCheckOutPicture(userNumber, fileUrl) {
     'Authorization': `Bearer ${tokens.access_token}`
   };
 
-  await axios.put(`${API_URL}/api/v1/salesmen/${userNumber}/visits/${detailStoreInfoDistri.value.visit_id}`, {
-    photo_visit_out: fileUrl,
-    lat_out: latitude.value,
-    long_out: longitude.value,
-  }, {
-    headers: headers
-  })
-  .then((response) => {
-    console.log("Successfully store check out visit pictures: ", response);
-  })
-  .catch((error) => {
-    errorMessage.value = error.message;
+  try {
+    const response = await axios.put(`${API_URL}/api/v2/salesmen/${userNumber}/visits/${detailStoreInfoDistri.value.visit_id}`, {
+      photo_visit_out: fileUrl,
+      lat_out: latitude.value,
+      long_out: longitude.value,
+    }, {
+      headers: headers
+    });
 
-    console.log("Failed to store check out visit pictures: ", error);
-    throw new Error("Failed to store check out visit pictures: ", error);
-  });
+    console.log("Successfully store check out visit pictures: ", response);
+  } catch (error) {
+    console.error("Failed to store check out visit pictures: ", error);
+  }
 }
 
 async function takeCheckInPicture() {
@@ -629,22 +629,12 @@ async function takeCheckInPicture() {
       renderModCheckInBtn.value = true;
       imageUrl.value = image.webPath.toString();
       console.log(`Captured photo path: ${imageUrl.value}`);
-      
-      setTimeout(() => {
-        setOpen(true);
-      }, 1000);
 
     } else {
-      errorMessage.value = 'Failed to capture photo or image path is missing';
-
       console.error('Failed to capture photo or image path is missing');
-      throw new Error('Failed to capture photo or image path is missing');
     }
   } catch (error) {
-    errorMessage.value = error.message;
-
-    console.error(`Error when capturing photo: ${error.message}`);
-    throw new Error(`Error when capturing photo: ${error.message}`);
+    console.error('Error when capturing photo: ', error);
   }
 }
 
@@ -662,24 +652,14 @@ async function takeCheckOutPicture() {
       imageUrl.value = image.webPath.toString();
       console.log(`Captured photo path: ${imageUrl.value}`);
 
-      setTimeout(() => {
-        setOpen(true);
-      }, 1000);
-
       const previewPhoto = document.getElementById("preview-photo");
       previewPhoto.style.display = "block";
 
     } else {
-      errorMessage.value = 'Failed to capture photo or image path is missing';
-
       console.error('Failed to capture photo or image path is missing');
-      throw new Error('Failed to capture photo or image path is missing');
     }
   } catch (error) {
-      errorMessage.value = error.message;
-
-      console.error(`Error when capturing photo: ${error.message}`);
-      throw new Error(`Error when capturing photo: ${error.message}`);
+      console.error('Error when capturing photo: ', error);
   }      
 }
 
@@ -724,10 +704,7 @@ async function renderMap() {
     ])
     .addTo(map.value);
   } catch (error) {
-    errorMessage.value = error.message;
-
-    console.error(`Failed to render map: ${error.message}`);
-    throw new Error(`Failed to render map: ${error.message}`);
+    console.error('Failed to render map: ', error);
   }
 }
 
@@ -744,16 +721,15 @@ async function renderPositionToAddress() {
 
     currentAddress.value = data.display_name;
 
-    console.log(currentAddress.value);
+    console.log("Successfully fetch current address: ", currentAddress.value);
   } catch (error) {
-    errorMessage.value = error.message;
     
-    console.error(`Error when getting address: ${error.message}`);
-    throw new Error(`Error when getting address: ${error.message}`);
+    console.error('Error when getting address: ', error);
   }
 }
 
 onMounted(() => {
+  refreshToken();
   fetchStoresData();
   renderMap();
   renderPositionToAddress();
@@ -787,8 +763,8 @@ ion-modal ion-toolbar {
   position: relative;
   width: 100%;
   height: calc(
-    100vh - 77px
-  ); /* calculate height of the screen minus the heading */
+    110vh - 420px
+  );
 }
 
 .map {
