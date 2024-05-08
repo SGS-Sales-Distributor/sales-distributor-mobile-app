@@ -42,7 +42,8 @@ import {
   IonModal,
   IonInfiniteScroll,
   IonProgressBar,
-  IonBadge
+  IonBadge,
+  IonInput
 } from '@ionic/vue';
 
 /* Core CSS required for Ionic components to work properly */
@@ -76,7 +77,6 @@ import '@ionic/vue/css/display.css';
 import './theme/variables.css';
 
 import './tailwind.css';
-import axios from 'axios';
 import { ErrorMessage, Field, Form } from 'vee-validate';
 import { catchToastError } from '@/services/toastHandler';
 
@@ -127,6 +127,7 @@ app.component('ion-tabs', IonTabs);
 app.component('ion-router-outlet', IonRouterOutlet);
 app.component('ion-menu', IonMenu);
 app.component('ion-img', IonImg);
+app.component('ion-input', IonInput);
 app.component('ion-infinite-scroll', IonInfiniteScroll);
 app.component('ion-progress-bar', IonProgressBar);
 app.component('ion-badge', IonBadge);

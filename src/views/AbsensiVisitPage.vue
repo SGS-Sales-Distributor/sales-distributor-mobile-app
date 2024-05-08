@@ -48,7 +48,7 @@
       <div class="flex min-h-full flex-col p-6">
         <!-- Card Header -->
         <ion-card-header>
-          <div v-if="checkLocationAccess && statusGPS" class="flex flex-col items-center justify-center pb-3"
+          <div v-if="checkLocationAccess" class="flex flex-col items-center justify-center pb-3"
             id="geo-address">
             <ion-card-subtitle class="text-md text-gray-900 font-bold pb-2 text-center">Lokasi Anda
               Terkini</ion-card-subtitle>
@@ -249,7 +249,7 @@
               <thead class="text-xs text-gray-50 font-bold uppercase bg-blue-400">
                 <tr>
                   <th scope="col" class="px-6 py-3 whitespace-nowrap">
-                    ID
+                    No.
                   </th>
                   <th scope="col" class="px-6 py-3 whitespace-nowrap">
                     Aksi
@@ -271,7 +271,7 @@
                   </th>
                 </tr>
               </thead>
-              <tbody v-if="storeInfoDistri.length > 0 && statusGPS">
+              <tbody>
                 <tr v-for="(store, index) in storeInfoDistri" :key="index + 1"
                   class="odd:bg-sky-50 even:bg-blue-100 border-b border-gray-100 hover:bg-gray-50 transition-all">
                   <th scope="row" class="px-6 py-4 font-bold text-gray-900 whitespace-nowrap">
@@ -279,7 +279,7 @@
                   </th>
                   <td class="px-6 py-4">
 
-                    <ion-button :disabled="store.disabledAbsenBtn" @click="fetchOneStoreData(store.store_id)"
+                    <ion-button :disabled="store.statusx" @click="fetchOneStoreData(store.store_id)"
                       id="check-in-button" size="small">
                       <ion-icon slot="start" :icon="camera"></ion-icon>
                       Absen
@@ -287,7 +287,7 @@
                     </ion-button>
 
                     <router-link :to="{ name: 'storeDetail', params: { id: store.store_id } }">
-                      <ion-button :disabled="store.disabledPurchaseOrderBtn" size="small">
+                      <ion-button :disabled="store.statusy" size="small">
                         <ion-icon slot="start" :icon="documentAttach"></ion-icon>
                         Purchase Order
                         <!-- <img src="/public/icons8-purchase-50.png" alt="Sinergi Global Service" /> -->
@@ -377,6 +377,7 @@ const renderModCheckInBtn = ref(false);
 const renderModeCheckOutBtn = ref(false);
 const disabledCheckIn = ref(true);
 const disabledCheckOut = ref(true);
+const disabledAbsenBtn = ref(true);
 const disabledPurchaseOrderBtn = ref(true);
 const currentAddress = ref('');
 const storeInfoDistri = ref([]);
@@ -388,7 +389,6 @@ const imageUrl = shallowRef("");
 const lokasi_gambar2 = ref(null);
 const loading = ref(null);
 const statusGPS = ref(false);
-const enabledFirstAbsenBtn = ref(false);
 
 const API_URL = `${import.meta.env.VITE_API_HOST}:${parseInt(import.meta.env.VITE_API_PORT)}`;
 
@@ -567,55 +567,34 @@ async function fetchStoresData() {
     });
 
     storeInfoDistri.value = response.data.resource.data;
+    console.log(storeInfoDistri.value);
 
+    
+    let bisa_absen = true;
     Object.keys(storeInfoDistri.value).forEach(key => {
       const value = storeInfoDistri.value[key];
 
-      if (!enabledFirstAbsenBtn.value) {
-        // Enable first Absen button for the first row
-        value.disabledAbsenBtn = false;
 
-        enabledFirstAbsenBtn.value = true;
-      } else {
-        // Disable Absen button for subsequent rows
-        value.disabledAbsenBtn = true;
+        if (bisa_absen && (value.waktu_keluar == null || value.waktu_masuk == null) ){
+          value.statusx = false;
+          bisa_absen = false
+        } else {
+          value.statusx = true;
+        }
+
+        if ( value.waktu_masuk != null )
+        {
+          value.statusy = false;
+        }else{
+          value.statusy = true;
+        }
+      
+
+      if (!statusGPS.value) {
+        value.statusy = true;
+        value.statusx = true;
       }
-
-      // Disable Purchase Order button if waktu_masuk is null
-      value.disabledPurchaseOrderBtn = value.waktu_masuk === null;
-
-      // Disable buttons if GPS status is true
-      // if (statusGPS.value) {
-      //   value.disabledAbsenBtn = true;
-      //   value.disabledPurchaseOrderBtn = true;
-      // }
     });
-    // Object.keys(storeInfoDistri.value).forEach(key => {
-    //   const value = storeInfoDistri.value[key];
-
-    //   if (enableFirstAbsenBtn.value) {
-    //     if (!value.waktu_keluar && !value.waktu_masuk) {
-    //       value.statusx = false;
-    //       enableFirstAbsenBtn.value = true;
-    //     } else {
-    //       value.statusx = true;
-    //     }
-    //   } else {
-    //     value.statusx = true;
-    //   }
-
-    //   if (!value.waktu_masuk) {
-    //     value.statusy = true;
-    //     enableFirstAbsenBtn.value = true;
-    //   } else {
-    //     value.statusy = false;
-    //   }
-
-    //   if (statusGPS.value) {
-    //     value.statusy = true;
-    //     value.statusx = true;
-    //   }
-    // });
 
     stopLoading();
 
