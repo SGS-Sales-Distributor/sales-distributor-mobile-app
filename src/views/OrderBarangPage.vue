@@ -35,7 +35,7 @@
                 </ion-item-divider>
           
                 <ion-item>
-                    <ion-grid class="bg-gray-500">
+                    <ion-grid>
                         <ion-row>
                           <ion-col size="6" size-md="4" size-lg="2">{{ product.prod_number }}</ion-col>
                           <ion-col size="6" size-md="4" size-lg="2">{{ product.prod_name }}</ion-col>
@@ -156,9 +156,9 @@ onMounted(() => {
 
 <style>
 ion-col {
-    background-color: rgb(118, 169, 250);
+    background-color: rgb(244, 248, 255);
     border: solid 1px #fff;
-    color: #fff;
+    color: black;
     text-align: center;
 }
 </style>

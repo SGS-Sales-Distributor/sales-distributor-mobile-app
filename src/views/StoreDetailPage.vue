@@ -141,28 +141,32 @@
 					<!-- End of Detail Store Card -->
 
 					<div class="flex justify-between items-center mb-2">
-						<button
-						@click="goToOrder" 
-						data-modal-target="large-modal" 
-						data-modal-toggle="large-modal" 
-						class="block w-full md:w-auto text-white bg-blue-400 hover:bg-blue-500 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800" type="button">
+						<button @click="goToOrder" data-modal-target="large-modal" data-modal-toggle="large-modal"
+							class="block w-full md:w-auto text-white bg-blue-400 hover:bg-blue-500 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800"
+							type="button">
 							Tambah Order
 						</button>
 					</div>
 
 					<!-- Large Modal -->
-					<div id="large-modal" tabindex="-1" class="fixed top-0 left-0 right-0 z-50 hidden w-full p-4 overflow-x-hidden overflow-y-auto md:inset-0 h-[calc(100%-1rem)] max-h-full">
+					<div id="large-modal" tabindex="-1"
+						class="fixed top-0 left-0 right-0 z-50 hidden w-full p-4 overflow-x-hidden overflow-y-auto md:inset-0 h-[calc(100%-1rem)] max-h-full">
 						<div class="relative w-full max-w-4xl max-h-full">
 							<!-- Modal content -->
 							<div class="relative bg-white rounded-lg shadow dark:bg-gray-700">
 								<!-- Modal header -->
-								<div class="flex items-center justify-between p-4 md:p-5 border-b rounded-t dark:border-gray-600">
+								<div
+									class="flex items-center justify-between p-4 md:p-5 border-b rounded-t dark:border-gray-600">
 									<h3 class="text-xl font-medium text-gray-900 dark:text-white">
 										Large modal
 									</h3>
-									<button type="button" class="text-gray-400 bg-transparent hover:bg-gray-200 hover:text-gray-900 rounded-lg text-sm w-8 h-8 ms-auto inline-flex justify-center items-center dark:hover:bg-gray-600 dark:hover:text-white" data-modal-hide="large-modal">
-										<svg class="w-3 h-3" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 14 14">
-											<path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="m1 1 6 6m0 0 6 6M7 7l6-6M7 7l-6 6"/>
+									<button type="button"
+										class="text-gray-400 bg-transparent hover:bg-gray-200 hover:text-gray-900 rounded-lg text-sm w-8 h-8 ms-auto inline-flex justify-center items-center dark:hover:bg-gray-600 dark:hover:text-white"
+										data-modal-hide="large-modal">
+										<svg class="w-3 h-3" aria-hidden="true" xmlns="http://www.w3.org/2000/svg"
+											fill="none" viewBox="0 0 14 14">
+											<path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"
+												stroke-width="2" d="m1 1 6 6m0 0 6 6M7 7l6-6M7 7l-6 6" />
 										</svg>
 										<span class="sr-only">Close modal</span>
 									</button>
@@ -170,22 +174,99 @@
 								<!-- Modal body -->
 								<div class="p-4 md:p-5 space-y-4">
 									<p class="text-base leading-relaxed text-gray-500 dark:text-gray-400">
-										With less than a month to go before the European Union enacts new consumer privacy laws for its citizens, companies around the world are updating their terms of service agreements to comply.
+										With less than a month to go before the European Union enacts new consumer
+										privacy laws for its citizens, companies around the world are updating their
+										terms of service agreements to comply.
 									</p>
 									<p class="text-base leading-relaxed text-gray-500 dark:text-gray-400">
-										The European Union’s General Data Protection Regulation (G.D.P.R.) goes into effect on May 25 and is meant to ensure a common set of data rights in the European Union. It requires organizations to notify users as soon as possible of high-risk data breaches that could personally affect them.
+										The European Union’s General Data Protection Regulation (G.D.P.R.) goes into
+										effect on May 25 and is meant to ensure a common set of data rights in the
+										European Union. It requires organizations to notify users as soon as possible of
+										high-risk data breaches that could personally affect them.
 									</p>
 								</div>
 								<!-- Modal footer -->
-								<div class="flex items-center p-4 md:p-5 space-x-3 rtl:space-x-reverse border-t border-gray-200 rounded-b dark:border-gray-600">
-									<button data-modal-hide="large-modal" type="button" class="text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800">I accept</button>
-									<button data-modal-hide="large-modal" type="button" class="py-2.5 px-5 ms-3 text-sm font-medium text-gray-900 focus:outline-none bg-white rounded-lg border border-gray-200 hover:bg-gray-100 hover:text-blue-700 focus:z-10 focus:ring-4 focus:ring-gray-100 dark:focus:ring-gray-700 dark:bg-gray-800 dark:text-gray-400 dark:border-gray-600 dark:hover:text-white dark:hover:bg-gray-700">Decline</button>
+								<div
+									class="flex items-center p-4 md:p-5 space-x-3 rtl:space-x-reverse border-t border-gray-200 rounded-b dark:border-gray-600">
+									<button data-modal-hide="large-modal" type="button"
+										class="text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800">I
+										accept</button>
+									<button data-modal-hide="large-modal" type="button"
+										class="py-2.5 px-5 ms-3 text-sm font-medium text-gray-900 focus:outline-none bg-white rounded-lg border border-gray-200 hover:bg-gray-100 hover:text-blue-700 focus:z-10 focus:ring-4 focus:ring-gray-100 dark:focus:ring-gray-700 dark:bg-gray-800 dark:text-gray-400 dark:border-gray-600 dark:hover:text-white dark:hover:bg-gray-700">Decline</button>
 								</div>
 							</div>
 						</div>
 					</div>
-					<h6 class="text-center font-bold mb-4">Daftar Order</h6>
-					<div class="relative overflow-x-auto shadow-lg shadow-gray-300 rounded-lg">
+					<h6 class="text-center font-bold py-4">Daftar Order</h6>
+					<ion-item-group v-for="(order, index) in objOrder" :key="index + 1">
+						<ion-item-divider>
+							<ion-label>{{ index + 1 }}</ion-label>
+						</ion-item-divider>
+
+						<ion-item>
+							<ion-grid>
+								<ion-row>
+									<ion-col size="6" size-md="4" size-lg="2" style="text-align: left;">Kode
+										Produk</ion-col>
+									<ion-col size="6" size-md="4" size-lg="2" style="text-align: right;">{{
+										order.prodNumber }}</ion-col>
+									<ion-col size="6" size-md="4" size-lg="2" style="text-align: left;">Nama
+										Produk</ion-col>
+									<ion-col size="6" size-md="4" size-lg="2" style="text-align: right;">{{
+										order.prodName }}</ion-col>
+									<ion-col size="6" size-md="4" size-lg="2" style="text-align: left;">Stock</ion-col>
+									<ion-col size="6" size-md="4" size-lg="2" style="text-align: right;">{{ order.stock
+										}}</ion-col>
+									<ion-col size="6" size-md="4" size-lg="2"
+										style="text-align: left;">Quantity</ion-col>
+									<ion-col size="6" size-md="4" size-lg="2" style="text-align: right;">
+										<ion-button size="small" @click="minusOrder(index, 0)">
+											<ion-icon slot="icon-only" :icon="removeOutline"></ion-icon>
+										</ion-button>
+										<input id="orderInput" :value="order.qty" type="number" pattern="[0-9]" size="2"
+											min="0" :max="order.stock" readonly />
+										<ion-button size="small" @click="plusOrder(index, order.stock)">
+											<ion-icon slot="icon-only" :icon="addOutline"></ion-icon>
+										</ion-button>
+									</ion-col>
+									<ion-col size="6" size-md="4" size-lg="2" style="text-align: left;">Aksi</ion-col>
+									<ion-col size="6" size-md="4" size-lg="2" style="text-align: right;">
+										<ion-button color="danger" @click="hapusOrder(index)">Hapus</ion-button>
+									</ion-col>
+								</ion-row>
+							</ion-grid>
+						</ion-item>
+
+					</ion-item-group>
+
+					<div class="flex justify-between items-center py-4" v-if="objOrder.length">
+						<button @click="setOpen(true)" data-modal-target="large-modal" data-modal-toggle="large-modal"
+							class="block w-full md:w-auto text-white bg-green-400 hover:bg-green-500 focus:ring-4 focus:outline-none font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800"
+							type="button">
+							Konfirmasi OTP
+						</button>
+					</div>
+
+					<ion-modal :is-open="isOpen">
+						<ion-header>
+							<ion-toolbar>
+								<ion-title>OTP Whatsapp</ion-title>
+								<ion-buttons slot="end">
+									<ion-button @click="setOpen(false)">Close</ion-button>
+								</ion-buttons>
+							</ion-toolbar>
+						</ion-header>
+						<ion-content class="ion-padding">
+							<p>
+								Lorem ipsum dolor sit amet consectetur adipisicing elit. Magni illum quidem recusandae
+								ducimus quos
+								reprehenderit. Veniam, molestias quos, dolorum consequuntur nisi deserunt omnis id illo
+								sit cum qui. Eaque,
+								dicta.
+							</p>
+						</ion-content>
+					</ion-modal>
+					<!-- <div class="relative overflow-x-auto shadow-lg shadow-gray-300 rounded-lg">
 						<table class="w-full text-sm text-center rtl:text-right text-gray-500">
 							<thead class="text-xs text-gray-50 font-bold uppercase bg-blue-400">
 								<tr>
@@ -234,16 +315,8 @@
 										<ion-button size="small" @click="minusOrder(index, 0)">
 											<ion-icon slot="icon-only" :icon="removeOutline"></ion-icon>
 										</ion-button>
-										<input
-										id="orderInput"
-										:value="order.qty"
-										type="number"
-										pattern="[0-9]"
-										style="width: 8em"
-										min="0"
-										:max="order.stock"
-										readonly
-										/>
+										<input id="orderInput" :value="order.qty" type="number" pattern="[0-9]"
+											style="width: 8em" min="0" :max="order.stock" readonly />
 										<ion-button size="small" @click="plusOrder(index, order.stock)">
 											<ion-icon slot="icon-only" :icon="addOutline"></ion-icon>
 										</ion-button>
@@ -254,8 +327,8 @@
 								</tr>
 							</tbody>
 						</table>
-					</div>
-				</div>	
+					</div> -->
+				</div>
 			</div>
 		</ion-content>
 	</ion-page>
@@ -278,6 +351,11 @@ import { objOrder } from '@/services/globalVariables';
 const route = useRoute();
 const renderLoading = ref(null);
 
+const isOpen = ref(false);
+
+const setOpen = (open) => (isOpen.value = open);
+
+
 const storeData = ref(null);
 const storeId = ref(route.params.id);
 const productsData = ref([]);
@@ -291,9 +369,13 @@ function minusOrder(index, min) {
 
 	if (objOrder.value[index].qty < min) {
 		catchToastError("Tidak boleh order kurang dari 0", 3000);
-		
+
 		objOrder.value[index].qty = min;
 	}
+}
+
+function konfirmasiOrder() {
+
 }
 
 function plusOrder(index, maks) {
@@ -318,7 +400,7 @@ function goBack() {
 
 function goToOrder() {
 	setTimeout(() => {
-		router.push({ name: 'orderBarang', params: { id: storeId.value}});
+		router.push({ name: 'orderBarang', params: { id: storeId.value } });
 	}, 100);
 }
 
@@ -330,18 +412,18 @@ function disableTypeInputNumber() {
 }
 
 function presentLoading() {
-  renderLoading.value = loadingController.create({
-      message: "Loading...",
-    })
-    .then((a) => a.present());
-  
-    return renderLoading.value;
+	renderLoading.value = loadingController.create({
+		message: "Loading...",
+	})
+		.then((a) => a.present());
+
+	return renderLoading.value;
 }
 
 function stopLoading() {
-  setTimeout(() => {
-    loadingController.dismiss();
-  }, 100);
+	setTimeout(() => {
+		loadingController.dismiss();
+	}, 100);
 }
 
 async function fetchStoreDetailData(id) {
@@ -389,7 +471,7 @@ async function fetchProductsData(query = '') {
 		});
 
 		productsData.value = response.data.resource.data;
-		
+
 		console.log("Success fetch products data: ", response);
 	} catch (error) {
 		catchToastError(error.message, 3000);
@@ -403,3 +485,12 @@ onMounted(() => {
 	fetchProductsData();
 });
 </script>
+
+<style>
+ion-col {
+	background-color: rgb(244, 248, 255);
+	border: solid 1px #fff;
+	color: #fff;
+	text-align: center;
+}
+</style>
