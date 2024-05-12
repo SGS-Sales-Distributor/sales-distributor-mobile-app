@@ -1,74 +1,14 @@
 <template>
   <ion-page>
     <ion-content :fullscreen="true">
-
       <!-- Header -->
-      <header class="bg-blue-500 p-6 rounded-b-3xl">
-        <div class="flex justify-between">
-          <div>
-            <a href="/home" class="flex items-center space-x-3 rtl:space-x-reverse">
-              <img src="/public/1630597076257.jpeg" class="h-12 rounded-full" alt="Sinergi Global Service" />
-              <span class="self-center text-md font-semibold whitespace-nowrap dark:text-white">PT. Sinergi Global Service</span>
-            </a>
-          </div>          
-          <div>
-            <button type="button" class="relative inline-flex items-center p-2 text-sm font-medium text-center text-white bg-blue-700 rounded-lg hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 dark:hover:bg-blue-700 dark:focus:ring-blue-800">
-              <icon-button>
-                <ion-icon class="text-2xl" :icon="notificationsOutline"></ion-icon>
-              </icon-button>
-              <span class="sr-only">Notifications</span>
-                <div class="absolute inline-flex items-center justify-center w-6 h-6 text-xs font-bold text-white bg-red-500 border-0 border-white rounded-full -top-2 -end-2">20</div>
-            </button>
-          </div>
-        </div>
-      </header>
+      <HeaderSection />      
       <!-- End of header -->
       
       <div class="flex min-h-full flex-col justify-start px-4 py-8">
-        <!-- Main feature -->
-        <div class="grid grid-cols-4 gap-6 text-center">
-          <div>
-            <div class="flex flex-col items-center justify-center space-y-2">
-              <ion-button id="absensi-button" href="/absensi">
-                <ion-icon class="text-2xl" :icon="cameraOutline"></ion-icon>
-              </ion-button>
-              <ion-label class="text-sm font-semibold">Absensi Visit</ion-label>
-            </div>
-          </div>
-          <div>
-            <div class="flex flex-col items-center justify-center space-y-2">
-              <ion-button id="registrasi-toko-button" color="success">
-                <ion-icon class="text-2xl" :icon="storefrontOutline"></ion-icon>
-              </ion-button>
-              <ion-label class="text-sm font-semibold">Registrasi Toko</ion-label>
-            </div>
-          </div>
-          <div>
-            <div class="flex flex-col items-center justify-center space-y-2">
-              <ion-button id="katalog-produk-button" color="secondary">
-                <ion-icon class="text-2xl" :icon="cubeOutline"></ion-icon>
-              </ion-button>
-              <ion-label class="text-sm font-semibold">Katalog Produk</ion-label>
-            </div>
-          </div>
-          <div>
-            <div class="flex flex-col items-center justify-center space-y-2">
-              <ion-button id="purchase-order-button" color="tertiary">
-                <ion-icon class="text-2xl" :icon="basketOutline"></ion-icon>
-              </ion-button>
-              <ion-label class="text-sm font-semibold">Purchase Order</ion-label>
-            </div>
-          </div>
-          <div>
-            <div class="flex flex-col items-center justify-center space-y-2">
-              <ion-button color="warning" id="achievement-button">
-                <ion-icon class="text-2xl" :icon="trophyOutline"></ion-icon>
-              </ion-button>
-              <ion-label class="text-sm font-semibold">Achievement</ion-label>
-            </div>
-          </div>
-        </div>
-        <!-- End main feature -->
+        <!-- Feature Section -->
+        <FeatureSection />
+        <!-- End of Feature Section -->
 
         <!-- Swipe to right and left -->
         <div class="py-6">
@@ -95,41 +35,37 @@
 </template>
 
 <script setup>
-import { 
-  cameraOutline, 
-  storefrontOutline, 
-  basketOutline,
-  trophyOutline,
-  notificationsOutline,
-  cubeOutline,
-} from 'ionicons/icons';
+import FeatureSection from './../components/home/FeatureSection.vue'
+import HeaderSection from '../components/HeaderSection.vue'
 import { refreshAccessTokenHandler } from '@/services/auth.js';
 import { onMounted } from 'vue';
-import { catchToastError } from '@/services/toastHandler';
+import { catchToastError } from '@/services/toastHandlers';
 import axios from 'axios';
 import { API_URL } from '@/services/globalVariables';
 
 async function fetchAuthUser() {
+  refreshAccessTokenHandler();
+  
+  const tokens = localStorage.getItem("tokens") ? JSON.parse(localStorage.getItem("tokens")) : null;
+
+  if (!tokens) {
+    console.error('Access Token and Refresh Token not found.');
+    return;
+  }
+
+  const headers = {
+    'Content-Type': 'application/json',
+    'Authorization': `Bearer ${tokens.access_token}`
+  };
+    
   try {
-    refreshAccessTokenHandler();
-
-    const tokens = localStorage.getItem("tokens") ? JSON.parse(localStorage.getItem("tokens")) : null;
-
-    if (!tokens) {
-      console.error('Access Token and Refresh Token not found.');
-      return;
-    }
-
-    const headers = {
-      'Content-Type': 'application/json',
-      'Authorization': `Bearer ${tokens.access_token}`,
-    };
-
     const response = await axios.get(`${API_URL.value}/api/v2/auth/me`, { headers: headers })
 
     const authUserData = response.data.resource.data;
 
     localStorage.setItem("user", JSON.stringify(authUserData));
+
+    console.log(JSON.parse(localStorage.getItem("user")));
   } catch (error) {
       catchToastError(error.message);
       

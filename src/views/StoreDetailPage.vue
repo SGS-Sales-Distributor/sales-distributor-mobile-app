@@ -13,7 +13,7 @@
 					</div>
 					<div class="flex items-center justify-center">
 						<h2 class="text-center" v-if="storeData">
-							Dari toko <span class="font-semibold">{{ storeData.nama_toko }}</span>
+							Toko <span class="font-semibold">{{ storeData.nama_toko }}</span>
 						</h2>
 					</div>
 					<div class="text-md">
@@ -41,14 +41,6 @@
 									<ion-card-title>
 										<span class="font-bold text-gray-900 text-2xl">Data Detail Toko</span>
 									</ion-card-title>
-									<button id="close-btn" @click="closeButtonHandler"
-										class="text-gray-900 hover:text-gray-700 transition-all">
-										<svg xmlns="http://www.w3.org/2000/svg" width="20" height="20"
-											fill="currentColor" class="bi bi-x-lg" viewBox="0 0 16 16">
-											<path
-												d="M2.146 2.854a.5.5 0 1 1 .708-.708L8 7.293l5.146-5.147a.5.5 0 0 1 .708.708L8.707 8l5.147 5.146a.5.5 0 0 1-.708.708L8 8.707l-5.146 5.147a.5.5 0 0 1-.708-.708L7.293 8z" />
-										</svg>
-									</button>
 								</div>
 								<ion-card-subtitle>
 									<span class="font-medium text-gray-900">
@@ -197,7 +189,7 @@
 							</div>
 						</div>
 					</div>
-					<h6 class="text-center font-bold py-4">Daftar Order</h6>
+					<h6 v-if="objOrder.length > 0" class="text-center font-bold py-4">Daftar Order</h6>
 					<ion-item-group v-for="(order, index) in objOrder" :key="index + 1">
 						<ion-item-divider>
 							<ion-label>{{ index + 1 }}</ion-label>
@@ -239,6 +231,11 @@
 
 					</ion-item-group>
 
+					<ion-select v-if="objOrder.length > 0" @ionChange="handleChange($event)" label="Metode Pembayaran" placeholder="Pilih" value="Tunai">
+						<ion-select-option value="Tunai">Tunai</ion-select-option>
+						<ion-select-option value="Transfer">Transfer</ion-select-option>
+					</ion-select>
+
 					<div class="flex justify-between items-center py-4" v-if="objOrder.length">
 						<button @click="setOpen(true)" data-modal-target="large-modal" data-modal-toggle="large-modal"
 							class="block w-full md:w-auto text-white bg-green-400 hover:bg-green-500 focus:ring-4 focus:outline-none font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800"
@@ -256,14 +253,99 @@
 								</ion-buttons>
 							</ion-toolbar>
 						</ion-header>
-						<ion-content class="ion-padding">
-							<p>
-								Lorem ipsum dolor sit amet consectetur adipisicing elit. Magni illum quidem recusandae
-								ducimus quos
-								reprehenderit. Veniam, molestias quos, dolorum consequuntur nisi deserunt omnis id illo
-								sit cum qui. Eaque,
-								dicta.
-							</p>
+						<ion-content>
+							<div v-if="flagOTP"
+								class="relative flex min-h-screen flex-col justify-center overflow-hidden">
+								<div
+									class="relative bg-white px-6 mx-auto w-full max-w-lg rounded-2xl">
+									<div class="mx-auto flex w-full max-w-md flex-col space-y-16">
+										<div class="flex flex-col items-center justify-center text-center space-y-2">
+											<img src="/public/3d-mobile-phone-with-security-code-padlock.jpg" alt="OTP Images">
+											<div class="font-semibold text-3xl">
+												<p>Kirim OTP Whatsapp</p>
+											</div>
+											<div class="flex flex-row text-sm font-medium text-gray-400">
+												<p>Kami akan mengirimkan kode OTP ke nomor <br />{{ nomorWhatsappOTP }}</p>
+											</div>
+										</div>
+										<div class="flex flex-col space-y-5">
+											<div>
+												<button @click="kirimOTP(nomorWhatsappOTP)"
+													class="flex flex-row items-center justify-center text-center w-full border rounded-xl outline-none py-5 bg-blue-700 border-none text-white text-sm shadow-sm">
+													Kirim OTP
+												</button>
+											</div>
+										</div>
+									</div>
+								</div>
+							</div>
+							<div v-if="!flagOTP"
+								class="relative flex min-h-screen flex-col justify-center overflow-hidden bg-gray-50 py-12">
+								<div
+									class="relative bg-white px-6 pt-10 pb-9 shadow-xl mx-auto w-full max-w-lg rounded-2xl">
+									<div class="mx-auto flex w-full max-w-md flex-col space-y-16">
+										<div class="flex flex-col items-center justify-center text-center space-y-2">
+											<div class="font-semibold text-3xl">
+												<p>Verifikasi OTP Whatsapp</p>
+											</div>
+											<div class="flex flex-row text-sm font-medium text-gray-400">
+												<p>Kami telah mengirim kode OTP ke nomor {{ nomorWhatsappOTP }}</p>
+											</div>
+										</div>
+
+										<div>
+											
+												<div class="flex flex-col space-y-16">
+													<div
+														class="flex flex-row items-center justify-between mx-auto w-full max-w-xs">
+														<div class="w-16 h-16 ">
+															<input
+																v-model="satu"
+																class="w-full h-full flex flex-col items-center justify-center text-center px-5 outline-none rounded-xl border border-gray-200 text-lg bg-white focus:bg-gray-50 focus:ring-1 ring-blue-700"
+																type="text" name="" id="">
+														</div>
+														<div class="w-16 h-16 ">
+															<input
+																v-model="dua"
+																class="w-full h-full flex flex-col items-center justify-center text-center px-5 outline-none rounded-xl border border-gray-200 text-lg bg-white focus:bg-gray-50 focus:ring-1 ring-blue-700"
+																type="text" name="" id="">
+														</div>
+														<div class="w-16 h-16 ">
+															<input
+																v-model="tiga"
+																class="w-full h-full flex flex-col items-center justify-center text-center px-5 outline-none rounded-xl border border-gray-200 text-lg bg-white focus:bg-gray-50 focus:ring-1 ring-blue-700"
+																type="text" name="" id="">
+														</div>
+														<div class="w-16 h-16 ">
+															<input
+																v-model="empat"
+																class="w-full h-full flex flex-col items-center justify-center text-center px-5 outline-none rounded-xl border border-gray-200 text-lg bg-white focus:bg-gray-50 focus:ring-1 ring-blue-700"
+																type="text" name="" id="">
+														</div>
+													</div>
+
+													<div class="flex flex-col space-y-5">
+														<div>
+															<button
+																@click="konfirmasiOTP"
+																class="flex flex-row items-center justify-center text-center w-full border rounded-xl outline-none py-5 bg-blue-700 border-none text-white text-sm shadow-sm">
+																Verifikasi OTP
+															</button>
+														</div>
+
+														<div
+															class="flex flex-row items-center justify-center text-center text-sm font-medium space-x-1 text-gray-500">
+															<p>Tidak menerima kode OTP?</p> <a
+																class="flex flex-row items-center text-blue-600"
+																href="javascript:void(0)" @click="resendOTPHandler"
+																rel="noopener noreferrer">Resend</a>
+														</div>
+													</div>
+												</div>
+										</div>
+									</div>
+								</div>
+							</div>
 						</ion-content>
 					</ion-modal>
 					<!-- <div class="relative overflow-x-auto shadow-lg shadow-gray-300 rounded-lg">
@@ -345,24 +427,112 @@ import {
 import { onMounted, ref } from 'vue';
 import { useRoute } from 'vue-router';
 import { refreshAccessTokenHandler } from '@/services/auth.js';
-import { catchToast, catchToastError } from '@/services/toastHandler';
-import { objOrder } from '@/services/globalVariables';
+import { catchToast, catchToastError } from '@/services/toastHandlers';
+import { 
+	objOrder, 
+	nomorWhatsappOTP,
+	satu,
+	dua,
+	tiga,
+	empat, 
+} from '@/services/globalVariables';
 
 const route = useRoute();
 const renderLoading = ref(null);
 
 const isOpen = ref(false);
 
-const setOpen = (open) => (isOpen.value = open);
-
-
+const setOpen = (open) => (isOpen.value = open, flagOTP.value = true);
+const flagOTP = ref(true);
 const storeData = ref(null);
 const storeId = ref(route.params.id);
 const productsData = ref([]);
+const idToko = ref(null);
+const metodePembayaran = ref("Tunai");
+const resendOTP = ref(null);
+const resendNomorPO = ref(null);
 
 import { API_URL } from '@/services/globalVariables';
 import router from '@/router';
 import { loadingController, toastController } from '@ionic/vue';
+
+async function konfirmasiOTP() {
+	if (satu.value == null || dua.value == null || tiga.value == null || empat.value == null) 
+	{
+		alert("Kode OTP tidak boleh kosong");
+		return false;
+	}
+
+	try {
+	const URL = `${API_URL.value}/api/v2/stores/confirm-otp`;
+
+    const tokens = localStorage.getItem("tokens") ? JSON.parse(localStorage.getItem("tokens")) : null;
+
+    const config = {
+      headers: {
+        'Authorization': `Bearer ${tokens.access_token}`,
+      },
+    };
+    
+	await axios.post(URL, {
+		"nomorPO": resendNomorPO.value ,
+		"inputOtp": satu.value + dua.value + tiga.value + empat.value,
+	}, config).then(async (res) => {
+		console.log(res);
+		
+
+		catchToast(res.data.message, 3000);
+
+		objOrder.value = [];
+
+		// setOpen(false);
+		isOpen.value = false;
+    })
+      .catch(function (error) {
+        catchToastError("Kode OTP anda salah", 3000);
+        stopLoading();
+        console.error(error);
+      });
+  } catch (e) {
+    alert("[" + e + "]");
+  }
+}
+
+async function resendOTPHandler() {
+	try {
+	const URL = `${API_URL.value}/api/v2/stores/resend-otp`;
+
+    const tokens = localStorage.getItem("tokens") ? JSON.parse(localStorage.getItem("tokens")) : null;
+
+    const config = {
+      headers: {
+        'Authorization': `Bearer ${tokens.access_token}`,
+      },
+    };
+    
+	await axios.post(URL, {
+		"nomorPO": resendNomorPO.value ,
+	}, config).then(async (res) => {
+		console.log(res);
+
+		// res.data.resource;
+		kirimWhatsapp(res.data.resource.nomor_po, res.data.resource.otp, nomorWhatsappOTP.value);
+		
+		resendNomorPO.value = res.data.resource.nomor_po;
+		resendOTP.value = res.data.resource.otp;
+
+		//catchToast("Kode OTP terkirim", 3000);
+    })
+      .catch(function (error) {
+        alert("(" + error + ")");
+        stopLoading();
+        console.error(error);
+      });
+  } catch (e) {
+    alert("[" + e + "]");
+  }
+
+}
 
 function minusOrder(index, min) {
 	objOrder.value[index].qty -= 1;
@@ -374,8 +544,102 @@ function minusOrder(index, min) {
 	}
 }
 
-function konfirmasiOrder() {
+function handleChange(event) {
+	metodePembayaran.value = event.detail.value;
+}
 
+async function kirimWhatsapp(nomorPO, otp, nomorWhatsappOTP) {
+      const AuthStr = "Up#YVpLNfcEkqw3PCpBH";
+      const URL = "https://api.fonnte.com/send";
+      
+	  let number = otp;
+
+      let formData = new FormData();
+      formData.append("target", nomorWhatsappOTP);
+      formData.append(
+        "message",
+        `Kode OTP untuk nomor PO ${nomorPO} Anda adalah ${number}`
+      );
+      formData.append("countryCode", "62");
+
+      const config = {
+        headers: {
+          Authorization: AuthStr,
+        },
+      };
+      await axios
+        .post(URL, formData, config)
+        .then(async (res) => {
+          	stopLoading();
+			catchToast("OTP telah terkirim", 3000);
+		})
+        .catch(function (error) {
+          alert("(" + error + ")");
+          stopLoading();
+          console.log(error);
+        });
+}
+
+async function kirimOTP(nomorWhatsappOTP) {
+	let a = false;
+
+	Object.keys(objOrder.value).forEach(key => {
+		const value = objOrder.value[key];
+
+		if (value.qty == 0) {
+			catchToastError("Kirim OTP gagal dikarenakan quantity order tidak boleh 0, mohon cek kembali", 3000)
+			a = true;
+			return false;
+		}
+	});
+
+	if (a) return false;
+
+	try {
+
+	const URL = `${API_URL.value}/api/v2/stores/send-otp`;
+
+    const tokens = localStorage.getItem("tokens") ? JSON.parse(localStorage.getItem("tokens")) : null;
+
+	console.log(objOrder.value);
+
+    // let formData = new FormData();
+    // formData.append("nomorWhatsappOTP", nomorWhatsappOTP);
+    // formData.append("objOrder", objOrder.value);
+    // formData.append("idToko", idToko.value);
+
+    const config = {
+      headers: {
+        'Authorization': `Bearer ${tokens.access_token}`,
+      },
+    };
+
+    await axios.post(URL, {
+		"nomorWhatsappOTP": nomorWhatsappOTP,
+		"objOrder": objOrder.value,
+		"idToko": idToko.value,
+		"metodePembayaran": metodePembayaran.value,
+	}, config).then(async (res) => {
+		console.log(res);
+
+		flagOTP.value = false;
+
+		// res.data.resource;
+		kirimWhatsapp(res.data.resource.nomor_po, res.data.resource.otp, nomorWhatsappOTP);
+		
+		resendNomorPO.value = res.data.resource.nomor_po;
+		resendOTP.value = res.data.resource.otp;
+
+		//catchToast("Kode OTP terkirim", 3000);
+    })
+      .catch(function (error) {
+        alert("(" + error + ")");
+        stopLoading();
+        console.error(error);
+      });
+  } catch (e) {
+    alert("[" + e + "]");
+  }
 }
 
 function plusOrder(index, maks) {
@@ -442,6 +706,10 @@ async function fetchStoreDetailData(id) {
 		});
 
 		storeData.value = response.data.resource;
+
+		nomorWhatsappOTP.value = storeData.value.nomor_telepon_toko;
+		
+		idToko.value = storeData.value.store_id;
 
 		localStorage.setItem("store", storeData.value);
 

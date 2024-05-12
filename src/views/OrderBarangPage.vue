@@ -7,7 +7,7 @@
 					<div>
 						<button type="button"
 							class="relative inline-flex items-center p-2 text-sm font-medium text-center text-white bg-transparent rounded-lg focus:ring-4 focus:outline-none focus:ring-blue-300"
-							@click="goBack">
+							@click="redirectToStoreDetailPage(storeData.store_id)">
 							<ion-icon class="text-2xl" :icon="chevronBackOutline" color="dark"></ion-icon>
 						</button>
 					</div>
@@ -26,7 +26,7 @@
 					</div>
 				</div>
 			</header>
-            <ion-searchbar :debounce="500" @ionInput="handleInput($event)"></ion-searchbar>
+            <ion-searchbar :debounce="300" @ionInput="handleInput($event)"></ion-searchbar>
             <br>
             <!-- <ion-input label="Cari Barang" label-placement="floating" placeholder="Enter text" class="py-4 border border-gray-300" fill="solid"></ion-input> -->
             <ion-item-group v-for="(product, index) in productsData" :key="index+1">
@@ -41,7 +41,7 @@
                           <ion-col size="6" size-md="4" size-lg="2">{{ product.prod_name }}</ion-col>
                           <ion-col size="6" size-md="4" size-lg="2">stock_terkini</ion-col>
                           <ion-col size="6" size-md="4" size-lg="2">
-                            <ion-button shape="round" color="success" @click="tambahProduk(product.prod_number, product.prod_name, 5)">
+                            <ion-button shape="round" color="success" @click="orderProduct(product.prod_number, product.prod_name, 5)">
                                 Pilih
                             </ion-button>
                           </ion-col>                         
@@ -57,50 +57,33 @@
 
 <script setup>
 import axios from 'axios';
+
 import {
 	chevronBackOutline,
     ellipsisVerticalOutline
 } from 'ionicons/icons'
+
 import { onMounted, ref } from 'vue';
-import { refreshAccessTokenHandler } from '@/services/auth.js';
-import { catchToast, catchToastError } from '@/services/toastHandler';
-import { loadingController } from '@ionic/vue';
+
 import router from '@/router';
+
+import { refreshAccessTokenHandler } from '@/services/auth.js';
+import { catchToastError } from '@/services/toastHandlers';
 import { objOrder } from '@/services/globalVariables';
+import { presentLoading, stopLoading } from '@/services/loadingHandlers';
+import { redirectToStoreDetailPage } from '@/services/redirectHandlers';
 
 const API_URL = `${import.meta.env.VITE_API_HOST}:${parseInt(import.meta.env.VITE_API_PORT)}`;
 const productsData = ref([]);
-const renderLoading = ref(null);
 
 const storeData = localStorage.getItem("store");
-
-function goBack() {
-    setTimeout(() => {
-        router.push({ name: 'storeDetail', params: { id: storeData.store_id } });
-    });
-}
-
-function presentLoading() {
-  renderLoading.value = loadingController.create({
-      message: "Loading...",
-    })
-    .then((a) => a.present());
-  
-    return renderLoading.value;
-}
-
-function stopLoading() {
-  setTimeout(() => {
-    loadingController.dismiss();
-  }, 100);
-}
 
 function handleInput(event) {
     const query = event.target.value.toLowerCase();
     fetchProductsData(query);
 }
 
-function tambahProduk(prodNumber, prodName, stock) {
+function orderProduct(prodNumber, prodName, stock) {
     const pilihan = {
         prodNumber: prodNumber,
         prodName: prodName,
@@ -140,10 +123,10 @@ async function fetchProductsData(query = '') {
         productsData.value = response.data.resource.data;
 
         console.log("Success fetch products data: ", productsData.value);
-        stopLoading();
     } catch (error) {
-        console.error("Failed to fetch product data: ", error);
         catchToastError(error.message, 3000);
+        
+        console.error("Failed to fetch product data: ", error);
     } finally {
         stopLoading();
     }

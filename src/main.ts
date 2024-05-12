@@ -28,7 +28,6 @@ import {
   IonMenuButton,
   IonSegment,
   IonSegmentButton,
-  // IonModal,
   IonFab,
   IonFabButton,
   IonList,
@@ -41,6 +40,7 @@ import {
   IonRouterOutlet,
   IonModal,
   IonInfiniteScroll,
+  IonInfiniteScrollContent,
   IonProgressBar,
   IonBadge,
   IonInput
@@ -78,7 +78,7 @@ import './theme/variables.css';
 
 import './tailwind.css';
 import { ErrorMessage, Field, Form } from 'vee-validate';
-import { catchToastError } from '@/services/toastHandler';
+import { catchToastError } from '@/services/toastHandlers';
 
 const app = createApp(App)
   .use(IonicVue)
@@ -129,6 +129,7 @@ app.component('ion-menu', IonMenu);
 app.component('ion-img', IonImg);
 app.component('ion-input', IonInput);
 app.component('ion-infinite-scroll', IonInfiniteScroll);
+app.component('ion-infinite-scroll-content', IonInfiniteScrollContent);
 app.component('ion-progress-bar', IonProgressBar);
 app.component('ion-badge', IonBadge);
 

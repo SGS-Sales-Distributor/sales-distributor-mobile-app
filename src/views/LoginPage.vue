@@ -7,14 +7,6 @@
         </div>
         <div class="mt-4 sm:mx-auto sm:w-full sm:max-w-sm">
           <FormLogin />
-          <div class="mt-5 flex items-center justify-end">
-            <!-- <div class="text-sm">
-                <a href="/registrasi" class="font-semibold text-gray-900 underline underline-offset-2 hover:text-gray-600">Belum Punya Akun?</a>
-            </div> -->
-            <div class="text-sm">
-              <a href="#" class="font-semibold text-gray-900 underline underline-offset-2 hover:text-gray-600">Ubah Password</a>
-            </div>
-          </div>
           <p class="mt-10 text-center align-text-bottom text-xs font-normal text-gray-900">© PT. Sinergi Global Service 2024. All rights reserved.</p>
         </div>
       </div>
@@ -23,7 +15,7 @@
 </template>
 
 <script setup>
-import FormLogin from '@/components/FormLogin.vue';
+import FormLogin from '@/components/login/FormLogin.vue';
 </script>
 
 <style scoped>

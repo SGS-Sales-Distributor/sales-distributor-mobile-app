@@ -2,24 +2,24 @@
   <ion-page>
     <ion-tabs>
       <ion-router-outlet></ion-router-outlet>
-      <ion-tab-bar slot="bottom" color="primary">
+      <ion-tab-bar slot="bottom">
         <ion-tab-button tab="home" href="/home">
-          <ion-icon class="text-2xl" aria-hidden="true" :icon="homeOutline" />
+          <ion-icon class="text-2xl" aria-hidden="true" :icon="home" />
           <ion-label>Home</ion-label>
         </ion-tab-button>
 
         <ion-tab-button tab="absensi" href="/absensi">
-          <ion-icon class="text-2xl" aria-hidden="true" :icon="cameraOutline" />
+          <ion-icon class="text-2xl active" aria-hidden="true" :icon="camera" />
           <ion-label>Absensi</ion-label>
         </ion-tab-button>
 
         <ion-tab-button tab="profile" href="/profile">
-          <ion-icon class="text-2xl" aria-hidden="true" :icon="personOutline" />
+          <ion-icon class="text-2xl" aria-hidden="true" :icon="person" />
           <ion-label class="text-md">Profile</ion-label>
         </ion-tab-button>
 
         <ion-tab-button tab="logout" @click="logout">
-          <ion-icon class="text-2xl" aria-hidden="true" :icon="logOutOutline" />
+          <ion-icon class="text-2xl" aria-hidden="true" :icon="logOut" />
           <ion-label class="text-md">Logout</ion-label>
         </ion-tab-button>
 
@@ -29,28 +29,20 @@
 </template>
 
 <script setup>
-import router from '@/router';
 import { 
-  cameraOutline, 
-  homeOutline, 
-  logOutOutline,
-  personOutline,
+  camera,
+  home,
+  logOut,
+  person,
 } from 'ionicons/icons';
-import { catchToast, catchToastError } from '@/services/toastHandler';
-
-function redirectToLoginPage() {
-  setTimeout(() => {
-    router.push({
-      path: '/login'
-    })
-  }, 1000);
-}
+import { catchToast, catchToastError } from '@/services/toastHandlers';
+import { redirectToLoginPage } from '@/services/redirectHandlers';
 
 async function logout() {
   try {
     localStorage.clear();
 
-    catchToast("Logout successful, see ya!", 3000);
+    catchToast("Logout berhasil, sampai bertemu kembali!", 3000);
 
     redirectToLoginPage();
   } catch (error) {
@@ -62,5 +54,18 @@ async function logout() {
 </script>
 
 <style scoped>
+ion-tab-bar {
+  --background: rgb(255, 255, 255); 
+}
 
+ion-tab-button {
+  --color: rgb(188, 192, 199);
+  --background-focused: rgb(59 130 246);
+  --color-selected: rgb(59 130 246);
+  --padding-end: 0px;
+  --padding-start: 0px;
+  --padding-bottom: 0px;
+  --margin-left:0px;
+  --margin-right:0px;
+}
 </style>
