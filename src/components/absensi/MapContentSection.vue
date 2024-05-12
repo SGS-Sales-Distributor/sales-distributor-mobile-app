@@ -15,16 +15,14 @@
 import { statusGPS, mapContainer, map } from '@/services/globalVariables';
 import { checkLocationAccess, printCurrentPosition } from '@/services/locationHandlers';
 import { catchToastError } from '@/services/toastHandlers';
-import { GeolocateControl, Map, Marker, NavigationControl, config } from '@maptiler/sdk';
-import { onMounted, shallowRef, ref } from 'vue';
+import { Map, GeolocateControl, Marker, NavigationControl } from 'maplibre-gl';
+import { onMounted } from 'vue';
 import '@maptiler/sdk/dist/maptiler-sdk.css';
 
 async function renderMap() {
   const currentPositions = await printCurrentPosition();
   const [currentLatitude, currentLongitude] = currentPositions;
   const myApiKey = import.meta.env.VITE_MAPTILER_API_KEY;
-
-  config.apiKey = myApiKey;
 
   try {
     map.value = new Map({

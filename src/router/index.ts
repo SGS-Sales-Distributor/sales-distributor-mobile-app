@@ -49,7 +49,7 @@ const routes: Array<RouteRecordRaw> = [
       },
       {
         path: "/store/:id/order",
-        name: "orderBarang",
+        name: "purchaseOrder",
         component: OrderBarangPage,
       },
       {

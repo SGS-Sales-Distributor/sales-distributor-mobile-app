@@ -7,7 +7,7 @@
 					<div>
 						<button type="button"
 							class="relative inline-flex items-center p-2 text-sm font-medium text-center text-white bg-transparent rounded-lg focus:ring-4 focus:outline-none focus:ring-blue-300"
-							@click="goBack">
+							@click="redirectToAbsensiPage">
 							<ion-icon class="text-2xl" :icon="chevronBackOutline" color="dark"></ion-icon>
 						</button>
 					</div>
@@ -133,7 +133,8 @@
 					<!-- End of Detail Store Card -->
 
 					<div class="flex justify-between items-center mb-2">
-						<button @click="goToOrder" data-modal-target="large-modal" data-modal-toggle="large-modal"
+						<button @click="redirectToPurchaseOrderPage(storeId)" data-modal-target="large-modal"
+							data-modal-toggle="large-modal"
 							class="block w-full md:w-auto text-white bg-blue-400 hover:bg-blue-500 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800"
 							type="button">
 							Tambah Order
@@ -189,49 +190,60 @@
 							</div>
 						</div>
 					</div>
+
 					<h6 v-if="objOrder.length > 0" class="text-center font-bold py-4">Daftar Order</h6>
-					<ion-item-group v-for="(order, index) in objOrder" :key="index + 1">
-						<ion-item-divider>
-							<ion-label>{{ index + 1 }}</ion-label>
-						</ion-item-divider>
 
-						<ion-item>
-							<ion-grid>
-								<ion-row>
-									<ion-col size="6" size-md="4" size-lg="2" style="text-align: left;">Kode
-										Produk</ion-col>
-									<ion-col size="6" size-md="4" size-lg="2" style="text-align: right;">{{
-										order.prodNumber }}</ion-col>
-									<ion-col size="6" size-md="4" size-lg="2" style="text-align: left;">Nama
-										Produk</ion-col>
-									<ion-col size="6" size-md="4" size-lg="2" style="text-align: right;">{{
-										order.prodName }}</ion-col>
-									<ion-col size="6" size-md="4" size-lg="2" style="text-align: left;">Stock</ion-col>
-									<ion-col size="6" size-md="4" size-lg="2" style="text-align: right;">{{ order.stock
-										}}</ion-col>
-									<ion-col size="6" size-md="4" size-lg="2"
-										style="text-align: left;">Quantity</ion-col>
-									<ion-col size="6" size-md="4" size-lg="2" style="text-align: right;">
-										<ion-button size="small" @click="minusOrder(index, 0)">
-											<ion-icon slot="icon-only" :icon="removeOutline"></ion-icon>
-										</ion-button>
-										<input id="orderInput" :value="order.qty" type="number" pattern="[0-9]" size="2"
-											min="0" :max="order.stock" readonly />
-										<ion-button size="small" @click="plusOrder(index, order.stock)">
-											<ion-icon slot="icon-only" :icon="addOutline"></ion-icon>
-										</ion-button>
-									</ion-col>
-									<ion-col size="6" size-md="4" size-lg="2" style="text-align: left;">Aksi</ion-col>
-									<ion-col size="6" size-md="4" size-lg="2" style="text-align: right;">
-										<ion-button color="danger" @click="hapusOrder(index)">Hapus</ion-button>
-									</ion-col>
-								</ion-row>
-							</ion-grid>
-						</ion-item>
+					<div v-for="(order, index) in objOrder" :key="index + 1" class="relative overflow-x-auto">
+						<ion-card class="py-2 odd:bg-blue-500 even:bg-sky-400">
+							<ion-card-header class="bg-gray-50">
+								<div class="flex flex-col w-full h-full space-y-2">
+									<div class="flex flex-row w-full h-full justify-between space-x-2">
+										<label for="nama-toko" class="flex-initial w-56 font-semibold">Kode
+											Produk</label>
+										<p class="flex-initial w-44 text-right">{{ order.prodNumber }}</p>
+									</div>
+									<div class="flex flex-row w-full h-full justify-between space-x-2">
+										<label for="nama-toko" class="flex-initial w-56 font-semibold">Nama
+											Produk</label>
+										<p class="flex-initial w-44 text-right">{{ order.prodName }}</p>
+									</div>
+									<div class="flex flex-row w-full h-full justify-between space-x-2">
+										<label for="nama-toko" class="flex-initial w-56 font-semibold">Stok</label>
+										<p class="flex-initial w-44 text-right">{{ order.stock }}</p>
+									</div>
+									<div class="flex flex-row w-full h-full justify-between space-x-2">
+										<label for="nama-toko" class="flex-initial w-56 font-semibold">Harga Produk</label>
+										<p class="flex-initial w-44 text-right">Rp. {{ parseFloat(order.prodPrice).toFixed(3) }}</p>
+									</div>
+									<div class="flex flex-row w-full h-full justify-between space-x-2">
+										<label for="nama-toko" class="flex-initial w-56 font-semibold">Quantity</label>
+										<div class="flex">
+											<ion-button size="small" @click="reduceOrder(index, 0)">
+												<ion-icon slot="icon-only" :icon="removeOutline"></ion-icon>
+											</ion-button>
+											<input id="orderInput" :value="order.qty" type="number" pattern="[0-9]"
+												size="2" min="0" :max="order.stock" readonly />
+											<ion-button size="small" @click="addMoreOrder(index, order.stock)">
+												<ion-icon slot="icon-only" :icon="addOutline"></ion-icon>
+											</ion-button>
+										</div>
+									</div>
+									<div class="flex flex-row w-full h-full justify-between space-x-2">
+										<label for="nama-toko" class="flex-initial w-56 font-semibold">Total Harga</label>
+										<p class="flex-initial w-44 text-right">Rp. {{ (parseFloat(order.prodPrice) * order.qty).toFixed(3) }}</p>
+									</div>
+								</div>
+							</ion-card-header>
+							<ion-card-content class="bg-gray-50">
+								<div class="flex w-full justify-center items-center px-4 pb-2 space-x-4">
+									<ion-button color="danger" @click="deleteRecentOrder(index)">Hapus</ion-button>
+								</div>
+							</ion-card-content>
+						</ion-card>
+					</div>
 
-					</ion-item-group>
-
-					<ion-select v-if="objOrder.length > 0" @ionChange="handleChange($event)" label="Metode Pembayaran" placeholder="Pilih" value="Tunai">
+					<ion-select v-if="objOrder.length > 0" @ionChange="handleChange($event)" label="Metode Pembayaran"
+						placeholder="Pilih" value="Tunai">
 						<ion-select-option value="Tunai">Tunai</ion-select-option>
 						<ion-select-option value="Transfer">Transfer</ion-select-option>
 					</ion-select>
@@ -256,21 +268,22 @@
 						<ion-content>
 							<div v-if="flagOTP"
 								class="relative flex min-h-screen flex-col justify-center overflow-hidden">
-								<div
-									class="relative bg-white px-6 mx-auto w-full max-w-lg rounded-2xl">
+								<div class="relative bg-white px-6 mx-auto w-full max-w-lg rounded-2xl">
 									<div class="mx-auto flex w-full max-w-md flex-col space-y-16">
 										<div class="flex flex-col items-center justify-center text-center space-y-2">
-											<img src="/public/3d-mobile-phone-with-security-code-padlock.jpg" alt="OTP Images">
+											<img src="/public/3d-mobile-phone-with-security-code-padlock.jpg"
+												alt="OTP Images">
 											<div class="font-semibold text-3xl">
 												<p>Kirim OTP Whatsapp</p>
 											</div>
 											<div class="flex flex-row text-sm font-medium text-gray-400">
-												<p>Kami akan mengirimkan kode OTP ke nomor <br />{{ nomorWhatsappOTP }}</p>
+												<p>Kami akan mengirimkan kode OTP ke nomor <br />{{ nomorWhatsappOTP }}
+												</p>
 											</div>
 										</div>
 										<div class="flex flex-col space-y-5">
 											<div>
-												<button @click="kirimOTP(nomorWhatsappOTP)"
+												<button @click="sendOTP(nomorWhatsappOTP)"
 													class="flex flex-row items-center justify-center text-center w-full border rounded-xl outline-none py-5 bg-blue-700 border-none text-white text-sm shadow-sm">
 													Kirim OTP
 												</button>
@@ -294,122 +307,55 @@
 										</div>
 
 										<div>
-											
-												<div class="flex flex-col space-y-16">
-													<div
-														class="flex flex-row items-center justify-between mx-auto w-full max-w-xs">
-														<div class="w-16 h-16 ">
-															<input
-																v-model="satu"
-																class="w-full h-full flex flex-col items-center justify-center text-center px-5 outline-none rounded-xl border border-gray-200 text-lg bg-white focus:bg-gray-50 focus:ring-1 ring-blue-700"
-																type="text" name="" id="">
-														</div>
-														<div class="w-16 h-16 ">
-															<input
-																v-model="dua"
-																class="w-full h-full flex flex-col items-center justify-center text-center px-5 outline-none rounded-xl border border-gray-200 text-lg bg-white focus:bg-gray-50 focus:ring-1 ring-blue-700"
-																type="text" name="" id="">
-														</div>
-														<div class="w-16 h-16 ">
-															<input
-																v-model="tiga"
-																class="w-full h-full flex flex-col items-center justify-center text-center px-5 outline-none rounded-xl border border-gray-200 text-lg bg-white focus:bg-gray-50 focus:ring-1 ring-blue-700"
-																type="text" name="" id="">
-														</div>
-														<div class="w-16 h-16 ">
-															<input
-																v-model="empat"
-																class="w-full h-full flex flex-col items-center justify-center text-center px-5 outline-none rounded-xl border border-gray-200 text-lg bg-white focus:bg-gray-50 focus:ring-1 ring-blue-700"
-																type="text" name="" id="">
-														</div>
+
+											<div class="flex flex-col space-y-16">
+												<div
+													class="flex flex-row items-center justify-between mx-auto w-full max-w-xs">
+													<div class="w-16 h-16 ">
+														<input v-model="firstOTPNumber"
+															class="w-full h-full flex flex-col items-center justify-center text-center px-5 outline-none rounded-xl border border-gray-200 text-lg bg-white focus:bg-gray-50 focus:ring-1 ring-blue-700"
+															type="text" name="" id="">
 													</div>
-
-													<div class="flex flex-col space-y-5">
-														<div>
-															<button
-																@click="konfirmasiOTP"
-																class="flex flex-row items-center justify-center text-center w-full border rounded-xl outline-none py-5 bg-blue-700 border-none text-white text-sm shadow-sm">
-																Verifikasi OTP
-															</button>
-														</div>
-
-														<div
-															class="flex flex-row items-center justify-center text-center text-sm font-medium space-x-1 text-gray-500">
-															<p>Tidak menerima kode OTP?</p> <a
-																class="flex flex-row items-center text-blue-600"
-																href="javascript:void(0)" @click="resendOTPHandler"
-																rel="noopener noreferrer">Resend</a>
-														</div>
+													<div class="w-16 h-16 ">
+														<input v-model="secondOTPNumber"
+															class="w-full h-full flex flex-col items-center justify-center text-center px-5 outline-none rounded-xl border border-gray-200 text-lg bg-white focus:bg-gray-50 focus:ring-1 ring-blue-700"
+															type="text" name="" id="">
+													</div>
+													<div class="w-16 h-16 ">
+														<input v-model="thirdOTPNumber"
+															class="w-full h-full flex flex-col items-center justify-center text-center px-5 outline-none rounded-xl border border-gray-200 text-lg bg-white focus:bg-gray-50 focus:ring-1 ring-blue-700"
+															type="text" name="" id="">
+													</div>
+													<div class="w-16 h-16 ">
+														<input v-model="fourthOTPNumber"
+															class="w-full h-full flex flex-col items-center justify-center text-center px-5 outline-none rounded-xl border border-gray-200 text-lg bg-white focus:bg-gray-50 focus:ring-1 ring-blue-700"
+															type="text" name="" id="">
 													</div>
 												</div>
+
+												<div class="flex flex-col space-y-5">
+													<div>
+														<button @click="confirmOTP"
+															class="flex flex-row items-center justify-center text-center w-full border rounded-xl outline-none py-5 bg-blue-700 border-none text-white text-sm shadow-sm">
+															Verifikasi OTP
+														</button>
+													</div>
+
+													<div
+														class="flex flex-row items-center justify-center text-center text-sm font-medium space-x-1 text-gray-500">
+														<p>Tidak menerima kode OTP?</p> <a
+															class="flex flex-row items-center text-blue-600"
+															href="javascript:void(0)" @click="resendOTPHandler"
+															rel="noopener noreferrer">Resend</a>
+													</div>
+												</div>
+											</div>
 										</div>
 									</div>
 								</div>
 							</div>
 						</ion-content>
 					</ion-modal>
-					<!-- <div class="relative overflow-x-auto shadow-lg shadow-gray-300 rounded-lg">
-						<table class="w-full text-sm text-center rtl:text-right text-gray-500">
-							<thead class="text-xs text-gray-50 font-bold uppercase bg-blue-400">
-								<tr>
-									<th scope="col" class="px-6 py-3 whitespace-nowrap">
-										No.
-									</th>
-									<th scope="col" class="px-6 py-3 whitespace-nowrap">
-										Kode Produk
-									</th>
-									<th scope="col" class="px-6 py-3 whitespace-nowrap">
-										Nama Produk
-									</th>
-									<th scope="col" class="px-6 py-3 whitespace-nowrap">
-										Stock
-									</th>
-									<th scope="col" class="px-6 py-3 whitespace-nowrap">
-										Qty
-									</th>
-									<th scope="col" class="px-6 py-3 whitespace-nowrap">
-										Aksi
-									</th>
-								</tr>
-							</thead>
-							<tbody>
-								<tr v-for="(order, index) in objOrder" :key="index + 1"
-									class="odd:bg-sky-50 even:bg-blue-100 border-b border-gray-100 hover:bg-gray-50 transition-all">
-									<th scope="row" class="px-6 py-4 font-bold text-gray-900 whitespace-nowrap">
-										{{ index + 1 }}
-									</th>
-									<td class="px-6 py-4">
-										<span
-											class="text-gray-900 font-medium whitespace-nowrap transition-all hover:text-blue-500 hover:font-normal">{{
-												order.prodNumber }}</span>
-									</td>
-									<td class="px-6 py-4">
-										<span
-											class="text-gray-900 font-medium whitespace-nowrap transition-all hover:text-blue-500 hover:font-normal">{{
-												order.prodName }}</span>
-									</td>
-									<td class="px-6 py-4">
-										<span
-											class="text-gray-900 font-medium whitespace-nowrap transition-all hover:text-blue-500 hover:font-normal">{{
-												order.stock }}</span>
-									</td>
-									<td class="px-6 py-4">
-										<ion-button size="small" @click="minusOrder(index, 0)">
-											<ion-icon slot="icon-only" :icon="removeOutline"></ion-icon>
-										</ion-button>
-										<input id="orderInput" :value="order.qty" type="number" pattern="[0-9]"
-											style="width: 8em" min="0" :max="order.stock" readonly />
-										<ion-button size="small" @click="plusOrder(index, order.stock)">
-											<ion-icon slot="icon-only" :icon="addOutline"></ion-icon>
-										</ion-button>
-									</td>
-									<td class="px-6 py-4">
-										<ion-button color="danger" @click="hapusOrder(index)">Hapus</ion-button>
-									</td>
-								</tr>
-							</tbody>
-						</table>
-					</div> -->
 				</div>
 			</div>
 		</ion-content>
@@ -427,22 +373,25 @@ import {
 import { onMounted, ref } from 'vue';
 import { useRoute } from 'vue-router';
 import { refreshAccessTokenHandler } from '@/services/auth.js';
+import { presentLoading, stopLoading } from '@/services/loadingHandlers';
 import { catchToast, catchToastError } from '@/services/toastHandlers';
-import { 
-	objOrder, 
+import {
+	objOrder,
 	nomorWhatsappOTP,
-	satu,
-	dua,
-	tiga,
-	empat, 
+	firstOTPNumber,
+	secondOTPNumber,
+	thirdOTPNumber,
+	fourthOTPNumber,
 } from '@/services/globalVariables';
+import { redirectToAbsensiPage, redirectToPurchaseOrderPage } from '@/services/redirectHandlers';
+import { API_URL } from '@/services/globalVariables';
+
 
 const route = useRoute();
-const renderLoading = ref(null);
 
 const isOpen = ref(false);
-
 const setOpen = (open) => (isOpen.value = open, flagOTP.value = true);
+
 const flagOTP = ref(true);
 const storeData = ref(null);
 const storeId = ref(route.params.id);
@@ -452,135 +401,124 @@ const metodePembayaran = ref("Tunai");
 const resendOTP = ref(null);
 const resendNomorPO = ref(null);
 
-import { API_URL } from '@/services/globalVariables';
-import router from '@/router';
-import { loadingController, toastController } from '@ionic/vue';
+function handleChange(event) {
+	metodePembayaran.value = event.detail.value;
+}
 
-async function konfirmasiOTP() {
-	if (satu.value == null || dua.value == null || tiga.value == null || empat.value == null) 
-	{
+async function confirmOTP() {
+	if (firstOTPNumber.value == null || secondOTPNumber.value == null || thirdOTPNumber.value == null || fourthOTPNumber.value == null) {
 		alert("Kode OTP tidak boleh kosong");
 		return false;
 	}
 
 	try {
-	const URL = `${API_URL.value}/api/v2/stores/confirm-otp`;
+		refreshAccessTokenHandler();
 
-    const tokens = localStorage.getItem("tokens") ? JSON.parse(localStorage.getItem("tokens")) : null;
+		presentLoading();
 
-    const config = {
-      headers: {
-        'Authorization': `Bearer ${tokens.access_token}`,
-      },
-    };
-    
-	await axios.post(URL, {
-		"nomorPO": resendNomorPO.value ,
-		"inputOtp": satu.value + dua.value + tiga.value + empat.value,
-	}, config).then(async (res) => {
-		console.log(res);
-		
+		const tokens = localStorage.getItem("tokens") ? JSON.parse(localStorage.getItem("tokens")) : null;
 
-		catchToast(res.data.message, 3000);
+		const headers = {
+			'Authorization' : `Bearer ${tokens.access_token}`,
+		}
+
+		const response = await axios.post(`${API_URL.value}/api/v2/stores/confirm-otp`, {
+			"nomorPO": resendNomorPO.value,
+			"inputOtp": firstOTPNumber.value + secondOTPNumber.value + thirdOTPNumber.value + fourthOTPNumber.value,
+		}, {
+			headers: headers
+		});
+
+		catchToast(response.data.message, 3000);
 
 		objOrder.value = [];
 
-		// setOpen(false);
 		isOpen.value = false;
-    })
-      .catch(function (error) {
-        catchToastError("Kode OTP anda salah", 3000);
-        stopLoading();
-        console.error(error);
-      });
-  } catch (e) {
-    alert("[" + e + "]");
-  }
+
+		stopLoading();
+	} catch (error) {
+		catchToastError("Kode OTP salah", 3000);
+
+		console.error("Kode OTP salah", error);
+	} finally {
+		stopLoading();
+	}
 }
 
 async function resendOTPHandler() {
 	try {
-	const URL = `${API_URL.value}/api/v2/stores/resend-otp`;
+		refreshAccessTokenHandler();
 
-    const tokens = localStorage.getItem("tokens") ? JSON.parse(localStorage.getItem("tokens")) : null;
+		presentLoading();
 
-    const config = {
-      headers: {
-        'Authorization': `Bearer ${tokens.access_token}`,
-      },
-    };
-    
-	await axios.post(URL, {
-		"nomorPO": resendNomorPO.value ,
-	}, config).then(async (res) => {
-		console.log(res);
+		const tokens = localStorage.getItem("tokens") ? JSON.parse(localStorage.getItem("tokens")) : null;
 
-		// res.data.resource;
-		kirimWhatsapp(res.data.resource.nomor_po, res.data.resource.otp, nomorWhatsappOTP.value);
-		
-		resendNomorPO.value = res.data.resource.nomor_po;
-		resendOTP.value = res.data.resource.otp;
+		const headers = {
+			'Authorization': `Bearer ${tokens.access_token}`,
+		}
 
-		//catchToast("Kode OTP terkirim", 3000);
-    })
-      .catch(function (error) {
-        alert("(" + error + ")");
-        stopLoading();
-        console.error(error);
-      });
-  } catch (e) {
-    alert("[" + e + "]");
-  }
+		const response = await axios.post(`${API_URL.value}/api/v2/stores/resend-otp`, {
+			"nomorPO": resendNomorPO.value,
+		}, {
+			headers: headers 
+		});
+
+		sendOTPIntoWhatsapp(
+			response.data.resource.nomor_po,
+			response.data.resource.otp,
+			nomorWhatsappOTP.value
+		);
+
+		resendNomorPO.value = response.data.resource.nomor_po;
+		resendOTP.value = response.data.resource.otp;
+
+		stopLoading();
+	} catch (error) {
+		catchToastError(error.message, 3000);
+
+		console.error("Gagal mengirim ulang kode OTP", error);
+	} finally {
+		stopLoading();
+	}
 
 }
 
-function minusOrder(index, min) {
-	objOrder.value[index].qty -= 1;
+async function sendOTPIntoWhatsapp(nomorPO, otp, nomorWhatsappOTP) {
+	const fonteUniqueToken = "Up#YVpLNfcEkqw3PCpBH";
 
-	if (objOrder.value[index].qty < min) {
-		catchToastError("Tidak boleh order kurang dari 0", 3000);
+	try {
+		refreshAccessTokenHandler();
+		
+		presentLoading();
 
-		objOrder.value[index].qty = min;
+		let formData = new FormData();
+		formData.append("target", nomorWhatsappOTP);
+		formData.append("message", `Kode OTP untuk nomor PO ${nomorPO} Anda adalah ${otp}`);
+		formData.append("countryCode", "62");
+
+		const headers = {
+			'Authorization': fonteUniqueToken,
+		}
+
+		const response = await axios.post("https://api.fonnte.com/send", formData, {
+			headers: headers,
+		});
+
+		console.log(response);
+
+		catchToast("OTP berhasil terkirim", 3000);
+
+		stopLoading();
+	} catch (error) {
+		catchToastError("OTP gagal terkirim", 3000);
+
+		console.error("OTP gagal terkirim", error);
+	} finally {
+		stopLoading();
 	}
 }
 
-function handleChange(event) {
-	metodePembayaran.value = event.detail.value;
-}
-
-async function kirimWhatsapp(nomorPO, otp, nomorWhatsappOTP) {
-      const AuthStr = "Up#YVpLNfcEkqw3PCpBH";
-      const URL = "https://api.fonnte.com/send";
-      
-	  let number = otp;
-
-      let formData = new FormData();
-      formData.append("target", nomorWhatsappOTP);
-      formData.append(
-        "message",
-        `Kode OTP untuk nomor PO ${nomorPO} Anda adalah ${number}`
-      );
-      formData.append("countryCode", "62");
-
-      const config = {
-        headers: {
-          Authorization: AuthStr,
-        },
-      };
-      await axios
-        .post(URL, formData, config)
-        .then(async (res) => {
-          	stopLoading();
-			catchToast("OTP telah terkirim", 3000);
-		})
-        .catch(function (error) {
-          alert("(" + error + ")");
-          stopLoading();
-          console.log(error);
-        });
-}
-
-async function kirimOTP(nomorWhatsappOTP) {
+async function sendOTP(nomorWhatsappOTP) {
 	let a = false;
 
 	Object.keys(objOrder.value).forEach(key => {
@@ -596,53 +534,51 @@ async function kirimOTP(nomorWhatsappOTP) {
 	if (a) return false;
 
 	try {
+		refreshAccessTokenHandler();
 
-	const URL = `${API_URL.value}/api/v2/stores/send-otp`;
+		presentLoading();
 
-    const tokens = localStorage.getItem("tokens") ? JSON.parse(localStorage.getItem("tokens")) : null;
+		const tokens = localStorage.getItem("tokens") ? JSON.parse(localStorage.getItem("tokens")) : null;
 
-	console.log(objOrder.value);
+		console.log(objOrder.value);
 
-    // let formData = new FormData();
-    // formData.append("nomorWhatsappOTP", nomorWhatsappOTP);
-    // formData.append("objOrder", objOrder.value);
-    // formData.append("idToko", idToko.value);
+		const headers = {
+			'Authorization': `Bearer ${tokens.access_token}`,
+		}
 
-    const config = {
-      headers: {
-        'Authorization': `Bearer ${tokens.access_token}`,
-      },
-    };
+		const response = await axios.post(`${API_URL.value}/api/v2/stores/send-otp`, {
+			"nomorWhatsappOTP": nomorWhatsappOTP,
+			"objOrder": objOrder.value,
+			"idToko": idToko.value,
+			"metodePembayaran": metodePembayaran.value,
+		}, {
+			headers: headers
+		});
 
-    await axios.post(URL, {
-		"nomorWhatsappOTP": nomorWhatsappOTP,
-		"objOrder": objOrder.value,
-		"idToko": idToko.value,
-		"metodePembayaran": metodePembayaran.value,
-	}, config).then(async (res) => {
-		console.log(res);
+		console.log(response);
 
 		flagOTP.value = false;
 
-		// res.data.resource;
-		kirimWhatsapp(res.data.resource.nomor_po, res.data.resource.otp, nomorWhatsappOTP);
-		
-		resendNomorPO.value = res.data.resource.nomor_po;
-		resendOTP.value = res.data.resource.otp;
+		sendOTPIntoWhatsapp(
+			response.data.resource.nomor_po,
+			response.data.resource.otp,
+			nomorWhatsappOTP,
+		);
 
-		//catchToast("Kode OTP terkirim", 3000);
-    })
-      .catch(function (error) {
-        alert("(" + error + ")");
-        stopLoading();
-        console.error(error);
-      });
-  } catch (e) {
-    alert("[" + e + "]");
-  }
+		resendNomorPO.value = response.data.resource.nomor_po;
+		resendOTP.value = response.data.resource.otp;
+
+		stopLoading();
+	} catch (error) {
+		catchToastError(error.message, 3000);
+
+		console.error(error.message, error);
+	} finally {
+		stopLoading();
+	}
 }
 
-function plusOrder(index, maks) {
+function addMoreOrder(index, maks) {
 	objOrder.value[index].qty += 1;
 
 	if (objOrder.value[index].qty > maks) {
@@ -652,47 +588,25 @@ function plusOrder(index, maks) {
 	}
 }
 
-function hapusOrder(index) {
+function reduceOrder(index, min) {
+	objOrder.value[index].qty -= 1;
+
+	if (objOrder.value[index].qty < min) {
+		catchToastError("Tidak boleh order kurang dari 0", 3000);
+
+		objOrder.value[index].qty = min;
+	}
+}
+
+function deleteRecentOrder(index) {
 	objOrder.value.splice(index, 1);
-}
-
-function goBack() {
-	setTimeout(() => {
-		router.push({ name: 'absensi' });
-	}, 100);
-}
-
-function goToOrder() {
-	setTimeout(() => {
-		router.push({ name: 'orderBarang', params: { id: storeId.value } });
-	}, 100);
-}
-
-function disableTypeInputNumber() {
-	const input = document.getElementById("orderInput");
-	input.addEventListener("keypress", (event) => {
-		event.preventDefault();
-	});
-}
-
-function presentLoading() {
-	renderLoading.value = loadingController.create({
-		message: "Loading...",
-	})
-		.then((a) => a.present());
-
-	return renderLoading.value;
-}
-
-function stopLoading() {
-	setTimeout(() => {
-		loadingController.dismiss();
-	}, 100);
 }
 
 async function fetchStoreDetailData(id) {
 	try {
 		refreshAccessTokenHandler();
+
+		presentLoading();
 
 		const tokens = localStorage.getItem("tokens") ? JSON.parse(localStorage.getItem("tokens")) : null;
 
@@ -708,21 +622,26 @@ async function fetchStoreDetailData(id) {
 		storeData.value = response.data.resource;
 
 		nomorWhatsappOTP.value = storeData.value.nomor_telepon_toko;
-		
+
 		idToko.value = storeData.value.store_id;
 
 		localStorage.setItem("store", storeData.value);
 
+		stopLoading();
 	} catch (error) {
 		catchToastError(error.message, 3000);
 
 		console.log(`Failed to fetch store ${id}: `, error);
+	} finally {
+		stopLoading();
 	}
 }
 
 async function fetchProductsData(query = '') {
 	try {
 		refreshAccessTokenHandler();
+
+		presentLoading();
 
 		const tokens = localStorage.getItem("tokens") ? JSON.parse(localStorage.getItem("tokens")) : null;
 
@@ -739,16 +658,17 @@ async function fetchProductsData(query = '') {
 		});
 
 		productsData.value = response.data.resource.data;
-
-		console.log("Success fetch products data: ", response);
 	} catch (error) {
 		catchToastError(error.message, 3000);
 
 		console.error("Failed to fetch products data: ", error);
+	} finally {
+		stopLoading();
 	}
 }
 
 onMounted(() => {
+	refreshAccessTokenHandler();
 	fetchStoreDetailData(storeId.value);
 	fetchProductsData();
 });

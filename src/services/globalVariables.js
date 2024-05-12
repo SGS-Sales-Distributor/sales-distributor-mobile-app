@@ -19,7 +19,7 @@ export const loading = ref(null);
 
 export const objOrder = ref([]);
 export const nomorWhatsappOTP = ref(null);
-export const satu = ref(null);
-export const dua = ref(null);
-export const tiga = ref(null);
-export const empat = ref(null);
+export const firstOTPNumber = ref(null);
+export const secondOTPNumber = ref(null);
+export const thirdOTPNumber = ref(null);
+export const fourthOTPNumber = ref(null);

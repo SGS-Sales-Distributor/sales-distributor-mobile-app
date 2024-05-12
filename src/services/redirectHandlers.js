@@ -31,3 +31,11 @@ export function redirectToStoreDetailPage(storeId) {
         });
     }, 300);
 }
+
+export function redirectToPurchaseOrderPage(storeId) {
+    setTimeout(() => {
+        router.push({
+            name: 'purchaseOrder', params: { id: storeId }
+        });
+    }, 300);
+}

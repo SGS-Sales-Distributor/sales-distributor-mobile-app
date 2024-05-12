@@ -159,7 +159,7 @@
           </ion-row>
         </ion-grid>
 
-        <ion-searchbar :debounce="300" @ionInput="searchStoreHandler($event)" placeholder="Cari nama toko" color="light"></ion-searchbar>
+        <ion-searchbar :debounce="300" @ionInput="searchStoreHandler($event)" placeholder="Cari nama toko..." color="light"></ion-searchbar>
 
         <div v-for="(store, index) in visibleStores" :key="index + 1" class="relative overflow-x-auto">
           <ion-card v-if="statusGPS" class="py-2 odd:bg-blue-500 even:bg-sky-400">
