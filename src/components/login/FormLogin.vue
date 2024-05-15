@@ -1,15 +1,15 @@
 <template>
-    <form
+    <Form
     novalidate 
     class="space-y-6" 
     method="post"
-    @submit.prevent="login"
+    @submit="login"
     :validation-schema="formLoginValidate">
         <!-- Email Input -->
         <div>
             <label for="email" class="block text-sm font-medium leading-6 text-gray-900">Email address</label>
             <div class="mt-2">
-                <vee-field
+                <Field
                 v-model="formData.email" 
                 :type="emailFieldType"
                 id="email" 
@@ -40,7 +40,7 @@
                 sm:text-md 
                 sm:leading-6"
                 />
-                <vee-error-message name="email" class="mt-4 text-rose-500" />
+                <ErrorMessage name="email" class="mt-4 text-rose-500" />
             </div>
         </div>
 
@@ -48,7 +48,7 @@
         <div>
             <label for="password" class="block text-sm font-medium leading-6 text-gray-900">Password</label>
             <div class="mt-2 relative">
-                <vee-field 
+                <Field 
                 v-model="formData.password"
                 :type="passwordFieldType"
                 id="password" 
@@ -88,8 +88,8 @@
                     <path d="M8 5.5a2.5 2.5 0 1 0 0 5 2.5 2.5 0 0 0 0-5M4.5 8a3.5 3.5 0 1 1 7 0 3.5 3.5 0 0 1-7 0"/>
                   </svg>
                 </button>
-                <vee-error-message name="password" class="mt-4 text-rose-500" />
-            </div>
+              </div>
+              <ErrorMessage name="password" class="mt-4 text-rose-500" />
         </div>
 
         <!-- Submit button -->
@@ -99,7 +99,7 @@
             </button>
         </div>
         <!-- End of Submit Button -->
-    </form>
+      </Form>
 </template>
 
 <script setup>
@@ -110,6 +110,7 @@ import { ref } from 'vue';
 import { API_URL } from '@/services/globalVariables';
 import { redirectToHomePage } from '@/services/redirectHandlers';
 import { presentLoading, stopLoading } from '@/services/loadingHandlers';
+import { Form, Field, ErrorMessage } from 'vee-validate';
 
 const passwordFieldType = ref('password');
 const emailFieldType = ref('email');
@@ -141,12 +142,8 @@ async function login() {
     const response = await axios.post(`${API_URL.value}/api/v2/auth/login`, formData.value);
     
     const tokens = response.data.resource.tokens;
-    const accessToken = tokens.access_token;
-    const refreshToken = tokens.refresh_token;
 
     localStorage.setItem("tokens", JSON.stringify(tokens));
-    localStorage.setItem("accessToken", accessToken);
-    localStorage.setItem("refreshToken", refreshToken);
 
     stopLoading();
     
@@ -157,8 +154,6 @@ async function login() {
     catchToastError(error.message, 3000);
     
     console.error('Failed to logged in: ', error);
-  } finally {
-    stopLoading();
   }
 }
 </script>

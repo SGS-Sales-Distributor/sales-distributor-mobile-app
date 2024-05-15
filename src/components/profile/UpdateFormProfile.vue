@@ -77,17 +77,17 @@ import { catchToast, catchToastError } from '@/services/toastHandlers';
 import axios from 'axios';
 import { presentLoading, stopLoading } from '@/services/loadingHandlers';
 
-const authUser = localStorage.getItem("user") ? JSON.parse(localStorage.getItem("user")) : null;
+const authUser = ref(localStorage.getItem("user") ? JSON.parse(localStorage.getItem("user")) : null);
 
 const disabledNumberInput = ref(true);
 
 const formProfileData = ref({
-  number: authUser.number,
-  nik: authUser.nik,
-  fullname: authUser.fullname,
-  phone: authUser.phone,
-  email: authUser.email,
-  name: authUser.name,
+  number: authUser.value.number,
+  nik: authUser.value.nik,
+  fullname: authUser.value.fullname,
+  phone: authUser.value.phone,
+  email: authUser.value.email,
+  name: authUser.value.name,
 });
 
 const formProfileValidate = Yup.object().shape({
@@ -141,8 +141,6 @@ async function updateProfile(userNumber) {
     catchToastError(error.message, 3000);
     
     console.error("Failed to update profile: ", error);
-  } finally {
-    stopLoading();
   }
 }
 

@@ -148,8 +148,10 @@ async function fetchProductsData(query = '') {
 
 onMounted(() => {
     presentLoading();
+
     refreshAccessTokenHandler();
     fetchProductsData();
+    
     stopLoading();
 });
 </script>

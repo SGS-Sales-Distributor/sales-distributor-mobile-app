@@ -41,9 +41,7 @@ import { refreshAccessTokenHandler } from '@/services/auth';
 import { API_URL } from '@/services/globalVariables';
 import { catchToast, catchToastError } from '@/services/toastHandlers';
 import axios from 'axios';
-import { loadingController } from '@ionic/vue';
-
-const renderLoading = ref(null);
+import { presentLoading, stopLoading } from '@/services/loadingHandlers';
 
 const authUser = localStorage.getItem("user") ? JSON.parse(localStorage.getItem("user")) : null;
 
@@ -67,21 +65,6 @@ const formChangePasswordValidate = Yup.object().shape({
     .required("Konfirmasi password diperlukan, tidak boleh kosong.")
     .oneOf([Yup.ref('password'), null], "Password tidak match."),
 });
-
-function presentLoading() {
-  renderLoading.value = loadingController.create({
-      message: "Loading...",
-    })
-    .then((a) => a.present());
-  
-    return renderLoading.value;
-}
-
-function stopLoading() {
-  setTimeout(() => {
-    loadingController.dismiss();
-  }, 100);
-}
 
 async function changePassword(userNumber) {
   try {
@@ -109,13 +92,10 @@ async function changePassword(userNumber) {
     stopLoading();
 
     catchToast(response.data.message);
-
   } catch (error) {
     catchToastError(error.message, 3000);
 
     console.error("Failed to update salesman password: ", error);
-  } finally {
-    stopLoading();
   }
 }
 </script>

@@ -271,8 +271,6 @@ const imageUrl = shallowRef("");
 const imageLocation = ref(null);
 
 const storeInfoDistri = ref([]);
-const callPlans = ref([]);
-const callPlanDetails = ref([]);
 
 const lastIndex = ref(5);
 const visibleStores = computed(() => {
@@ -413,40 +411,6 @@ async function passCheckOutAlert() {
 }
 
 // rest api (backend server)
-async function fetchStoreBasedOnCallPlans(userNumber, query = '') {
-  refreshAccessTokenHandler();
-
-  const tokens = localStorage.getItem("tokens") ? JSON.parse(localStorage.getItem("tokens")) : null;
-
-  const headers = {
-    'Content-Type': 'application/json',
-    'Authorization': `Bearer ${tokens.access_token}`
-  }
-
-  try {
-    const response = await axios.get(`${API_URL.value}/api/v2/salesmen/${userNumber}`, {
-      headers: headers,
-      params: {
-        q: query
-      },
-    });
-
-    response.data.resource.master_call_plan_details.forEach(storeData => {
-      console.log(storeData.store);
-    });
-
-    // response.data.resource.forEach(callPlan => {
-    //   if (Array.isArray(callPlan.details)) {
-    //     callPlan.details.forEach(storeData => {
-    //       console.log(storeData.store);
-    //     });
-    //   }
-    // });
-  } catch (error) {
-    console.error(error);
-  }
-}
-
 async function fetchStoresData(query = '') {
   refreshAccessTokenHandler();
 
@@ -592,12 +556,16 @@ async function uploadCheckInImage(userNumber) {
       'Content-Type': 'multipart/form-data',
     }
 
+    presentLoading();
+
     const response = await axios.post(`${API_URL.value}/api/v2/salesmen/${userNumber}/visits`, 
       formData, {
       headers: headers 
     });
 
     fetchStoresData();
+
+    stopLoading();
 
     imageUrl.value = null;
     storeInfoDistri.value = null;
@@ -606,7 +574,7 @@ async function uploadCheckInImage(userNumber) {
 
     catchToast("Sukses upload gambar untuk absensi check-in", 3000);
 
-    console.log("Sukses upload gambar untuk absensi check-in", response);
+    // console.log("Sukses upload gambar untuk absensi check-in", response);
   } catch (error) {
     catchToastError(error.message);
 
@@ -630,6 +598,8 @@ async function uploadCheckOutImage(userNumber) {
       'Content-Type': 'multipart/form-data',
     }
 
+    presentLoading();
+
     const response = await axios.post(`${API_URL.value}/api/v2/salesmen/${userNumber}/visits/${detailStoreInfoDistri.value.visit_id}`, 
       formData, {
       headers: headers 
@@ -637,13 +607,15 @@ async function uploadCheckOutImage(userNumber) {
 
     fetchStoresData();
     
+    stopLoading();
+
     imageUrl.value = null;
     storeInfoDistri.value = null;
     detailStoreInfoDistri.value = null;
 
     catchToast("Sukses upload gambar untuk absensi check-out", 3000);
     
-    console.log("Sukses upload gambar untuk absensi check-out", response);
+    // console.log("Sukses upload gambar untuk absensi check-out", response);
   } catch (error) {
     catchToastError(error.message);
 
@@ -664,10 +636,10 @@ async function takeCheckInPicture() {
       renderModCheckInBtn.value = true;
       imageUrl.value = image.webPath.toString();
 
-      console.log(`Captured photo path: ${imageUrl.value}`);
+      // console.log(`Captured photo path: ${imageUrl.value}`);
 
       imageLocation.value = await fetch(image.webPath).then((r) => r.blob());
-      console.log(imageLocation.value);
+      // console.log(imageLocation.value);
     } else {
       catchToastError('Failed to capture photo or image path is missing', 3000);
 
@@ -693,10 +665,10 @@ async function takeCheckOutPicture() {
       renderModeCheckOutBtn.value = true;
       imageUrl.value = image.webPath.toString();
 
-      console.log(`Captured photo path: ${imageUrl.value}`);
+      // console.log(`Captured photo path: ${imageUrl.value}`);
 
       imageLocation.value = await fetch(image.webPath).then((r) => r.blob());
-      console.log(imageLocation.value);
+      // console.log(imageLocation.value);
     } else {
       catchToastError('Failed to capture photo or image path is missing', 3000);
 
@@ -711,11 +683,13 @@ async function takeCheckOutPicture() {
 
 onMounted(() => {
   presentLoading();
+  
   refreshAccessTokenHandler();
-  fetchStoreBasedOnCallPlans(user.value.number);
+
   fetchStoresData();
   printCurrentPosition();
   checkLocationAccess();
+  
   stopLoading();
 });
 </script>

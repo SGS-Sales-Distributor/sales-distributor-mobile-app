@@ -46,7 +46,9 @@ const photoPath = ref("http://localhost:2022/images/20240514100957_6SkNjNvVwn.pn
 
 onMounted(() => {
   presentLoading();
+
   refreshAccessTokenHandler();
+  
   stopLoading();
 })
 </script>

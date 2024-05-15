@@ -119,10 +119,10 @@
 import * as Yup from 'yup';
 import HeaderSection from './../components/HeaderSection.vue'
 import { onMounted, ref } from 'vue';
-import { redirectToOwnerFormPage } from '@/services/redirectHandlers';
 import { refreshAccessTokenHandler } from '@/services/auth';
 import axios from 'axios';
-import { API_URL } from '@/services/globalVariables';
+import { API_URL, fieldTypes } from '@/services/globalVariables';
+import { redirectToOwnerFormPage } from '@/services/redirectHandlers';
 import { presentLoading, stopLoading } from '@/services/loadingHandlers';
 import { catchToast, catchToastError } from '@/services/toastHandlers';
 import { alertController } from '@ionic/vue';
@@ -130,13 +130,6 @@ import { Form, Field, ErrorMessage } from 'vee-validate';
 
 const storeTypes = ref([]);
 const storeCabangs = ref([]);
-
-const fieldTypes = ref({
-    password: 'password',
-    email: 'email',
-    text: 'text',
-    phone: 'tel',
-});
 
 const formData = ref({
     store_name: null,
@@ -195,7 +188,6 @@ async function storeDataAlert() {
     return alert.present();
 }
 
-
 async function saveStoreData() {
     try {
         refreshAccessTokenHandler();
@@ -210,9 +202,9 @@ async function saveStoreData() {
             headers: headers
         });
 
-        console.log(response);
-
         localStorage.setItem("store", JSON.stringify(response.data.resource));
+
+        console.log(response.data.resource);
 
         catchToast(response.data.message);
     } catch (error) {
@@ -274,9 +266,11 @@ async function fetchStoreCabangs(query = '') {
 
 onMounted(() => {
     presentLoading();
+
     refreshAccessTokenHandler();
     fetchStoreTypes();
     fetchStoreCabangs();
+    
     stopLoading();
 });
 </script>

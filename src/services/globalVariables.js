@@ -19,9 +19,19 @@ export const detailStoreInfoDistri = ref(null);
 // Used for Loading.
 export const loading = ref(null);
 
+// Used for purchase order.
 export const objOrder = ref([]);
 export const nomorWhatsappOTP = ref(null);
 export const firstOTPNumber = ref(null);
 export const secondOTPNumber = ref(null);
 export const thirdOTPNumber = ref(null);
 export const fourthOTPNumber = ref(null);
+
+// Used for input vee validate.
+export const fieldTypes = ref({
+    password: 'password',
+    email: 'email',
+    text: 'text',
+    phone: 'tel',
+    file: 'file',
+});

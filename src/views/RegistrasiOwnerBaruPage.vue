@@ -34,73 +34,48 @@
             <p class="text-gray-600 text-center mb-6">Masukkan data yang diperlukan.</p>
             <Form method="post" novalidate :validation-schema="validation">
               <div class="mb-4">
-                <label for="store_name" class="block text-gray-700 text-sm font-semibold mb-2">Nama Toko
+                <label for="owner" class="block text-gray-700 text-sm font-semibold mb-2">Nama Owner
                   *</label>
-                <Field v-model="formData.store_name" :type="fieldTypes.text" id="store_name" name="store_name"
+                <Field v-model="formData.owner" :type="fieldTypes.text" id="owner" name="owner"
                   class="form-input w-full px-4 py-2 border rounded-lg text-gray-700 focus:ring-blue-500"
-                  placeholder="Masukkan nama toko" aria-label="store_name" aria-describedby="store_name" />
-                <ErrorMessage name="store_name" class="text-rose-500" />
+                  placeholder="Masukkan nama owner" aria-label="owner" aria-describedby="owner" />
+                <ErrorMessage name="owner" class="text-rose-500" />
               </div>
               <div class="mb-4">
-                <label for="store_alias" class="block text-gray-700 text-sm font-semibold mb-2">Nama
-                  Alias Toko *</label>
-                <Field v-model="formData.store_alias" :type="fieldTypes.text" id="store_alias" name="store_alias"
+                <label for="nik_owner" class="block text-gray-700 text-sm font-semibold mb-2">NIK Owner *</label>
+                <Field v-model="formData.nik_owner" :type="fieldTypes.text" id="nik_owner" name="nik_owner"
                   class="form-input w-full px-4 py-2 border rounded-lg text-gray-700 focus:ring-blue-500"
-                  placeholder="Masukkan nama alias toko" aria-label="store_alias" aria-describedby="store_alias" />
-                <ErrorMessage name="store_alias" class="text-rose-500" />
+                  placeholder="Masukkan NIK owner" aria-label="nik_owner" aria-describedby="nik_owner" />
+                <ErrorMessage name="nik_owner" class="text-rose-500" />
               </div>
               <div class="mb-4">
-                <label for="store_address" class="block text-gray-700 text-sm font-semibold mb-2">Alamat
-                  Toko
+                <label for="email" class="block text-gray-700 text-sm font-semibold mb-2">Email Owner
                   *</label>
-                <Field v-model="formData.store_address" name="store_address" as="textarea" id="store_address"
+                <Field v-model="formData.email_owner" name="email" :type="fieldTypes.email" id="email"
                   class="form-input w-full px-4 py-2 border rounded-lg text-gray-700 focus:ring-blue-500"
-                  placeholder="Masukkan alamat toko" cols="20" rows="10" aria-label="store_address"
-                  aria-describedby="store_address">
+                  placeholder="Masukkan email owner" aria-label="email"
+                  aria-describedby="email">
                 </Field>
-                <ErrorMessage name="store_address" class="text-rose-500" />
+                <ErrorMessage name="email" class="text-rose-500" />
               </div>
               <div class="mb-4">
-                <label for="store_phone" class="block text-gray-700 text-sm font-semibold mb-2">Nomor
-                  Telepon Toko *</label>
-                <Field v-model="formData.store_phone" :type="fieldTypes.phone" id="store_phone" name="store_phone"
-                  class="form-input w-full px-4 py-2 border rounded-lg text-gray-700 focus:ring-blue-500"
-                  placeholder="1234-5678-9012" aria-label="store_phone" aria-describedby="store_phone" />
-                <ErrorMessage name="store_phone" class="text-rose-500" />
-              </div>
-              <div class="mb-4">
-                <label for="store_fax" class="block text-gray-700 text-sm font-semibold mb-2">Nomor Fax
-                  Toko *</label>
-                <Field v-model="formData.store_fax" :type="fieldTypes.phone" id="store_fax" name="store_fax"
-                  class="form-input w-full px-4 py-2 border rounded-lg text-gray-700 focus:ring-blue-500"
-                  placeholder="1234-5678-9012" aria-label="store_fax" aria-describedby="store_fax" />
-                <ErrorMessage name="store_fax" class="text-rose-500" />
-              </div>
-              <div class="mb-4">
-                <label for="store_type" class="block text-gray-700 text-sm font-semibold mb-2">Tipe Toko
+                <label for="ktp_image" class="block text-gray-700 text-sm font-semibold mb-2">Gambar KTP Owner
                   *</label>
-                <Field v-model="formData.store_type_id" as="select" id="store_type" name="store_type"
+                <Field v-model="formData.ktp_owner" name="ktp_image" :type="fieldTypes.file" id="ktp_image"
                   class="form-input w-full px-4 py-2 border rounded-lg text-gray-700 focus:ring-blue-500"
-                  placeholder="1234-5678-9012">
-                  <option disabled selected value="">Pilih Tipe Toko</option>
-                  <option v-for="type in storeTypes" :key="type.store_type_id" :value="type.store_type_id">
-                    {{ type.store_type_name }}
-                  </option>
+                  placeholder="Masukkan gambar KTP owner" aria-label="ktp_image"
+                  aria-describedby="ktp_image">
                 </Field>
-                <ErrorMessage name="store_type" class="text-rose-500" />
+                <ErrorMessage name="ktp_image" class="text-rose-500" />
               </div>
               <div class="mb-4">
-                <label for="subcabang_id" class="block text-gray-700 text-sm font-semibold mb-2">Cabang
-                  Toko*</label>
-                <Field v-model="formData.subcabang_id" as="select" id="subcabang_id" name="subcabang_id"
+                <label for="photo_other" class="block text-gray-700 text-sm font-semibold mb-2">Gambar Lainnya</label>
+                <Field v-model="formData.photo_other" name="photo_other" :type="fieldTypes.file" id="photo_other"
                   class="form-input w-full px-4 py-2 border rounded-lg text-gray-700 focus:ring-blue-500"
-                  placeholder="1234-5678-9012">
-                  <option disabled selected value="">Pilih Cabang Toko</option>
-                  <option v-for="cabang in storeCabangs" :key="cabang.id" :value="cabang.id">
-                    {{ cabang.nama_cabang }}
-                  </option>
+                  placeholder="Masukkan gambar lainnya" aria-label="photo_other"
+                  aria-describedby="photo_other">
                 </Field>
-                <ErrorMessage name="subcabang_id" class="text-rose-500" />
+                <ErrorMessage name="photo_other" class="text-rose-500" />
               </div>
               <button type="button" @click="storeDataAlert"
                 class="w-full bg-blue-500 text-white px-4 py-2 rounded-lg hover:bg-blue-600 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-opacity-50">Daftarkan
@@ -120,10 +95,24 @@
 import * as Yup from 'yup';
 import { chevronBackOutline, ellipsisVerticalOutline } from 'ionicons/icons';
 import { redirectToRegisterStorePage } from '@/services/redirectHandlers';
-import { ref } from 'vue';
+import { onMounted, ref } from 'vue';
 import { Form, Field, ErrorMessage } from 'vee-validate';
+import { refreshAccessTokenHandler } from '@/services/auth';
+import { presentLoading } from '@/services/loadingHandlers';
+import axios from 'axios';
+import { API_URL } from '@/services/globalVariables';
+import { catchToast, catchToastError } from '@/services/toastHandlers';
+import { fieldTypes } from '@/services/globalVariables';
 
 const store = ref(JSON.parse(localStorage.getItem("store")));
+
+const formData = ref({
+  owner: null,
+  nik_owner: null,
+  email_owner: null,
+  ktp_owner: null,
+  photo_other: null,  
+});
 
 const validation = Yup.object().shape({
   owner: Yup.string()
@@ -142,6 +131,65 @@ const validation = Yup.object().shape({
     .nullable()
     .max('Nama gambar Foto tambahan tidak boleh lebih dari 255 karaketer'),
 });
-</script>
 
-<style scoped></style>
+async function storeDataAlert() {
+    const alert = await alertController.create({
+        header: "Konfirmasi pembuatan data owner baru",
+        message: "Apakah kamu yakin?",
+        buttons: [
+            {
+                text: "Tidak",
+                cssClass: "alert-button-cancel",
+                handler: () => {
+                    console.log("Pembuatan data owner dibatalkan.");
+                },
+            },
+            {
+                text: "Lanjutkan",
+                cssClass: "alert-button-confirm",
+                handler: () => {
+                    console.log("Pembuatan data owner berhasil");
+
+                    saveOwnerData();
+
+                    redirectToOwnerFormPage();
+                },
+            },
+        ],
+    });
+
+    return alert.present();
+}
+
+async function saveOwnerData(storeId) {
+  try {
+    refreshAccessTokenHandler();
+
+    const tokens = localStorage.getItem("tokens") ? JSON.parse(localStorage.getItem("tokens")) : null;
+
+    const headers = {
+      'Authorization': `Bearer ${tokens.access_token}`,
+    }
+
+    const response = await axios.post(`${API_URL.value}/api/v2/stores/${storeId}/owners`, formData.value, {
+      headers: headers,
+    });
+
+    console.log(response);
+
+    catchToast(response.data.message);
+  } catch (error) {
+    catchToastError(error.message, 3000);
+
+    console.error("Failed to save owner data", error);
+  }
+}
+
+onMounted(() => {
+  presentLoading();
+
+  refreshAccessTokenHandler();
+
+  stopLoading();
+})
+</script>

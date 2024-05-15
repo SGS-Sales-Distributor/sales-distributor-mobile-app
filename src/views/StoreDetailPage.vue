@@ -636,9 +636,11 @@ async function fetchProductsData(query = '') {
 
 onMounted(() => {
 	presentLoading();
+
 	refreshAccessTokenHandler();
 	fetchStoreDetailData(storeId.value);
 	fetchProductsData();
+	
 	stopLoading();
 });
 </script>
