@@ -6,13 +6,13 @@
       <!-- End of header -->
 
       <!-- Content -->
-      <section class="py-6">
-        <div class="flex justify-center items-center">
-          <div class="text-center text-gray-500 max-w-full">
-            <img class="w-32 h-32 rounded-full mx-auto" alt="user-photo" src="/public/uknown-profile.jpg">
+      <section class="container mx-auto">
+        <div class="flex items-center justify-center min-h-screen">
+          <div class="p-8 rounded-lg max-w-sm w-full">
+            <img class="w-32 h-32 rounded-full mx-auto" alt="user-photo" :src="photoPath">
 
             <!-- Card here -->
-            <div class="rounded overflow-hidden shadow-none bg-white dark:bg-gray-800 w-96">
+            <div class="rounded overflow-hidden shadow-none bg-white dark:bg-gray-800">
               <div class="m-4">
                 <UpdateFormProfile />
               </div>
@@ -36,12 +36,17 @@
 
 <script setup>
 import HeaderSection from '../components/HeaderSection.vue'
-import { onMounted} from 'vue';
+import { onMounted, ref} from 'vue';
 import { refreshAccessTokenHandler } from '@/services/auth';
 import UpdateFormProfile from '@/components/profile/UpdateFormProfile.vue';
 import UpdateFormPassword from '@/components/profile/UpdateFormPassword.vue';
+import { presentLoading, stopLoading } from '@/services/loadingHandlers';
+
+const photoPath = ref("http://localhost:2022/images/20240514100957_6SkNjNvVwn.png");
 
 onMounted(() => {
+  presentLoading();
   refreshAccessTokenHandler();
+  stopLoading();
 })
 </script>

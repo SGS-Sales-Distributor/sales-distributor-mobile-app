@@ -414,8 +414,6 @@ async function confirmOTP() {
 	try {
 		refreshAccessTokenHandler();
 
-		presentLoading();
-
 		const tokens = localStorage.getItem("tokens") ? JSON.parse(localStorage.getItem("tokens")) : null;
 
 		const headers = {
@@ -434,22 +432,16 @@ async function confirmOTP() {
 		objOrder.value = [];
 
 		isOpen.value = false;
-
-		stopLoading();
 	} catch (error) {
 		catchToastError("Kode OTP salah", 3000);
 
 		console.error("Kode OTP salah", error);
-	} finally {
-		stopLoading();
 	}
 }
 
 async function resendOTPHandler() {
 	try {
 		refreshAccessTokenHandler();
-
-		presentLoading();
 
 		const tokens = localStorage.getItem("tokens") ? JSON.parse(localStorage.getItem("tokens")) : null;
 
@@ -472,24 +464,19 @@ async function resendOTPHandler() {
 		resendNomorPO.value = response.data.resource.nomor_po;
 		resendOTP.value = response.data.resource.otp;
 
-		stopLoading();
 	} catch (error) {
 		catchToastError(error.message, 3000);
 
 		console.error("Gagal mengirim ulang kode OTP", error);
-	} finally {
-		stopLoading();
 	}
-
 }
 
 async function sendOTPIntoWhatsapp(nomorPO, otp, nomorWhatsappOTP) {
 	const fonteUniqueToken = "Up#YVpLNfcEkqw3PCpBH";
+	// const fonteUniqueToken = "!GQUJzvQaWe#QqxpC#@1";
 
 	try {
 		refreshAccessTokenHandler();
-		
-		presentLoading();
 
 		let formData = new FormData();
 		formData.append("target", nomorWhatsappOTP);
@@ -507,14 +494,10 @@ async function sendOTPIntoWhatsapp(nomorPO, otp, nomorWhatsappOTP) {
 		console.log(response);
 
 		catchToast("OTP berhasil terkirim", 3000);
-
-		stopLoading();
 	} catch (error) {
 		catchToastError("OTP gagal terkirim", 3000);
 
 		console.error("OTP gagal terkirim", error);
-	} finally {
-		stopLoading();
 	}
 }
 
@@ -535,8 +518,6 @@ async function sendOTP(nomorWhatsappOTP) {
 
 	try {
 		refreshAccessTokenHandler();
-
-		presentLoading();
 
 		const tokens = localStorage.getItem("tokens") ? JSON.parse(localStorage.getItem("tokens")) : null;
 
@@ -567,14 +548,10 @@ async function sendOTP(nomorWhatsappOTP) {
 
 		resendNomorPO.value = response.data.resource.nomor_po;
 		resendOTP.value = response.data.resource.otp;
-
-		stopLoading();
 	} catch (error) {
 		catchToastError(error.message, 3000);
 
 		console.error(error.message, error);
-	} finally {
-		stopLoading();
 	}
 }
 
@@ -606,8 +583,6 @@ async function fetchStoreDetailData(id) {
 	try {
 		refreshAccessTokenHandler();
 
-		presentLoading();
-
 		const tokens = localStorage.getItem("tokens") ? JSON.parse(localStorage.getItem("tokens")) : null;
 
 		const headers = {
@@ -626,22 +601,16 @@ async function fetchStoreDetailData(id) {
 		idToko.value = storeData.value.store_id;
 
 		localStorage.setItem("store", storeData.value);
-
-		stopLoading();
 	} catch (error) {
 		catchToastError(error.message, 3000);
 
 		console.log(`Failed to fetch store ${id}: `, error);
-	} finally {
-		stopLoading();
 	}
 }
 
 async function fetchProductsData(query = '') {
 	try {
 		refreshAccessTokenHandler();
-
-		presentLoading();
 
 		const tokens = localStorage.getItem("tokens") ? JSON.parse(localStorage.getItem("tokens")) : null;
 
@@ -662,15 +631,15 @@ async function fetchProductsData(query = '') {
 		catchToastError(error.message, 3000);
 
 		console.error("Failed to fetch products data: ", error);
-	} finally {
-		stopLoading();
 	}
 }
 
 onMounted(() => {
+	presentLoading();
 	refreshAccessTokenHandler();
 	fetchStoreDetailData(storeId.value);
 	fetchProductsData();
+	stopLoading();
 });
 </script>
 

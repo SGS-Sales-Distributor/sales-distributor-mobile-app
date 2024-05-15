@@ -5,7 +5,7 @@
       <HeaderSection />      
       <!-- End of header -->
       
-      <div class="flex min-h-full flex-col justify-start px-4 py-8">
+      <div class="flex min-h-full flex-col justify-start px-4 py-8 bg-white">
         <!-- Feature Section -->
         <FeatureSection />
         <!-- End of Feature Section -->
@@ -42,6 +42,7 @@ import { onMounted } from 'vue';
 import { catchToastError } from '@/services/toastHandlers';
 import axios from 'axios';
 import { API_URL } from '@/services/globalVariables';
+import { redirectToLoginPage } from '@/services/redirectHandlers';
 
 async function fetchAuthUser() {
   refreshAccessTokenHandler();
@@ -67,8 +68,12 @@ async function fetchAuthUser() {
 
     console.log(JSON.parse(localStorage.getItem("user")));
   } catch (error) {
-      catchToastError(error.message);
+      catchToastError("Akses token telah hangus, mohon login kembali", 3000);
       
+      if (error) {
+        redirectToLoginPage();
+      }
+
       console.error(`Failed to fetch auth user: ${error.message}`);
   }
 }

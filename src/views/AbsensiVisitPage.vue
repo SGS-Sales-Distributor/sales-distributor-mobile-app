@@ -184,7 +184,7 @@
                 </div>
                 <div v-if="store.waktu_masuk !== null" class="flex flex-row w-full justify-between space-x-2">
                   <label for="nama-toko" class="flex-initial w-56 font-semibold">Waktu Check-In</label>
-                  <p class="flex-initial w-44 text-right">{{ store.waktu_masuk }}</p>
+                  <p class="flex-initial w-44 text-right">{{ store.waktu_masuk }} WIB</p>
                 </div>
                 <div v-else class="flex flex-row w-full justify-between space-x-2">
                   <label for="nama-toko" class="flex-initial font-semibold">Waktu Check-In</label>
@@ -192,7 +192,7 @@
                 </div>
                 <div v-if="store.waktu_keluar" class="flex flex-row w-full justify-between space-x-2">
                   <label for="nama-toko" class="flex-initial w-56 font-semibold">Waktu Check-Out</label>
-                  <p class="flex-initial w-44 text-right">{{ store.waktu_keluar }}</p>
+                  <p class="flex-initial w-44 text-right">{{ store.waktu_keluar }} WIB</p>
                 </div>
                 <div v-else class="flex flex-row w-full justify-between space-x-2">
                   <label for="nama-toko" class="flex-initial font-semibold">Waktu Check-Out</label>
@@ -255,27 +255,34 @@ import { computed, onMounted, ref, shallowRef } from 'vue';
 import { alertController } from '@ionic/vue';
 
 import { printCurrentPosition, checkLocationAccess } from '@/services/locationHandlers';
-import { statusGPS, API_URL } from '@/services/globalVariables';
+import { statusGPS, API_URL, latitude, longitude } from '@/services/globalVariables';
 import { catchToast, catchToastError } from '@/services/toastHandlers';
 import { refreshAccessTokenHandler } from '@/services/auth.js';
 import { presentLoading, stopLoading } from '@/services/loadingHandlers';
 
-const user = JSON.parse(localStorage.getItem("user"));
+const user = ref(JSON.parse(localStorage.getItem("user")));
 const renderModCheckInBtn = ref(false);
 const renderModeCheckOutBtn = ref(false);
 const disabledCheckIn = ref(true);
 const disabledCheckOut = ref(true);
 const disabledPurchaseOrderBtn = ref(true);
 const detailStoreInfoDistri = ref(null);
-const latitude = ref(0);
-const longitude = ref(0);
 const imageUrl = shallowRef("");
 const imageLocation = ref(null);
 
 const storeInfoDistri = ref([]);
+const callPlans = ref([]);
+const callPlanDetails = ref([]);
+
 const lastIndex = ref(5);
-const visibleStores = computed(() => storeInfoDistri.value.slice(0, lastIndex.value));
-const reachedEnd = computed(() => lastIndex.value >= storeInfoDistri.value.length);
+const visibleStores = computed(() => {
+  return storeInfoDistri.value && storeInfoDistri.value.length > 0 
+    ? storeInfoDistri.value.slice(0, lastIndex.value) 
+    : [];
+});
+const reachedEnd = computed(() => {
+  return Array.isArray(storeInfoDistri.value) && lastIndex.value >= storeInfoDistri.value.length; 
+});
 
 const ionInfinite = (event) => {
   if (!reachedEnd.value) {
@@ -406,6 +413,40 @@ async function passCheckOutAlert() {
 }
 
 // rest api (backend server)
+async function fetchStoreBasedOnCallPlans(userNumber, query = '') {
+  refreshAccessTokenHandler();
+
+  const tokens = localStorage.getItem("tokens") ? JSON.parse(localStorage.getItem("tokens")) : null;
+
+  const headers = {
+    'Content-Type': 'application/json',
+    'Authorization': `Bearer ${tokens.access_token}`
+  }
+
+  try {
+    const response = await axios.get(`${API_URL.value}/api/v2/salesmen/${userNumber}`, {
+      headers: headers,
+      params: {
+        q: query
+      },
+    });
+
+    response.data.resource.master_call_plan_details.forEach(storeData => {
+      console.log(storeData.store);
+    });
+
+    // response.data.resource.forEach(callPlan => {
+    //   if (Array.isArray(callPlan.details)) {
+    //     callPlan.details.forEach(storeData => {
+    //       console.log(storeData.store);
+    //     });
+    //   }
+    // });
+  } catch (error) {
+    console.error(error);
+  }
+}
+
 async function fetchStoresData(query = '') {
   refreshAccessTokenHandler();
 
@@ -417,8 +458,6 @@ async function fetchStoresData(query = '') {
   };
 
   try {
-    presentLoading();
-
     const response = await axios.get(`${API_URL.value}/api/v2/stores`, {
       headers: headers,
       params: {
@@ -427,7 +466,6 @@ async function fetchStoresData(query = '') {
     });
 
     storeInfoDistri.value = response.data.resource.data;
-    console.log(storeInfoDistri.value);
 
     let canAbsenVisit = true;
 
@@ -452,16 +490,10 @@ async function fetchStoresData(query = '') {
         value.enableAbsenBtn = true;
       }
     });
-
-    stopLoading();
-
-    console.log(storeInfoDistri.value);
   } catch (error) {
     catchToastError(error.message, 3000);
 
     console.error('Failed to fetch store data: ', error);
-  } finally {
-    stopLoading();
   }
 }
 
@@ -476,15 +508,11 @@ async function fetchOneStoreData(id) {
   };
 
   try {
-    presentLoading();
-
     const response = await axios.get(`${API_URL.value}/api/v2/stores/${id}`, {
       headers: headers
     });
 
     detailStoreInfoDistri.value = response.data.resource;
-
-    stopLoading();
 
     showDetailStoreCard();
 
@@ -498,8 +526,6 @@ async function fetchOneStoreData(id) {
     catchToastError(error.message, 3000);
 
     console.error(`Failed to fetch store ${id}: `, error);
-  } finally {
-    stopLoading();
   }
 }
 
@@ -512,9 +538,7 @@ async function saveCheckInImage() {
 
   imageUrl.value = base64Data;
 
-  console.log(user);
-
-  uploadCheckInImage(user.number);
+  await uploadCheckInImage(user.value.number);
 
   disabledPurchaseOrderBtn.value = false;
 
@@ -539,7 +563,7 @@ async function saveCheckOutImage() {
 
   imageUrl.value = base64Data;
 
-  uploadCheckOutImage(user.number);
+  uploadCheckOutImage(user.value.number);
 
   disabledCheckOut.value = true;
 
@@ -556,8 +580,6 @@ async function uploadCheckInImage(userNumber) {
     refreshAccessTokenHandler();
 
     const tokens = localStorage.getItem("tokens") ? JSON.parse(localStorage.getItem("tokens")) : null;
-
-    presentLoading();
 
     let formData = new FormData();
     formData.append("image", imageLocation.value);
@@ -589,8 +611,6 @@ async function uploadCheckInImage(userNumber) {
     catchToastError(error.message);
 
     console.error('Gagal upload gambar untuk absensi check-in', error);
-  } finally {
-    stopLoading();
   }
 }
 
@@ -599,8 +619,6 @@ async function uploadCheckOutImage(userNumber) {
     refreshAccessTokenHandler();
 
     const tokens = localStorage.getItem("tokens") ? JSON.parse(localStorage.getItem("tokens")) : null;
-
-    presentLoading();
 
     let formData = new FormData();
     formData.append("image", imageLocation.value);
@@ -630,8 +648,6 @@ async function uploadCheckOutImage(userNumber) {
     catchToastError(error.message);
 
     console.error('Gagal upload gambar untuk absensi check-in', error);
-  } finally {
-    stopLoading();
   }
 }
 
@@ -694,16 +710,23 @@ async function takeCheckOutPicture() {
 }
 
 onMounted(() => {
+  presentLoading();
   refreshAccessTokenHandler();
+  fetchStoreBasedOnCallPlans(user.value.number);
   fetchStoresData();
   printCurrentPosition();
   checkLocationAccess();
+  stopLoading();
 });
 </script>
 
 <style scoped>
+ion-col {
+  background-color: transparent;
+}
+
 ion-content {
-  --background: white;
+  --backgroun: white;
 }
 
 ion-modal {

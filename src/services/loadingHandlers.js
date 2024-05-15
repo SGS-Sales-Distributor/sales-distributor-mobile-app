@@ -14,5 +14,5 @@ export function presentLoading() {
 export function stopLoading() {
   setTimeout(() => {
     loadingController.dismiss();
-  }, 100);
+  }, 300);
 }

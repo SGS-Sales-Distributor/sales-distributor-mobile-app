@@ -11,9 +11,9 @@
             <div class="mt-2">
                 <vee-field
                 v-model="formData.email" 
+                :type="emailFieldType"
                 id="email" 
                 name="email" 
-                type="email" 
                 autocomplete="email" 
                 placeholder="Masukkan alamat email anda" 
                 aria-label="email" 
@@ -108,11 +108,11 @@ import { catchToast, catchToastError } from '@/services/toastHandlers';
 import axios from 'axios';
 import { ref } from 'vue';
 import { API_URL } from '@/services/globalVariables';
-import { loadingController } from '@ionic/vue';
 import { redirectToHomePage } from '@/services/redirectHandlers';
+import { presentLoading, stopLoading } from '@/services/loadingHandlers';
 
-const renderLoading = ref(null);
 const passwordFieldType = ref('password');
+const emailFieldType = ref('email');
 
 const formData = ref({
   email: null,
@@ -132,21 +132,6 @@ const formLoginValidate = Yup.object().shape({
 
 function togglePasswordVisibility() {
   passwordFieldType.value = passwordFieldType.value === 'password' ? 'text' : 'password';
-}
-
-function presentLoading() {
-  renderLoading.value = loadingController.create({
-      message: "Loading...",
-    })
-    .then((a) => a.present());
-  
-    return renderLoading.value;
-}
-
-function stopLoading() {
-  setTimeout(() => {
-    loadingController.dismiss();
-  }, 100);
 }
 
 async function login() {

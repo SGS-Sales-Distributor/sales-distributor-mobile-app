@@ -10,6 +10,8 @@ export const isLocationPermissionAllowed = ref(false);
 export const statusGPS = ref(false);
 export const mapContainer = shallowRef(null);
 export const map = shallowRef(null);
+export const latitude = ref(0);
+export const longitude = ref(0);
 
 // Used for get Detail Store.
 export const detailStoreInfoDistri = ref(null);

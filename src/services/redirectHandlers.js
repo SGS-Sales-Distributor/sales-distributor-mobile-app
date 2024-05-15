@@ -39,3 +39,19 @@ export function redirectToPurchaseOrderPage(storeId) {
         });
     }, 300);
 }
+
+export function redirectToOwnerFormPage() {
+    setTimeout(() => {
+        router.push({
+            name: 'registerOwnerStore'
+        });
+    }, 300);
+}
+
+export function redirectToRegisterStorePage() {
+    setTimeout(() => {
+        router.push({
+            name: 'registerNewStore'
+        });
+    }, 300);
+}

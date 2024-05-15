@@ -12,7 +12,7 @@
 </template>
 
 <script setup>
-import { statusGPS, mapContainer, map } from '@/services/globalVariables';
+import { statusGPS, mapContainer, map, latitude, longitude } from '@/services/globalVariables';
 import { checkLocationAccess, printCurrentPosition } from '@/services/locationHandlers';
 import { catchToastError } from '@/services/toastHandlers';
 import { Map, GeolocateControl, Marker, NavigationControl } from 'maplibre-gl';
@@ -24,6 +24,9 @@ async function renderMap() {
   const [currentLatitude, currentLongitude] = currentPositions;
   const myApiKey = import.meta.env.VITE_MAPTILER_API_KEY;
 
+  latitude.value = currentLatitude;
+  longitude.value = currentLongitude;
+  
   try {
     map.value = new Map({
       container: mapContainer.value,

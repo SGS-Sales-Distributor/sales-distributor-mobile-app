@@ -7,6 +7,9 @@ import AbsensiVisitPage from "@/views/AbsensiVisitPage.vue";
 import ProfilePage from "@/views/ProfilePage.vue";
 import StoreDetailPage from "@/views/StoreDetailPage.vue";
 import OrderBarangPage from "@/views/OrderBarangPage.vue";
+import RegistrasiTokoBaruPage from './../views/RegistrasiTokoBaruPage.vue'
+import RegistrasiOwnerBaruPage from './../views/RegistrasiOwnerBaruPage.vue'
+
 import { isAuthenticated } from "@/services/auth";
 import "maplibre-gl/dist/maplibre-gl.css";
 
@@ -51,6 +54,16 @@ const routes: Array<RouteRecordRaw> = [
         path: "/store/:id/order",
         name: "purchaseOrder",
         component: OrderBarangPage,
+      },
+      {
+        path: "/store/register",
+        name: "registerNewStore",
+        component: RegistrasiTokoBaruPage,
+      },
+      {
+        path: "/store/register/owner",
+        name: "registerOwnerStore",
+        component: RegistrasiOwnerBaruPage,
       },
       {
         path: "absensi",

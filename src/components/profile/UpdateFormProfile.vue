@@ -134,6 +134,8 @@ async function updateProfile(userNumber) {
       headers: headers,
     });
 
+    stopLoading();
+    
     catchToast(response.data.message);
   } catch (error) {
     catchToastError(error.message, 3000);

@@ -8,7 +8,7 @@
       <ion-label class="text-sm font-semibold">Absensi Visit</ion-label>
     </div>
     <div class="flex flex-col items-center justify-center space-y-2">
-      <ion-button id="registrasi-toko-button">
+      <ion-button id="registrasi-toko-button" href="/store/register">
         <ion-icon class="text-2xl" :icon="storefront"></ion-icon>
       </ion-button>
       <ion-label class="text-sm font-semibold">Registrasi Toko</ion-label>

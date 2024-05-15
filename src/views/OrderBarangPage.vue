@@ -117,18 +117,12 @@ function orderProduct(prodNumber, prodName, stock, hargaProduk) {
 
     objOrder.value.push(productData);
 
-    presentLoading();
-
     redirectToStoreDetailPage(storeData.store_id);
-
-    stopLoading();
 }
 
 async function fetchProductsData(query = '') {
     try {
         refreshAccessTokenHandler();
-
-        presentLoading();
 
         const tokens = localStorage.getItem("tokens") ? JSON.parse(localStorage.getItem("tokens")) : null;
 
@@ -145,20 +139,18 @@ async function fetchProductsData(query = '') {
         });
 
         productsData.value = response.data.resource.data;
-
-        stopLoading();
     } catch (error) {
         catchToastError(error.message, 3000);
 
         console.error("Failed to fetch product data: ", error);
-    } finally {
-        stopLoading();
     }
 }
 
 onMounted(() => {
+    presentLoading();
     refreshAccessTokenHandler();
     fetchProductsData();
+    stopLoading();
 });
 </script>
 
