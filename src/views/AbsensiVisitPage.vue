@@ -142,19 +142,19 @@
         <ion-grid v-if="statusGPS" :fixed="true">
           <ion-row v-if="renderModCheckInBtn">
             <ion-col style="margin: 20px">
-              <ion-button @click="passCheckInAlert">Save</ion-button></ion-col>
+              <ion-button @click="passCheckInAlert" id="save-btn">Save</ion-button></ion-col>
             <ion-col></ion-col>
             <ion-col style="margin: 20px">
-              <ion-button @click="clearImage">Clear</ion-button>
+              <ion-button @click="clearImage" id="clear-btn">Clear</ion-button>
             </ion-col>
           </ion-row>
           <ion-row v-if="renderModeCheckOutBtn">
             <ion-col style="margin: 20px">
-              <ion-button @click="passCheckOutAlert">Save</ion-button>
+              <ion-button @click="passCheckOutAlert" id="save-btn">Save</ion-button>
             </ion-col>
             <ion-col></ion-col>
             <ion-col style="margin: 20px">
-              <ion-button @click="clearImage">Clear</ion-button>
+              <ion-button @click="clearImage" id="clear-btn">Clear</ion-button>
             </ion-col>
           </ion-row>
         </ion-grid>
@@ -695,6 +695,15 @@ onMounted(() => {
 </script>
 
 <style scoped>
+#save-btn {
+  --background: green;
+  
+}
+
+#clear-btn {
+  --background: red;
+}
+
 ion-col {
   background-color: transparent;
 }

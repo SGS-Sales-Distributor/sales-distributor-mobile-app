@@ -43,7 +43,10 @@
                             </div>
                             <div class="flex flex-row w-full h-full justify-between space-x-2">
                                 <label for="nama-toko" class="flex-initial w-56 font-semibold">Harga Produk</label>
-                                <p class="flex-initial w-44 text-right">RP. {{ parseFloat(product.prod_base_price).toFixed(3) }}</p>
+                                <p class="flex-initial w-44 text-right">{{ new Intl.NumberFormat('id-ID', {
+                                    style: 'currency',
+                                    currency: 'IDR'
+                                }).format(product.prod_base_price) }}</p>
                             </div>
                             <div class="flex flex-row w-full h-full justify-between space-x-2">
                                 <label for="nama-toko" class="flex-initial w-56 font-semibold">Total Stok</label>

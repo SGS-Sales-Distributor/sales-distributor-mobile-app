@@ -22,6 +22,7 @@ import '@maptiler/sdk/dist/maptiler-sdk.css';
 async function renderMap() {
   const currentPositions = await printCurrentPosition();
   const [currentLatitude, currentLongitude] = currentPositions;
+  
   const myApiKey = import.meta.env.VITE_MAPTILER_API_KEY;
 
   latitude.value = currentLatitude;

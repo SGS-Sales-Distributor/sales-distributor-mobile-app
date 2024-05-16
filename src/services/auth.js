@@ -1,7 +1,7 @@
 import axios from "axios";
 import { API_URL } from "./globalVariables";
 import { catchToastError } from "./toastHandlers";
-import { redirectToHomePage } from "./redirectHandlers";
+import { redirectToHomePage, redirectToLoginPage } from "./redirectHandlers";
 
 export function isAuthenticated() {
   const tokens = localStorage.getItem("tokens");
@@ -35,7 +35,10 @@ export async function refreshAccessTokenHandler() {
 
   if (!refreshToken) {
     console.error("Refresh token not found in local storage.");
-    return;
+    
+    catchToastError("Akses token ");
+
+    redirectToLoginPage();
   }
 
   const accessToken = await refreshAccessToken(refreshToken);

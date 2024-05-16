@@ -314,22 +314,22 @@
 													<div class="w-16 h-16 ">
 														<input v-model="firstOTPNumber"
 															class="w-full h-full flex flex-col items-center justify-center text-center px-5 outline-none rounded-xl border border-gray-200 text-lg bg-white focus:bg-gray-50 focus:ring-1 ring-blue-700"
-															type="text" name="" id="">
+															type="text" name="" id="" maxlength="1">
 													</div>
 													<div class="w-16 h-16 ">
 														<input v-model="secondOTPNumber"
 															class="w-full h-full flex flex-col items-center justify-center text-center px-5 outline-none rounded-xl border border-gray-200 text-lg bg-white focus:bg-gray-50 focus:ring-1 ring-blue-700"
-															type="text" name="" id="">
+															type="text" name="" id="" maxlength="1">
 													</div>
 													<div class="w-16 h-16 ">
 														<input v-model="thirdOTPNumber"
 															class="w-full h-full flex flex-col items-center justify-center text-center px-5 outline-none rounded-xl border border-gray-200 text-lg bg-white focus:bg-gray-50 focus:ring-1 ring-blue-700"
-															type="text" name="" id="">
+															type="text" name="" id="" maxlength="1">
 													</div>
 													<div class="w-16 h-16 ">
 														<input v-model="fourthOTPNumber"
 															class="w-full h-full flex flex-col items-center justify-center text-center px-5 outline-none rounded-xl border border-gray-200 text-lg bg-white focus:bg-gray-50 focus:ring-1 ring-blue-700"
-															type="text" name="" id="">
+															type="text" name="" id="" maxlength="1">
 													</div>
 												</div>
 
@@ -651,5 +651,9 @@ ion-col {
 	border: solid 1px #fff;
 	color: #fff;
 	text-align: center;
+}
+
+#orderInput {
+
 }
 </style>
