@@ -621,8 +621,8 @@ async function saveCheckOutImage() {
 async function takeCheckInPicture() {
   try {
     const image = await Camera.getPhoto({
-      quality: 90,
-      allowEditing: true,
+      quality: 10,
+      allowEditing: false,
       source: CameraSource.Camera,
       resultType: CameraResultType.Uri,
     });
@@ -647,8 +647,8 @@ async function takeCheckInPicture() {
 async function takeCheckOutPicture() {
   try {
     const image = await Camera.getPhoto({
-      quality: 90,
-      allowEditing: true,
+      quality: 10,
+      allowEditing: false,
       source: CameraSource.Camera,
       resultType: CameraResultType.Uri,
     });
