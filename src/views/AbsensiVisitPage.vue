@@ -488,52 +488,6 @@ async function fetchOneStoreData(id) {
   }
 }
 
-async function saveCheckInImage() {
-  const response = await fetch(imageUrl.value);
-  const blob = await response.blob();
-  const base64Data = await convertBlobToBase64(blob);
-
-  console.log("url", base64Data);
-
-  imageUrl.value = base64Data;
-
-  await uploadCheckInImage(user.value.number);
-
-  disabledPurchaseOrderBtn.value = false;
-
-  disabledCheckIn.value = true;
-
-  if (renderModCheckInBtn.value) {
-    renderModCheckInBtn.value = false;
-  }
-
-  if (disabledCheckOut.value) {
-    disabledCheckOut.value = false;
-  }
-}
-
-
-async function saveCheckOutImage() {
-  const response = await fetch(imageUrl.value);
-  const blob = await response.blob();
-  const base64Data = await convertBlobToBase64(blob);
-
-  console.log("url", base64Data);
-
-  imageUrl.value = base64Data;
-
-  await uploadCheckOutImage(user.value.number);
-
-  disabledCheckOut.value = true;
-
-  if (renderModeCheckOutBtn.value) {
-    renderModeCheckOutBtn.value = false;
-  }
-
-  const previewPhoto = document.getElementById("preview-photo");
-  previewPhoto.style.display = "none";
-}
-
 async function uploadCheckInImage(userNumber) {
   try {
     refreshAccessTokenHandler();
@@ -616,6 +570,52 @@ async function uploadCheckOutImage(userNumber) {
   } finally {
     stopLoading();
   }
+}
+
+async function saveCheckInImage() {
+  const response = await fetch(imageUrl.value);
+  const blob = await response.blob();
+  const base64Data = await convertBlobToBase64(blob);
+
+  console.log("url", base64Data);
+
+  imageUrl.value = base64Data;
+
+  await uploadCheckInImage(user.value.number);
+
+  disabledPurchaseOrderBtn.value = false;
+
+  disabledCheckIn.value = true;
+
+  if (renderModCheckInBtn.value) {
+    renderModCheckInBtn.value = false;
+  }
+
+  // if (disabledCheckOut.value) {
+  //   disabledCheckOut.value = false;
+  // }
+}
+
+
+async function saveCheckOutImage() {
+  const response = await fetch(imageUrl.value);
+  const blob = await response.blob();
+  const base64Data = await convertBlobToBase64(blob);
+
+  console.log("url", base64Data);
+
+  imageUrl.value = base64Data;
+
+  await uploadCheckOutImage(user.value.number);
+
+  disabledCheckOut.value = true;
+
+  if (renderModeCheckOutBtn.value) {
+    renderModeCheckOutBtn.value = false;
+  }
+
+  const previewPhoto = document.getElementById("preview-photo");
+  previewPhoto.style.display = "none";
 }
 
 async function takeCheckInPicture() {
