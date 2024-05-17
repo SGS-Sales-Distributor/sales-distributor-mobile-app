@@ -19,7 +19,7 @@ export async function catchToast (responseMsg, duration) {
         ],
     });
 
-    await toast.present();
+    return toast.present();
 }
 
 export async function catchToastError (errorMsg, duration) {
@@ -40,7 +40,7 @@ export async function catchToastError (errorMsg, duration) {
         ],
     });
 
-    await toast.present();
+    return toast.present();
 }
 
 export async function catchToastWarn (warnMsg, duration) {
@@ -52,5 +52,5 @@ export async function catchToastWarn (warnMsg, duration) {
         color: "warning",
     });
 
-    await toast.present();
+    return toast.present();
 }

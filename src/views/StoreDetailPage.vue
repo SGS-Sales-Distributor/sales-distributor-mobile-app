@@ -148,13 +148,13 @@
 							<ion-card-header class="bg-gray-50">
 								<h6 class="font-bold text-left p-2.5">Daftar Program Terkini</h6>
 								<ion-list>
-									<ion-item v-for="(program, index) in promoProgramsData" :key="index + 1">
+									<ion-item v-for="(program, index) in visiblePromoPrograms" :key="index + 1">
 										<ion-label>{{ program.name_program }}</ion-label>
 									</ion-item>
 								</ion-list>
 								<ion-infinite-scroll @ionInfinite="ionInfinite">
-									<ion-infinite-scroll-content loading-text="Load more stores..."
-										loading-spinner="bubbles"></ion-infinite-scroll-content>
+									<ion-infinite-scroll-content loading-text="Load more programs..."
+									loading-spinner="bubbles"></ion-infinite-scroll-content>
 								</ion-infinite-scroll>
 							</ion-card-header>
 						</ion-card>
@@ -352,7 +352,7 @@ import {
 	removeOutline,
 	addOutline,
 } from 'ionicons/icons'
-import { onMounted, ref } from 'vue';
+import { computed, onMounted, ref } from 'vue';
 import { useRoute } from 'vue-router';
 import { refreshAccessTokenHandler } from '@/services/auth.js';
 import { presentLoading, stopLoading } from '@/services/loadingHandlers';
@@ -383,12 +383,12 @@ const productsData = ref([]);
 const promoProgramsData = ref([]);
 const lastIndex = ref(5);
 const visiblePromoPrograms = computed(() => {
-	return promoProgramsData.value && promoProgramsData.value.length > 0
-		? promoProgramsData.value.slice(0, lastIndex.value)
-		: [];
+  return promoProgramsData.value && promoProgramsData.value.length > 0
+    ? promoProgramsData.value.slice(0, lastIndex.value)
+    : [];
 });
 const reachedEnd = computed(() => {
-	return Array.isArray(promoProgramsData.value) && lastIndex.value >= promoProgramsData.value.length;
+  return Array.isArray(promoProgramsData.value) && lastIndex.value >= promoProgramsData.value.length;
 });
 
 const idToko = ref(null);
@@ -401,15 +401,15 @@ function handleChange(event) {
 }
 
 const ionInfinite = (event) => {
-    if (!reachedEnd.value) {
-        setTimeout(() => {
-            lastIndex.value += 5;
+  if (!reachedEnd.value) {
+    setTimeout(() => {
+      lastIndex.value += 5;
 
-            event.target.complete();
-        }, 1000);
-    } else {
-        event.target.disabled = true;
-    }
+      event.target.complete();
+    }, 1000);
+  } else {
+    event.target.disabled = true;
+  }
 }
 
 async function confirmOTP() {
@@ -485,7 +485,7 @@ async function sendOTPIntoWhatsapp(nomorPO, otp, nomorWhatsappOTP) {
 	try {
 		refreshAccessTokenHandler();
 
-		let formData = new FormData();
+		const formData = new FormData();
 		formData.append("target", nomorWhatsappOTP);
 		formData.append("message", `Kode OTP untuk nomor PO ${nomorPO} Anda adalah ${otp}`);
 		formData.append("countryCode", "62");

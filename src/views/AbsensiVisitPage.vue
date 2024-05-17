@@ -546,7 +546,7 @@ async function uploadCheckInImage(userNumber) {
 
     const tokens = localStorage.getItem("tokens") ? JSON.parse(localStorage.getItem("tokens")) : null;
 
-    let formData = new FormData();
+    const formData = new FormData();
     formData.append("image", imageLocation.value);
     formData.append("store_id", detailStoreInfoDistri.value.store_id);
     formData.append("lat_in", latitude.value);
@@ -591,7 +591,7 @@ async function uploadCheckOutImage(userNumber) {
 
     const tokens = localStorage.getItem("tokens") ? JSON.parse(localStorage.getItem("tokens")) : null;
 
-    let formData = new FormData();
+    const formData = new FormData();
     formData.append("image", imageLocation.value);
     formData.append("lat_out", latitude.value);
     formData.append("long_out", longitude.value);
