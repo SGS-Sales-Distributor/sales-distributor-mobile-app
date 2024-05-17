@@ -132,8 +132,9 @@
 					</div>
 					<!-- End of Detail Store Card -->
 
-					<div class="flex justify-center items-center mb-2">
-						<button @click="redirectToPurchaseOrderPage(storeId)" data-modal-target="large-modal"
+					<div class="flex justify-center items-center 
+					mb-2">
+						<button @click="redirectToStorePurchaseOrderPage(storeId)" data-modal-target="large-modal"
 							data-modal-toggle="large-modal"
 							class="block w-full md:w-auto text-white bg-blue-400 hover:bg-blue-500 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800"
 							type="button">
@@ -355,7 +356,6 @@ import {
 import { computed, onMounted, ref } from 'vue';
 import { useRoute } from 'vue-router';
 import { refreshAccessTokenHandler } from '@/services/auth.js';
-import { presentLoading, stopLoading } from '@/services/loadingHandlers';
 import { catchToast, catchToastError } from '@/services/toastHandlers';
 import {
 	objOrder,
@@ -366,7 +366,7 @@ import {
 	fourthOTPNumber,
 	selectedProduct,
 } from '@/services/globalVariables';
-import { redirectToAbsensiPage, redirectToPurchaseOrderPage } from '@/services/redirectHandlers';
+import { redirectToAbsensiPage, redirectToStorePurchaseOrderPage } from '@/services/redirectHandlers';
 import { API_URL } from '@/services/globalVariables';
 
 
@@ -381,6 +381,7 @@ const storeId = ref(route.params.id);
 const productsData = ref([]);
 
 const promoProgramsData = ref([]);
+
 const lastIndex = ref(5);
 const visiblePromoPrograms = computed(() => {
   return promoProgramsData.value && promoProgramsData.value.length > 0
@@ -472,7 +473,7 @@ async function resendOTPHandler() {
 		resendOTP.value = response.data.resource.otp;
 
 	} catch (error) {
-		catchToastError(error.message, 3000);
+		catchToastError("Gagal mengirim ulang kode OTP", 3000);
 
 		console.error("Gagal mengirim ulang kode OTP", error);
 	}
@@ -494,11 +495,9 @@ async function sendOTPIntoWhatsapp(nomorPO, otp, nomorWhatsappOTP) {
 			'Authorization': fonteUniqueToken,
 		}
 
-		const response = await axios.post("https://api.fonnte.com/send", formData, {
+		await axios.post("https://api.fonnte.com/send", formData, {
 			headers: headers,
 		});
-
-		console.log(response);
 
 		catchToast("OTP berhasil terkirim", 3000);
 	} catch (error) {
@@ -543,8 +542,6 @@ async function sendOTP(nomorWhatsappOTP) {
 			headers: headers
 		});
 
-		console.log(response);
-
 		flagOTP.value = false;
 
 		sendOTPIntoWhatsapp(
@@ -556,9 +553,9 @@ async function sendOTP(nomorWhatsappOTP) {
 		resendNomorPO.value = response.data.resource.nomor_po;
 		resendOTP.value = response.data.resource.otp;
 	} catch (error) {
-		catchToastError(error.message, 3000);
+		catchToastError("Gagal mengirim OTP", 3000);
 
-		console.error(error.message, error);
+		console.error("Gagal mengirim OTP", error);
 	}
 }
 
@@ -589,8 +586,6 @@ function deleteRecentOrder(index, prodNumber) {
 		const productIndex = selectedProduct.value.indexOf(prodNumber);
 
 		selectedProduct.value.splice(productIndex, 1);
-
-		console.log(selectedProduct.value);
 	}
 }
 
@@ -610,8 +605,6 @@ async function fetchPromoProgram() {
 		});
 
 		promoProgramsData.value = response.data.resource.data;
-
-		console.log(promoProgramsData.value);
 	} catch (error) {
 		catchToastError("Failed to fetch program promo data", 3000);
 
@@ -636,17 +629,15 @@ async function fetchStoreDetailData(id) {
 
 		storeData.value = response.data.resource;
 
-		console.log(storeData.value);
-
 		nomorWhatsappOTP.value = storeData.value.nomor_telepon_toko;
 
 		idToko.value = storeData.value.store_id;
 
 		localStorage.setItem("store", storeData.value);
 	} catch (error) {
-		catchToastError(error.message, 3000);
+		catchToastError(`Failed to fetch store ${id}`, 3000);
 
-		console.log(`Failed to fetch store ${id}: `, error);
+		console.error(`Failed to fetch store ${id}: `, error);
 	}
 }
 
@@ -670,21 +661,17 @@ async function fetchProductsData(query = '') {
 
 		productsData.value = response.data.resource.data;
 	} catch (error) {
-		catchToastError(error.message, 3000);
+		catchToastError("Failed to fetch products data", 3000);
 
 		console.error("Failed to fetch products data: ", error);
 	}
 }
 
 onMounted(() => {
-	presentLoading();
-
 	refreshAccessTokenHandler();
 	fetchStoreDetailData(storeId.value);
 	fetchPromoProgram();
 	fetchProductsData();
-
-	stopLoading();
 });
 </script>
 

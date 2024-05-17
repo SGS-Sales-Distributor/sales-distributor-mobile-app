@@ -135,6 +135,7 @@ function togglePasswordVisibility() {
   passwordFieldType.value = passwordFieldType.value === 'password' ? 'text' : 'password';
 }
 
+
 async function login() {
   try {
     presentLoading();
@@ -158,4 +159,5 @@ async function login() {
     stopLoading();
   }
 }
+
 </script>

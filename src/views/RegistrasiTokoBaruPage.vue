@@ -202,9 +202,9 @@ async function saveStoreData() {
             headers: headers
         });
 
-        localStorage.setItem("store", JSON.stringify(response.data.resource));
-
         stopLoading();
+
+        localStorage.setItem("store", JSON.stringify(response.data.resource));
 
         console.log(response.data.resource);
 
@@ -239,7 +239,7 @@ async function fetchStoreTypes(query = '') {
 
         storeTypes.value = response.data.resource.data;
     } catch (error) {
-        catchToastError(error.message, 3000);
+        catchToastError("Failed to fetch store types", 3000);
 
         console.error("Failed to fetch store types", error);
     }
@@ -264,7 +264,7 @@ async function fetchStoreCabangs(query = '') {
 
         storeCabangs.value = response.data.resource.data;
     } catch (error) {
-        catchToastError(error.message, 3000);
+        catchToastError("Failed to fetch store cabangs", 3000);
 
         console.error("Failed to fetch store cabangs", error);
     }

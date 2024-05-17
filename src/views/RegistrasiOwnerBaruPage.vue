@@ -64,7 +64,6 @@
                   class="form-input w-full px-4 py-2 border rounded-lg text-gray-700 focus:ring-blue-500"
                   placeholder="Masukkan gambar KTP owner" aria-label="ktp_image" aria-describedby="ktp_image">
                 </Field>
-                <ErrorMessage name="ktp_image" class="text-rose-500" />
               </div>
               <div class="mb-4">
                 <label for="photo_other" class="block text-gray-700 text-sm font-semibold mb-2">Gambar Lainnya</label>
@@ -72,7 +71,6 @@
                   class="form-input w-full px-4 py-2 border rounded-lg text-gray-700 focus:ring-blue-500"
                   placeholder="Masukkan gambar lainnya" aria-label="photo_other" aria-describedby="photo_other">
                 </Field>
-                <ErrorMessage name="photo_other" class="text-rose-500" />
               </div>
               <button type="button" @click="storeDataAlert"
                 class="w-full bg-blue-500 text-white px-4 py-2 rounded-lg hover:bg-blue-600 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-opacity-50">Daftarkan
@@ -91,7 +89,7 @@
 <script setup>
 import * as Yup from 'yup';
 import { chevronBackOutline, ellipsisVerticalOutline } from 'ionicons/icons';
-import { redirectToRegisterStorePage } from '@/services/redirectHandlers';
+import { redirectToPurchaseOrderPage, redirectToRegisterStorePage } from '@/services/redirectHandlers';
 import { onMounted, ref } from 'vue';
 import { Form, Field, ErrorMessage } from 'vee-validate';
 import { refreshAccessTokenHandler } from '@/services/auth';
@@ -121,7 +119,8 @@ const validation = Yup.object().shape({
     .max(20, 'NIK tidak boleh lebih dari 20 karaketer'),
   email_owner: Yup.string()
     .required('Email tidak boleh kosong!')
-    .max(100, 'Email tidak boleh lebih dari 100 karakter'),
+    .max(100, 'Email tidak boleh lebih dari 100 karakter')
+    .email(),
   ktp_owner: Yup.string()
     .nullable()
     .max(255, 'Nama gambar KTP tidak boleh lebih dari 255 karakter'),
@@ -149,6 +148,8 @@ async function storeDataAlert() {
           console.log("Pembuatan data owner berhasil");
 
           saveOwnerData(store.value.store_id);
+
+          redirectToPurchaseOrderPage();
         },
       },
     ],
@@ -188,8 +189,6 @@ async function saveOwnerData(storeId) {
 }
 
 onMounted(() => {
-  presentLoading();
-
   refreshAccessTokenHandler();
 
   stopLoading();

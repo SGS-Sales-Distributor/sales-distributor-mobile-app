@@ -32,7 +32,15 @@ export function redirectToStoreDetailPage(storeId) {
     }, 300);
 }
 
-export function redirectToPurchaseOrderPage(storeId) {
+export function  redirectToPurchaseOrderPage() {
+    setTimeout(() => {
+        router.push({
+            name: 'purchaseOrder',
+        });
+    }, 300);
+}
+
+export function redirectToStorePurchaseOrderPage(storeId) {
     setTimeout(() => {
         router.push({
             name: 'storePurchaseOrder', params: { id: storeId }

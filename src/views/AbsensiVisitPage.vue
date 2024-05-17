@@ -253,7 +253,7 @@ import LocationNotAllowed from './../components/absensi/LocationNotAllowed.vue'
 import MapContentSection from '@/components/absensi/MapContentSection.vue';
 
 import { Camera, CameraResultType, CameraSource } from '@capacitor/camera';
-import { computed, onMounted, ref, shallowRef } from 'vue';
+import { computed, nextTick, onMounted, ref, shallowRef } from 'vue';
 import { alertController } from '@ionic/vue';
 
 import { printCurrentPosition, checkLocationAccess } from '@/services/locationHandlers';
@@ -369,6 +369,7 @@ async function passCheckInAlert() {
           cssClass: "alert-button-confirm",
           handler: () => {
             console.log("Berhasil melakukan absensi check-in");
+
             saveCheckInImage();
           },
         },
@@ -395,6 +396,7 @@ async function passCheckOutAlert() {
           cssClass: "alert-button-confirm",
           handler: () => {
             console.log("Berhasil melakukan absensi check-out");
+
             saveCheckOutImage();
           },
         },
@@ -405,16 +407,16 @@ async function passCheckOutAlert() {
 
 // rest api (backend server)
 async function fetchStoresData(query = '') {
-  refreshAccessTokenHandler();
-
-  const tokens = localStorage.getItem("tokens") ? JSON.parse(localStorage.getItem("tokens")) : null;
-
-  const headers = {
-    'Content-Type': 'application/json',
-    'Authorization': `Bearer ${tokens.access_token}`
-  };
-
   try {
+    refreshAccessTokenHandler();
+
+    const tokens = localStorage.getItem("tokens") ? JSON.parse(localStorage.getItem("tokens")) : null;
+
+    const headers = {
+      'Content-Type': 'application/json',
+      'Authorization': `Bearer ${tokens.access_token}`
+    };
+
     const response = await axios.get(`${API_URL.value}/api/v2/stores`, {
       headers: headers,
       params: {
@@ -447,10 +449,8 @@ async function fetchStoresData(query = '') {
         value.enableAbsenBtn = true;
       }
     });
-
-    console.log(storeInfoDistri.value);
   } catch (error) {
-    catchToastError(error.message, 3000);
+    catchToastError('Failed to fetch store data', 3000);
 
     console.error('Failed to fetch store data: ', error);
   }
@@ -467,8 +467,6 @@ async function fetchOneStoreData(id) {
       'Authorization': `Bearer ${tokens.access_token}`
     };
 
-    presentLoading();
-
     const response = await axios.get(`${API_URL.value}/api/v2/stores/${id}`, {
       headers: headers
     });
@@ -477,14 +475,14 @@ async function fetchOneStoreData(id) {
 
     showDetailStoreCard();
 
-    stopLoading();
+    await nextTick();
 
     document.getElementById("check-in-button").scrollIntoView({
       behavior: 'smooth',
       block: 'center',
     });
   } catch (error) {
-    catchToastError(error.message, 3000);
+    catchToastError(`Failed to fetch store ${id}`, 3000);
 
     console.error(`Failed to fetch store ${id}: `, error);
   }
@@ -570,12 +568,10 @@ async function uploadCheckInImage(userNumber) {
     disabledCheckOut.value = true;
 
     catchToast("Sukses upload gambar untuk absensi check-in", 3000);
-
-    // console.log("Sukses upload gambar untuk absensi check-in", response);
   } catch (error) {
-    catchToastError('Gagal upload gambar untuk absensi check-out', 3000);
+    catchToastError('Gagal upload gambar untuk absensi check-in', 3000);
 
-    console.error('Gagal upload gambar untuk absensi check-out', error);
+    console.error('Gagal upload gambar untuk absensi check-in', error);
   } finally {
     stopLoading();
   }
@@ -613,8 +609,6 @@ async function uploadCheckOutImage(userNumber) {
     detailStoreInfoDistri.value = null;
 
     catchToast("Sukses upload gambar untuk absensi check-out", 3000);
-
-    // console.log("Sukses upload gambar untuk absensi check-out", response);
   } catch (error) {
     catchToastError('Gagal upload gambar untuk absensi check-out', 3000);
 
@@ -637,17 +631,14 @@ async function takeCheckInPicture() {
       renderModCheckInBtn.value = true;
       imageUrl.value = image.webPath.toString();
 
-      // console.log(`Captured photo path: ${imageUrl.value}`);
-
       imageLocation.value = await fetch(image.webPath).then((r) => r.blob());
-      // console.log(imageLocation.value);
     } else {
       catchToastError('Failed to capture photo or image path is missing', 3000);
 
       console.error('Failed to capture photo or image path is missing');
     }
   } catch (error) {
-    catchToastError(error.message, 3000);
+    catchToastError("Error when capturing photo", 3000);
 
     console.error('Error when capturing photo: ', error);
   }
@@ -666,17 +657,14 @@ async function takeCheckOutPicture() {
       renderModeCheckOutBtn.value = true;
       imageUrl.value = image.webPath.toString();
 
-      // console.log(`Captured photo path: ${imageUrl.value}`);
-
       imageLocation.value = await fetch(image.webPath).then((r) => r.blob());
-      // console.log(imageLocation.value);
     } else {
       catchToastError('Failed to capture photo or image path is missing', 3000);
 
       console.error('Failed to capture photo or image path is missing');
     }
   } catch (error) {
-    catchToastError(error.message);
+    catchToastError("Error when capturing photo");
 
     console.error('Error when capturing photo: ', error);
   }
