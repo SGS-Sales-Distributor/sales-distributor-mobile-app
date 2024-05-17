@@ -159,8 +159,8 @@
           </ion-row>
         </ion-grid>
 
-        <ion-searchbar v-if="storeInfoDistri.length > 0" :debounce="300" @ionInput="searchStoreHandler($event)" placeholder="Cari nama toko..."
-          color="light"></ion-searchbar>
+        <ion-searchbar v-if="visibleStores.length > 0" :debounce="300" @ionInput="searchStoreHandler($event)"
+          placeholder="Cari nama toko..." color="light"></ion-searchbar>
 
         <div v-for="(store, index) in visibleStores" :key="index + 1" class="relative overflow-x-auto">
           <ion-card v-if="statusGPS" class="py-2 odd:bg-blue-500 even:bg-sky-400">
@@ -324,7 +324,7 @@ function closeDetailCardBtnHandler() {
   disabledCheckOut.value = true;
 
   const storeDetailElement = document.getElementById("store-detail-card");
-  storeDetailElement.style.display = "none"; 
+  storeDetailElement.style.display = "none";
 }
 
 function clearImage() {
@@ -361,14 +361,14 @@ async function passCheckInAlert() {
           text: "No",
           cssClass: "alert-button-cancel",
           handler: () => {
-            console.log("send otp no");
+            console.log("Batal melakukan absensi check-in");
           },
         },
         {
           text: "Yes",
           cssClass: "alert-button-confirm",
           handler: () => {
-            console.log("send otp yes");
+            console.log("Berhasil melakukan absensi check-in");
             saveCheckInImage();
           },
         },
@@ -387,14 +387,14 @@ async function passCheckOutAlert() {
           text: "No",
           cssClass: "alert-button-cancel",
           handler: () => {
-            console.log("send otp no");
+            console.log("Batal melakukan absensi check-out");
           },
         },
         {
           text: "Yes",
           cssClass: "alert-button-confirm",
           handler: () => {
-            console.log("send otp yes");
+            console.log("Berhasil melakukan absensi check-out");
             saveCheckOutImage();
           },
         },
@@ -447,12 +447,12 @@ async function fetchStoresData(query = '') {
         value.enableAbsenBtn = true;
       }
     });
+
+    console.log(storeInfoDistri.value);
   } catch (error) {
     catchToastError(error.message, 3000);
 
     console.error('Failed to fetch store data: ', error);
-  } finally {
-    stopLoading();
   }
 }
 
@@ -476,21 +476,17 @@ async function fetchOneStoreData(id) {
     detailStoreInfoDistri.value = response.data.resource;
 
     showDetailStoreCard();
-    
+
     stopLoading();
 
-    setTimeout(() => {
-      document.getElementById("check-in-button").scrollIntoView({
-        behavior: 'smooth',
-        block: 'center',
-      });
-    }, 300);
+    document.getElementById("check-in-button").scrollIntoView({
+      behavior: 'smooth',
+      block: 'center',
+    });
   } catch (error) {
     catchToastError(error.message, 3000);
 
     console.error(`Failed to fetch store ${id}: `, error);
-  } finally {
-    stopLoading();
   }
 }
 
@@ -528,7 +524,7 @@ async function saveCheckOutImage() {
 
   imageUrl.value = base64Data;
 
-  uploadCheckOutImage(user.value.number);
+  await uploadCheckOutImage(user.value.number);
 
   disabledCheckOut.value = true;
 
@@ -546,7 +542,7 @@ async function uploadCheckInImage(userNumber) {
 
     const tokens = localStorage.getItem("tokens") ? JSON.parse(localStorage.getItem("tokens")) : null;
 
-    const formData = new FormData();
+    let formData = new FormData();
     formData.append("image", imageLocation.value);
     formData.append("store_id", detailStoreInfoDistri.value.store_id);
     formData.append("lat_in", latitude.value);
@@ -577,9 +573,9 @@ async function uploadCheckInImage(userNumber) {
 
     // console.log("Sukses upload gambar untuk absensi check-in", response);
   } catch (error) {
-    catchToastError(error.message);
+    catchToastError('Gagal upload gambar untuk absensi check-out', 3000);
 
-    console.error('Gagal upload gambar untuk absensi check-in', error);
+    console.error('Gagal upload gambar untuk absensi check-out', error);
   } finally {
     stopLoading();
   }
@@ -591,7 +587,7 @@ async function uploadCheckOutImage(userNumber) {
 
     const tokens = localStorage.getItem("tokens") ? JSON.parse(localStorage.getItem("tokens")) : null;
 
-    const formData = new FormData();
+    let formData = new FormData();
     formData.append("image", imageLocation.value);
     formData.append("lat_out", latitude.value);
     formData.append("long_out", longitude.value);
@@ -620,9 +616,9 @@ async function uploadCheckOutImage(userNumber) {
 
     // console.log("Sukses upload gambar untuk absensi check-out", response);
   } catch (error) {
-    catchToastError(error.message);
+    catchToastError('Gagal upload gambar untuk absensi check-out', 3000);
 
-    console.error('Gagal upload gambar untuk absensi check-in', error);
+    console.error('Gagal upload gambar untuk absensi check-out', error);
   } finally {
     stopLoading();
   }

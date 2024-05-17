@@ -485,7 +485,7 @@ async function sendOTPIntoWhatsapp(nomorPO, otp, nomorWhatsappOTP) {
 	try {
 		refreshAccessTokenHandler();
 
-		const formData = new FormData();
+		let formData = new FormData();
 		formData.append("target", nomorWhatsappOTP);
 		formData.append("message", `Kode OTP untuk nomor PO ${nomorPO} Anda adalah ${otp}`);
 		formData.append("countryCode", "62");

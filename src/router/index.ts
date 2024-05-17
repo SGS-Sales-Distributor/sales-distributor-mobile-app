@@ -9,6 +9,7 @@ import StoreDetailPage from "@/views/StoreDetailPage.vue";
 import OrderBarangPage from "@/views/OrderBarangPage.vue";
 import RegistrasiTokoBaruPage from './../views/RegistrasiTokoBaruPage.vue'
 import RegistrasiOwnerBaruPage from './../views/RegistrasiOwnerBaruPage.vue'
+import PurchaseOrderPage from './../views/PurchaseOrderPage.vue'
 
 import { isAuthenticated } from "@/services/auth";
 import "maplibre-gl/dist/maplibre-gl.css";
@@ -46,13 +47,18 @@ const routes: Array<RouteRecordRaw> = [
         component: HomePage,
       },
       {
+        path: "/order",
+        name: "purchaseOrder",
+        component: PurchaseOrderPage,
+      },
+      { 
         path: "/store/:id",
         name: "storeDetail",
         component: StoreDetailPage,
       },
       {
         path: "/store/:id/order",
-        name: "purchaseOrder",
+        name: "storePurchaseOrder",
         component: OrderBarangPage,
       },
       {

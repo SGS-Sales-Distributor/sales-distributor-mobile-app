@@ -3,7 +3,7 @@ import router from '../router';
 export function redirectToHomePage() {
     setTimeout(() => {
         router.push({
-            path: '/home',
+            name: 'home',
         });
     }, 300);
 }
@@ -11,7 +11,7 @@ export function redirectToHomePage() {
 export function redirectToLoginPage() {
     setTimeout(() => {
         router.push({
-            path: '/login',
+            name: 'login',
         });
     }, 300);
 }
@@ -19,7 +19,7 @@ export function redirectToLoginPage() {
 export function redirectToAbsensiPage() {
     setTimeout(() => {
         router.push({
-            path: '/absensi',
+           name: 'absensi',
         });
     }, 300);
 }
@@ -35,7 +35,7 @@ export function redirectToStoreDetailPage(storeId) {
 export function redirectToPurchaseOrderPage(storeId) {
     setTimeout(() => {
         router.push({
-            name: 'purchaseOrder', params: { id: storeId }
+            name: 'storePurchaseOrder', params: { id: storeId }
         });
     }, 300);
 }
