@@ -2,6 +2,7 @@ import { Capacitor } from '@capacitor/core';
 import { Geolocation } from '@capacitor/geolocation';
 import { catchToast, catchToastError, catchToastWarn } from './toastHandlers';
 import { isLocationPermissionAllowed, statusGPS } from './globalVariables';
+import { stopLoading } from './loadingHandlers';
 
 export async function printCurrentPosition() {
     const coordinates = await Geolocation.getCurrentPosition();
@@ -37,5 +38,7 @@ export async function checkLocationAccess() {
         console.error(`Error checking location access: ${error.message}`);
         
         catchToastError(error.message, 3000);
+    } finally {
+        stopLoading();
     }
 }

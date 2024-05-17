@@ -80,7 +80,7 @@ export async function authUser() {
     catchToastError("Akses token telah hangus, mohon login kembali", 3000);
 
     if (error) {
-      redirectToHomePage();
+      redirectToLoginPage();
     }
 
     console.error(`Failed to fetch auth user: ${error.message}`);

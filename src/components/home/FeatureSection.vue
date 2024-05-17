@@ -36,6 +36,7 @@ import {
   trophy,
   cube
 } from 'ionicons/icons';
+import { IonButton } from '@ionic/vue';
 </script>
 
 <style scoped>

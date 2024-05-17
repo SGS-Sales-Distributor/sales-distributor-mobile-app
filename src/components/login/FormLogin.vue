@@ -154,6 +154,8 @@ async function login() {
     catchToastError(error.message, 3000);
     
     console.error('Failed to logged in: ', error);
+  } finally {
+    stopLoading();
   }
 }
 </script>

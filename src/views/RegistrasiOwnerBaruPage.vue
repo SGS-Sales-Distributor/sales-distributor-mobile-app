@@ -12,7 +12,7 @@
             </button>
           </div>
           <div class="flex items-center justify-center">
-            <h2 class="text-center">
+            <h2 v-if="store.store_name" class="text-center">
               Form Daftar Owner Toko {{ store.store_name }}
             </h2>
           </div>
@@ -53,8 +53,7 @@
                   *</label>
                 <Field v-model="formData.email_owner" name="email" :type="fieldTypes.email" id="email"
                   class="form-input w-full px-4 py-2 border rounded-lg text-gray-700 focus:ring-blue-500"
-                  placeholder="Masukkan email owner" aria-label="email"
-                  aria-describedby="email">
+                  placeholder="Masukkan email owner" aria-label="email" aria-describedby="email">
                 </Field>
                 <ErrorMessage name="email" class="text-rose-500" />
               </div>
@@ -63,8 +62,7 @@
                   *</label>
                 <Field v-model="formData.ktp_owner" name="ktp_image" :type="fieldTypes.file" id="ktp_image"
                   class="form-input w-full px-4 py-2 border rounded-lg text-gray-700 focus:ring-blue-500"
-                  placeholder="Masukkan gambar KTP owner" aria-label="ktp_image"
-                  aria-describedby="ktp_image">
+                  placeholder="Masukkan gambar KTP owner" aria-label="ktp_image" aria-describedby="ktp_image">
                 </Field>
                 <ErrorMessage name="ktp_image" class="text-rose-500" />
               </div>
@@ -72,8 +70,7 @@
                 <label for="photo_other" class="block text-gray-700 text-sm font-semibold mb-2">Gambar Lainnya</label>
                 <Field v-model="formData.photo_other" name="photo_other" :type="fieldTypes.file" id="photo_other"
                   class="form-input w-full px-4 py-2 border rounded-lg text-gray-700 focus:ring-blue-500"
-                  placeholder="Masukkan gambar lainnya" aria-label="photo_other"
-                  aria-describedby="photo_other">
+                  placeholder="Masukkan gambar lainnya" aria-label="photo_other" aria-describedby="photo_other">
                 </Field>
                 <ErrorMessage name="photo_other" class="text-rose-500" />
               </div>
@@ -98,11 +95,12 @@ import { redirectToRegisterStorePage } from '@/services/redirectHandlers';
 import { onMounted, ref } from 'vue';
 import { Form, Field, ErrorMessage } from 'vee-validate';
 import { refreshAccessTokenHandler } from '@/services/auth';
-import { presentLoading } from '@/services/loadingHandlers';
+import { presentLoading, stopLoading } from '@/services/loadingHandlers';
 import axios from 'axios';
 import { API_URL } from '@/services/globalVariables';
 import { catchToast, catchToastError } from '@/services/toastHandlers';
 import { fieldTypes } from '@/services/globalVariables';
+import { alertController } from '@ionic/vue';
 
 const store = ref(JSON.parse(localStorage.getItem("store")));
 
@@ -111,7 +109,7 @@ const formData = ref({
   nik_owner: null,
   email_owner: null,
   ktp_owner: null,
-  photo_other: null,  
+  photo_other: null,
 });
 
 const validation = Yup.object().shape({
@@ -133,32 +131,30 @@ const validation = Yup.object().shape({
 });
 
 async function storeDataAlert() {
-    const alert = await alertController.create({
-        header: "Konfirmasi pembuatan data owner baru",
-        message: "Apakah kamu yakin?",
-        buttons: [
-            {
-                text: "Tidak",
-                cssClass: "alert-button-cancel",
-                handler: () => {
-                    console.log("Pembuatan data owner dibatalkan.");
-                },
-            },
-            {
-                text: "Lanjutkan",
-                cssClass: "alert-button-confirm",
-                handler: () => {
-                    console.log("Pembuatan data owner berhasil");
+  const alert = await alertController.create({
+    header: "Konfirmasi pembuatan data owner baru",
+    message: "Apakah kamu yakin?",
+    buttons: [
+      {
+        text: "Tidak",
+        cssClass: "alert-button-cancel",
+        handler: () => {
+          console.log("Pembuatan data owner dibatalkan.");
+        },
+      },
+      {
+        text: "Lanjutkan",
+        cssClass: "alert-button-confirm",
+        handler: () => {
+          console.log("Pembuatan data owner berhasil");
 
-                    saveOwnerData();
+          saveOwnerData(store.value.store_id);
+        },
+      },
+    ],
+  });
 
-                    redirectToOwnerFormPage();
-                },
-            },
-        ],
-    });
-
-    return alert.present();
+  return alert.present();
 }
 
 async function saveOwnerData(storeId) {
@@ -171,17 +167,23 @@ async function saveOwnerData(storeId) {
       'Authorization': `Bearer ${tokens.access_token}`,
     }
 
+    presentLoading();
+
     const response = await axios.post(`${API_URL.value}/api/v2/stores/${storeId}/owners`, formData.value, {
       headers: headers,
     });
 
     console.log(response);
 
-    catchToast(response.data.message);
+    stopLoading();
+
+    catchToast(response.data.message, 3000);
   } catch (error) {
-    catchToastError(error.message, 3000);
+    catchToastError("Gagal membuat data pemilik toko", 3000);
 
     console.error("Failed to save owner data", error);
+  } finally {
+    stopLoading();
   }
 }
 

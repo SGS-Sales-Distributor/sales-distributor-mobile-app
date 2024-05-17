@@ -56,7 +56,7 @@
                                 <Field v-model="formData.store_phone" :type="fieldTypes.phone" id="store_phone"
                                     name="store_phone"
                                     class="form-input w-full px-4 py-2 border rounded-lg text-gray-700 focus:ring-blue-500"
-                                    placeholder="1234-5678-9012" 
+                                    placeholder="+6285677445566" 
                                     aria-label="store_phone"
                                     aria-describedby="store_phone"
                                     />
@@ -78,8 +78,7 @@
                                 <label for="store_type" class="block text-gray-700 text-sm font-semibold mb-2">Tipe Toko
                                     *</label>
                                 <Field v-model="formData.store_type_id" as="select" id="store_type" name="store_type"
-                                    class="form-input w-full px-4 py-2 border rounded-lg text-gray-700 focus:ring-blue-500"
-                                    placeholder="1234-5678-9012">
+                                    class="form-input w-full px-4 py-2 border rounded-lg text-gray-700 focus:ring-blue-500">
                                     <option disabled selected value="">Pilih Tipe Toko</option>
                                     <option v-for="type in storeTypes" :key="type.store_type_id"
                                         :value="type.store_type_id">
@@ -92,8 +91,7 @@
                                 <label for="subcabang_id" class="block text-gray-700 text-sm font-semibold mb-2">Cabang
                                     Toko*</label>
                                 <Field v-model="formData.subcabang_id" as="select" id="subcabang_id" name="subcabang_id"
-                                    class="form-input w-full px-4 py-2 border rounded-lg text-gray-700 focus:ring-blue-500"
-                                    placeholder="1234-5678-9012">
+                                    class="form-input w-full px-4 py-2 border rounded-lg text-gray-700 focus:ring-blue-500">
                                     <option disabled selected value="">Pilih Cabang Toko</option>
                                     <option v-for="cabang in storeCabangs" :key="cabang.id" :value="cabang.id">
                                         {{ cabang.nama_cabang }}
@@ -122,7 +120,7 @@ import { onMounted, ref } from 'vue';
 import { refreshAccessTokenHandler } from '@/services/auth';
 import axios from 'axios';
 import { API_URL, fieldTypes } from '@/services/globalVariables';
-import { redirectToOwnerFormPage } from '@/services/redirectHandlers';
+import { redirectToOwnerFormPage, redirectToRegisterStorePage } from '@/services/redirectHandlers';
 import { presentLoading, stopLoading } from '@/services/loadingHandlers';
 import { catchToast, catchToastError } from '@/services/toastHandlers';
 import { alertController } from '@ionic/vue';
@@ -198,19 +196,27 @@ async function saveStoreData() {
             'Authorization': `Bearer ${tokens.access_token}`,
         }
 
+        presentLoading();
+
         const response = await axios.post(`${API_URL.value}/api/v2/stores`, formData.value, {
             headers: headers
         });
 
         localStorage.setItem("store", JSON.stringify(response.data.resource));
 
+        stopLoading();
+
         console.log(response.data.resource);
 
         catchToast(response.data.message);
     } catch (error) {
-        catchToastError(error.message, 3000);
+        catchToastError("Gagal membuat data toko baru", 3000);
+
+        redirectToRegisterStorePage();
 
         console.error("Failed to save store data", error);
+    } finally {
+        stopLoading();
     }
 }
 

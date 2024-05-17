@@ -132,7 +132,7 @@
 					</div>
 					<!-- End of Detail Store Card -->
 
-					<div class="flex justify-between items-center mb-2">
+					<div class="flex justify-center items-center mb-2">
 						<button @click="redirectToPurchaseOrderPage(storeId)" data-modal-target="large-modal"
 							data-modal-toggle="large-modal"
 							class="block w-full md:w-auto text-white bg-blue-400 hover:bg-blue-500 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800"
@@ -141,54 +141,23 @@
 						</button>
 					</div>
 
-					<!-- Large Modal -->
-					<div id="large-modal" tabindex="-1"
-						class="fixed top-0 left-0 right-0 z-50 hidden w-full p-4 overflow-x-hidden overflow-y-auto md:inset-0 h-[calc(100%-1rem)] max-h-full">
-						<div class="relative w-full max-w-4xl max-h-full">
-							<!-- Modal content -->
-							<div class="relative bg-white rounded-lg shadow dark:bg-gray-700">
-								<!-- Modal header -->
-								<div
-									class="flex items-center justify-between p-4 md:p-5 border-b rounded-t dark:border-gray-600">
-									<h3 class="text-xl font-medium text-gray-900 dark:text-white">
-										Large modal
-									</h3>
-									<button type="button"
-										class="text-gray-400 bg-transparent hover:bg-gray-200 hover:text-gray-900 rounded-lg text-sm w-8 h-8 ms-auto inline-flex justify-center items-center dark:hover:bg-gray-600 dark:hover:text-white"
-										data-modal-hide="large-modal">
-										<svg class="w-3 h-3" aria-hidden="true" xmlns="http://www.w3.org/2000/svg"
-											fill="none" viewBox="0 0 14 14">
-											<path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"
-												stroke-width="2" d="m1 1 6 6m0 0 6 6M7 7l6-6M7 7l-6 6" />
-										</svg>
-										<span class="sr-only">Close modal</span>
-									</button>
-								</div>
-								<!-- Modal body -->
-								<div class="p-4 md:p-5 space-y-4">
-									<p class="text-base leading-relaxed text-gray-500 dark:text-gray-400">
-										With less than a month to go before the European Union enacts new consumer
-										privacy laws for its citizens, companies around the world are updating their
-										terms of service agreements to comply.
-									</p>
-									<p class="text-base leading-relaxed text-gray-500 dark:text-gray-400">
-										The European Union’s General Data Protection Regulation (G.D.P.R.) goes into
-										effect on May 25 and is meant to ensure a common set of data rights in the
-										European Union. It requires organizations to notify users as soon as possible of
-										high-risk data breaches that could personally affect them.
-									</p>
-								</div>
-								<!-- Modal footer -->
-								<div
-									class="flex items-center p-4 md:p-5 space-x-3 rtl:space-x-reverse border-t border-gray-200 rounded-b dark:border-gray-600">
-									<button data-modal-hide="large-modal" type="button"
-										class="text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800">I
-										accept</button>
-									<button data-modal-hide="large-modal" type="button"
-										class="py-2.5 px-5 ms-3 text-sm font-medium text-gray-900 focus:outline-none bg-white rounded-lg border border-gray-200 hover:bg-gray-100 hover:text-blue-700 focus:z-10 focus:ring-4 focus:ring-gray-100 dark:focus:ring-gray-700 dark:bg-gray-800 dark:text-gray-400 dark:border-gray-600 dark:hover:text-white dark:hover:bg-gray-700">Decline</button>
-								</div>
-							</div>
-						</div>
+					<h6 v-if="objOrder.length > 0" class="text-center font-bold py-4">Daftar Promo</h6>
+
+					<div class="relative overflow-x-auto">
+						<ion-card class="py-2 odd:bg-blue-500 even:bg-sky-400">
+							<ion-card-header class="bg-gray-50">
+								<h6 class="font-bold text-left p-2.5">Daftar Program Terkini</h6>
+								<ion-list>
+									<ion-item v-for="(program, index) in promoProgramsData" :key="index + 1">
+										<ion-label>{{ program.name_program }}</ion-label>
+									</ion-item>
+								</ion-list>
+								<ion-infinite-scroll @ionInfinite="ionInfinite">
+									<ion-infinite-scroll-content loading-text="Load more stores..."
+										loading-spinner="bubbles"></ion-infinite-scroll-content>
+								</ion-infinite-scroll>
+							</ion-card-header>
+						</ion-card>
 					</div>
 
 					<h6 v-if="objOrder.length > 0" class="text-center font-bold py-4">Daftar Order</h6>
@@ -212,8 +181,12 @@
 										<p class="flex-initial w-44 text-right">{{ order.stock }}</p>
 									</div>
 									<div class="flex flex-row w-full h-full justify-between space-x-2">
-										<label for="nama-toko" class="flex-initial w-56 font-semibold">Harga Produk</label>
-										<p class="flex-initial w-44 text-right">Rp. {{ parseFloat(order.prodPrice).toFixed(3) }}</p>
+										<label for="nama-toko" class="flex-initial w-56 font-semibold">Harga
+											Produk</label>
+										<p class="flex-initial w-44 text-right">{{ new Intl.NumberFormat('id-ID', {
+											style: 'currency',
+											currency: 'IDR'
+										}).format(order.prodPrice) }}</p>
 									</div>
 									<div class="flex flex-row w-full h-full justify-between space-x-2">
 										<label for="nama-toko" class="flex-initial w-56 font-semibold">Quantity</label>
@@ -222,28 +195,37 @@
 												<ion-icon slot="icon-only" :icon="removeOutline"></ion-icon>
 											</ion-button>
 											<input id="orderInput" :value="order.qty" type="number" pattern="[0-9]"
-												size="2" min="0" :max="order.stock" readonly />
+												min="0" :max="order.stock" readonly class="text-right" />
 											<ion-button size="small" @click="addMoreOrder(index, order.stock)">
 												<ion-icon slot="icon-only" :icon="addOutline"></ion-icon>
 											</ion-button>
 										</div>
 									</div>
-									<div class="flex flex-row w-full h-full justify-between space-x-2">
+									<!-- <div class="flex flex-row w-full h-full justify-between space-x-2">
 										<label for="nama-toko" class="flex-initial w-56 font-semibold">Total Harga</label>
 										<p class="flex-initial w-44 text-right">Rp. {{ (parseFloat(order.prodPrice) * order.qty).toFixed(3) }}</p>
+									</div> -->
+									<div class="flex flex-row w-full h-full justify-between space-x-2">
+										<label for="nama-toko" class="flex-initial w-56 font-semibold">Total
+											Harga</label>
+										<p class="flex-initial w-44 text-right">{{ new Intl.NumberFormat('id-ID', {
+											style: 'currency',
+											currency: 'IDR'
+										}).format((parseFloat(order.prodPrice) * order.qty).toFixed(3)) }}</p>
 									</div>
 								</div>
 							</ion-card-header>
 							<ion-card-content class="bg-gray-50">
 								<div class="flex w-full justify-center items-center px-4 pb-2 space-x-4">
-									<ion-button color="danger" @click="deleteRecentOrder(index)">Hapus</ion-button>
+									<ion-button color="danger"
+										@click="deleteRecentOrder(index, order.prodNumber)">Hapus</ion-button>
 								</div>
 							</ion-card-content>
 						</ion-card>
 					</div>
 
 					<ion-select v-if="objOrder.length > 0" @ionChange="handleChange($event)" label="Metode Pembayaran"
-						placeholder="Pilih" value="Tunai">
+						placeholder="Pilih" :value="metodePembayaran">
 						<ion-select-option value="Tunai">Tunai</ion-select-option>
 						<ion-select-option value="Transfer">Transfer</ion-select-option>
 					</ion-select>
@@ -382,6 +364,7 @@ import {
 	secondOTPNumber,
 	thirdOTPNumber,
 	fourthOTPNumber,
+	selectedProduct,
 } from '@/services/globalVariables';
 import { redirectToAbsensiPage, redirectToPurchaseOrderPage } from '@/services/redirectHandlers';
 import { API_URL } from '@/services/globalVariables';
@@ -396,6 +379,18 @@ const flagOTP = ref(true);
 const storeData = ref(null);
 const storeId = ref(route.params.id);
 const productsData = ref([]);
+
+const promoProgramsData = ref([]);
+const lastIndex = ref(5);
+const visiblePromoPrograms = computed(() => {
+	return promoProgramsData.value && promoProgramsData.value.length > 0
+		? promoProgramsData.value.slice(0, lastIndex.value)
+		: [];
+});
+const reachedEnd = computed(() => {
+	return Array.isArray(promoProgramsData.value) && lastIndex.value >= promoProgramsData.value.length;
+});
+
 const idToko = ref(null);
 const metodePembayaran = ref("Tunai");
 const resendOTP = ref(null);
@@ -403,6 +398,18 @@ const resendNomorPO = ref(null);
 
 function handleChange(event) {
 	metodePembayaran.value = event.detail.value;
+}
+
+const ionInfinite = (event) => {
+    if (!reachedEnd.value) {
+        setTimeout(() => {
+            lastIndex.value += 5;
+
+            event.target.complete();
+        }, 1000);
+    } else {
+        event.target.disabled = true;
+    }
 }
 
 async function confirmOTP() {
@@ -417,7 +424,7 @@ async function confirmOTP() {
 		const tokens = localStorage.getItem("tokens") ? JSON.parse(localStorage.getItem("tokens")) : null;
 
 		const headers = {
-			'Authorization' : `Bearer ${tokens.access_token}`,
+			'Authorization': `Bearer ${tokens.access_token}`,
 		}
 
 		const response = await axios.post(`${API_URL.value}/api/v2/stores/confirm-otp`, {
@@ -452,7 +459,7 @@ async function resendOTPHandler() {
 		const response = await axios.post(`${API_URL.value}/api/v2/stores/resend-otp`, {
 			"nomorPO": resendNomorPO.value,
 		}, {
-			headers: headers 
+			headers: headers
 		});
 
 		sendOTPIntoWhatsapp(
@@ -575,8 +582,41 @@ function reduceOrder(index, min) {
 	}
 }
 
-function deleteRecentOrder(index) {
+function deleteRecentOrder(index, prodNumber) {
 	objOrder.value.splice(index, 1);
+
+	if (selectedProduct.value.includes(prodNumber)) {
+		const productIndex = selectedProduct.value.indexOf(prodNumber);
+
+		selectedProduct.value.splice(productIndex, 1);
+
+		console.log(selectedProduct.value);
+	}
+}
+
+async function fetchPromoProgram() {
+	try {
+		refreshAccessTokenHandler();
+
+		const tokens = localStorage.getItem("tokens") ? JSON.parse(localStorage.getItem("tokens")) : null;
+
+		const headers = {
+			'Content-Type': 'application/json',
+			'Authorization': `Bearer ${tokens.access_token}`
+		};
+
+		const response = await axios.get(`${API_URL.value}/api/v2/programs`, {
+			headers: headers,
+		});
+
+		promoProgramsData.value = response.data.resource.data;
+
+		console.log(promoProgramsData.value);
+	} catch (error) {
+		catchToastError("Failed to fetch program promo data", 3000);
+
+		console.error("Failed to fetch program promo data", error);
+	}
 }
 
 async function fetchStoreDetailData(id) {
@@ -595,6 +635,8 @@ async function fetchStoreDetailData(id) {
 		});
 
 		storeData.value = response.data.resource;
+
+		console.log(storeData.value);
 
 		nomorWhatsappOTP.value = storeData.value.nomor_telepon_toko;
 
@@ -639,8 +681,9 @@ onMounted(() => {
 
 	refreshAccessTokenHandler();
 	fetchStoreDetailData(storeId.value);
+	fetchPromoProgram();
 	fetchProductsData();
-	
+
 	stopLoading();
 });
 </script>
@@ -651,9 +694,5 @@ ion-col {
 	border: solid 1px #fff;
 	color: #fff;
 	text-align: center;
-}
-
-#orderInput {
-
 }
 </style>

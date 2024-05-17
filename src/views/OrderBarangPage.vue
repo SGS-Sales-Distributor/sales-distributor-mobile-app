@@ -27,7 +27,8 @@
                 </div>
             </header>
 
-            <ion-searchbar :debounce="300" @ionInput="handleInput($event)" placeholder="Cari nama, nomor produk..." color="light"></ion-searchbar>
+            <ion-searchbar :debounce="300" @ionInput="handleInput($event)" placeholder="Cari nama, nomor produk..."
+                color="light"></ion-searchbar>
 
             <div v-for="(product, index) in visibleProducts" :key="index + 1" class="relative overflow-x-auto">
                 <ion-card class="py-2 odd:bg-blue-500 even:bg-sky-400">
@@ -57,13 +58,15 @@
                     <ion-card-content class="bg-gray-50">
                         <div class="flex w-full justify-center items-center px-4 pb-2 space-x-4">
                             <ion-button shape="round" color="success"
-                            @click="orderProduct(product.prod_number, product.prod_name, 5, product.prod_base_price)">Pilih</ion-button>
+                                @click="orderProduct(product.prod_number, product.prod_name, 5, product.prod_base_price)"
+                                :disabled="selectedProduct.includes(product.prod_number)">Pilih</ion-button>
                         </div>
                     </ion-card-content>
                 </ion-card>
             </div>
             <ion-infinite-scroll @ionInfinite="ionInfinite">
-                <ion-infinite-scroll-content loading-text="Load more products..." loading-spinner="bubbles"></ion-infinite-scroll-content>
+                <ion-infinite-scroll-content loading-text="Load more products..."
+                    loading-spinner="bubbles"></ion-infinite-scroll-content>
             </ion-infinite-scroll>
         </ion-content>
     </ion-page>
@@ -81,7 +84,7 @@ import { computed, onMounted, ref } from 'vue';
 
 import { refreshAccessTokenHandler } from '@/services/auth.js';
 import { catchToastError } from '@/services/toastHandlers';
-import { objOrder, API_URL } from '@/services/globalVariables';
+import { objOrder, API_URL, selectedProduct } from '@/services/globalVariables';
 import { presentLoading, stopLoading } from '@/services/loadingHandlers';
 import { redirectToStoreDetailPage } from '@/services/redirectHandlers';
 
@@ -93,15 +96,15 @@ const reachedEnd = computed(() => lastIndex.value >= productsData.value.length);
 const storeData = localStorage.getItem("store");
 
 const ionInfinite = (event) => {
-  if (!reachedEnd.value) {
-    setTimeout(() => {
-      lastIndex.value += 5;
+    if (!reachedEnd.value) {
+        setTimeout(() => {
+            lastIndex.value += 5;
 
-      event.target.complete();
-    }, 1000);
-  } else {
-    event.target.disabled = true;
-  }
+            event.target.complete();
+        }, 1000);
+    } else {
+        event.target.disabled = true;
+    }
 }
 
 function handleInput(event) {
@@ -116,9 +119,22 @@ function orderProduct(prodNumber, prodName, stock, hargaProduk) {
         stock: stock,
         prodPrice: hargaProduk,
         qty: 0,
+        statusBonus: 0,
     };
 
     objOrder.value.push(productData);
+
+    if (!selectedProduct.value.includes(prodNumber)) {
+        selectedProduct.value.push(prodNumber);
+    }
+
+    console.log(selectedProduct.value);
+
+    if (selectedProduct.value.includes(prodNumber)) {
+        console.log(prodNumber);
+    }
+
+    console.log(objOrder.value);
 
     redirectToStoreDetailPage(storeData.store_id);
 }
@@ -154,7 +170,7 @@ onMounted(() => {
 
     refreshAccessTokenHandler();
     fetchProductsData();
-    
+
     stopLoading();
 });
 </script>

@@ -96,6 +96,8 @@ async function changePassword(userNumber) {
     catchToastError(error.message, 3000);
 
     console.error("Failed to update salesman password: ", error);
+  } finally {
+    stopLoading();
   }
 }
 </script>

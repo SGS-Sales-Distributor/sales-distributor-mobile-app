@@ -141,6 +141,8 @@ async function updateProfile(userNumber) {
     catchToastError(error.message, 3000);
     
     console.error("Failed to update profile: ", error);
+  } finally {
+    stopLoading();
   }
 }
 

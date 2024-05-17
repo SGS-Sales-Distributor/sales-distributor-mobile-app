@@ -35,3 +35,6 @@ export const fieldTypes = ref({
     phone: 'tel',
     file: 'file',
 });
+
+
+export const selectedProduct = ref([]);

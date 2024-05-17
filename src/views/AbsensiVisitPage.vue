@@ -12,7 +12,7 @@
         <AddressInfoSection />
 
         <!-- Card Content -->
-       <MapContentSection />
+        <MapContentSection />
         <!-- End of Card Content -->
 
         <!-- Detail Store Card -->
@@ -159,7 +159,8 @@
           </ion-row>
         </ion-grid>
 
-        <ion-searchbar :debounce="300" @ionInput="searchStoreHandler($event)" placeholder="Cari nama toko..." color="light"></ion-searchbar>
+        <ion-searchbar v-if="storeInfoDistri.length > 0" :debounce="300" @ionInput="searchStoreHandler($event)" placeholder="Cari nama toko..."
+          color="light"></ion-searchbar>
 
         <div v-for="(store, index) in visibleStores" :key="index + 1" class="relative overflow-x-auto">
           <ion-card v-if="statusGPS" class="py-2 odd:bg-blue-500 even:bg-sky-400">
@@ -213,8 +214,7 @@
             </ion-card-header>
             <ion-card-content class="bg-gray-50">
               <div class="flex w-full justify-center items-center px-4 pb-2 space-x-4">
-                <ion-button :disabled="store.enableAbsenBtn" @click="fetchOneStoreData(store.store_id)"
-                  size="small">
+                <ion-button :disabled="store.enableAbsenBtn" @click="fetchOneStoreData(store.store_id)" size="small">
                   <ion-icon slot="start" :icon="camera"></ion-icon>
                   Absen
                 </ion-button>
@@ -230,7 +230,8 @@
           </ion-card>
         </div>
         <ion-infinite-scroll @ionInfinite="ionInfinite">
-          <ion-infinite-scroll-content loading-text="Load more stores..." loading-spinner="bubbles"></ion-infinite-scroll-content>
+          <ion-infinite-scroll-content loading-text="Load more stores..."
+            loading-spinner="bubbles"></ion-infinite-scroll-content>
         </ion-infinite-scroll>
       </div>
     </ion-content>
@@ -239,6 +240,7 @@
 
 <script setup>
 import axios from 'axios';
+import { IonSearchbar } from '@ionic/vue';
 
 import {
   documentAttach,
@@ -261,6 +263,7 @@ import { refreshAccessTokenHandler } from '@/services/auth.js';
 import { presentLoading, stopLoading } from '@/services/loadingHandlers';
 
 const user = ref(JSON.parse(localStorage.getItem("user")));
+const isStoreDetailCardVisible = ref(false);
 const renderModCheckInBtn = ref(false);
 const renderModeCheckOutBtn = ref(false);
 const disabledCheckIn = ref(true);
@@ -274,12 +277,12 @@ const storeInfoDistri = ref([]);
 
 const lastIndex = ref(5);
 const visibleStores = computed(() => {
-  return storeInfoDistri.value && storeInfoDistri.value.length > 0 
-    ? storeInfoDistri.value.slice(0, lastIndex.value) 
+  return storeInfoDistri.value && storeInfoDistri.value.length > 0
+    ? storeInfoDistri.value.slice(0, lastIndex.value)
     : [];
 });
 const reachedEnd = computed(() => {
-  return Array.isArray(storeInfoDistri.value) && lastIndex.value >= storeInfoDistri.value.length; 
+  return Array.isArray(storeInfoDistri.value) && lastIndex.value >= storeInfoDistri.value.length;
 });
 
 const ionInfinite = (event) => {
@@ -295,37 +298,33 @@ const ionInfinite = (event) => {
 }
 
 function searchStoreHandler(event) {
-    const query = event.target.value.toLowerCase();
-    fetchStoresData(query);
+  const query = event.target.value.toLowerCase();
+
+  fetchStoresData(query);
 }
 
 function showDetailStoreCard() {
+  isStoreDetailCardVisible.value = true;
+
   if (detailStoreInfoDistri.value.waktu_masuk !== null) {
     disabledCheckIn.value = true;
     disabledCheckOut.value = false;
   } else {
     disabledCheckIn.value = false;
     disabledCheckOut.value = true;
-
-    const storeDetailCard = document.getElementById("store-detail-card");
-    storeDetailCard.classList.add("show");
-    storeDetailCard.style.display = 'block';
   }
+
+  const storeDetailElement = document.getElementById("store-detail-card");
+  storeDetailElement.style.display = "block";
 }
 
 function closeDetailCardBtnHandler() {
+  isStoreDetailCardVisible.value = false;
   disabledCheckIn.value = true;
   disabledCheckOut.value = true;
 
-  const storeDetailCard = document.getElementById("store-detail-card");
-
-  document.getElementById("close-btn").addEventListener("click", function () {
-    storeDetailCard.classList.remove("show");
-
-    setTimeout(() => {
-      storeDetailCard.style.display = 'none';
-    }, 100);
-  })
+  const storeDetailElement = document.getElementById("store-detail-card");
+  storeDetailElement.style.display = "none"; 
 }
 
 function clearImage() {
@@ -356,8 +355,6 @@ async function passCheckInAlert() {
   return alertController
     .create({
       header: "Konfirmasi Absen Check In",
-      //subHeader: "",
-      //cssClass: "alertDanger",
       message: "Apakah kamu yakin?",
       buttons: [
         {
@@ -378,15 +375,12 @@ async function passCheckInAlert() {
       ],
     })
     .then((a) => a.present());
-  //alert(message);
 }
 
 async function passCheckOutAlert() {
   return alertController
     .create({
       header: "Konfirmasi Absen Check Out",
-      //subHeader: "",
-      //cssClass: "alertDanger",
       message: "Apakah kamu yakin?",
       buttons: [
         {
@@ -407,7 +401,6 @@ async function passCheckOutAlert() {
       ],
     })
     .then((a) => a.present());
-  //alert(message);
 }
 
 // rest api (backend server)
@@ -458,20 +451,24 @@ async function fetchStoresData(query = '') {
     catchToastError(error.message, 3000);
 
     console.error('Failed to fetch store data: ', error);
+  } finally {
+    stopLoading();
   }
 }
 
 async function fetchOneStoreData(id) {
-  refreshAccessTokenHandler();
-
-  const tokens = localStorage.getItem("tokens") ? JSON.parse(localStorage.getItem("tokens")) : null;
-
-  const headers = {
-    'Content-Type': 'application/json',
-    'Authorization': `Bearer ${tokens.access_token}`
-  };
-
   try {
+    refreshAccessTokenHandler();
+
+    const tokens = localStorage.getItem("tokens") ? JSON.parse(localStorage.getItem("tokens")) : null;
+
+    const headers = {
+      'Content-Type': 'application/json',
+      'Authorization': `Bearer ${tokens.access_token}`
+    };
+
+    presentLoading();
+
     const response = await axios.get(`${API_URL.value}/api/v2/stores/${id}`, {
       headers: headers
     });
@@ -479,6 +476,8 @@ async function fetchOneStoreData(id) {
     detailStoreInfoDistri.value = response.data.resource;
 
     showDetailStoreCard();
+    
+    stopLoading();
 
     setTimeout(() => {
       document.getElementById("check-in-button").scrollIntoView({
@@ -490,6 +489,8 @@ async function fetchOneStoreData(id) {
     catchToastError(error.message, 3000);
 
     console.error(`Failed to fetch store ${id}: `, error);
+  } finally {
+    stopLoading();
   }
 }
 
@@ -558,9 +559,9 @@ async function uploadCheckInImage(userNumber) {
 
     presentLoading();
 
-    const response = await axios.post(`${API_URL.value}/api/v2/salesmen/${userNumber}/visits`, 
+    await axios.post(`${API_URL.value}/api/v2/salesmen/${userNumber}/visits`,
       formData, {
-      headers: headers 
+      headers: headers
     });
 
     fetchStoresData();
@@ -579,6 +580,8 @@ async function uploadCheckInImage(userNumber) {
     catchToastError(error.message);
 
     console.error('Gagal upload gambar untuk absensi check-in', error);
+  } finally {
+    stopLoading();
   }
 }
 
@@ -600,13 +603,13 @@ async function uploadCheckOutImage(userNumber) {
 
     presentLoading();
 
-    const response = await axios.post(`${API_URL.value}/api/v2/salesmen/${userNumber}/visits/${detailStoreInfoDistri.value.visit_id}`, 
+    await axios.post(`${API_URL.value}/api/v2/salesmen/${userNumber}/visits/${detailStoreInfoDistri.value.visit_id}`,
       formData, {
-      headers: headers 
+      headers: headers
     });
 
     fetchStoresData();
-    
+
     stopLoading();
 
     imageUrl.value = null;
@@ -614,12 +617,14 @@ async function uploadCheckOutImage(userNumber) {
     detailStoreInfoDistri.value = null;
 
     catchToast("Sukses upload gambar untuk absensi check-out", 3000);
-    
+
     // console.log("Sukses upload gambar untuk absensi check-out", response);
   } catch (error) {
     catchToastError(error.message);
 
     console.error('Gagal upload gambar untuk absensi check-in', error);
+  } finally {
+    stopLoading();
   }
 }
 
@@ -683,13 +688,13 @@ async function takeCheckOutPicture() {
 
 onMounted(() => {
   presentLoading();
-  
+
   refreshAccessTokenHandler();
 
   fetchStoresData();
   printCurrentPosition();
   checkLocationAccess();
-  
+
   stopLoading();
 });
 </script>
@@ -697,7 +702,7 @@ onMounted(() => {
 <style scoped>
 #save-btn {
   --background: green;
-  
+
 }
 
 #clear-btn {
