@@ -36,5 +36,5 @@ export const fieldTypes = ref({
     file: 'file',
 });
 
-
 export const selectedProduct = ref([]);
+export const currentRoute = ref(null);

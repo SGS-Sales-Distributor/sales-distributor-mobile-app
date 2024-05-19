@@ -1,5 +1,17 @@
 import router from '../router';
 
+export function redirectBackOneStep() {
+    setTimeout(() => {
+        router.go(-1);
+    }, 300);
+}
+
+export function redirectOneStep() {
+    setTimeout(() => {
+        router.go(1);
+    }, 300);
+}
+
 export function redirectToHomePage() {
     setTimeout(() => {
         router.push({

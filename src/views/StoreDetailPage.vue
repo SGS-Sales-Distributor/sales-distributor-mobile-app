@@ -5,7 +5,13 @@
 			<header class="bg-transparent p-4 rounded-b-3xl">
 				<div class="flex justify-between">
 					<div>
-						<button type="button"
+						<button v-if="currentRoute === 'purchaseOrder'" type="button"
+							class="relative inline-flex items-center p-2 text-sm font-medium text-center text-white bg-transparent rounded-lg focus:ring-4 focus:outline-none focus:ring-blue-300"
+							@click="redirectToPurchaseOrderPage">
+							<ion-icon class="text-2xl" :icon="chevronBackOutline" color="dark"></ion-icon>
+						</button>
+
+						<button v-else type="button"
 							class="relative inline-flex items-center p-2 text-sm font-medium text-center text-white bg-transparent rounded-lg focus:ring-4 focus:outline-none focus:ring-blue-300"
 							@click="redirectToAbsensiPage">
 							<ion-icon class="text-2xl" :icon="chevronBackOutline" color="dark"></ion-icon>
@@ -19,9 +25,9 @@
 					<div class="text-md">
 						<button type="button"
 							class="relative inline-flex items-center p-2 text-sm font-medium text-center text-white bg-transparent rounded-lg focus:ring-4 focus:outline-none focus:ring-blue-300">
-							<icon-button>
+							<button>
 								<ion-icon class="text-2xl" :icon="ellipsisVerticalOutline" color="dark"></ion-icon>
-							</icon-button>
+							</button>
 						</button>
 					</div>
 				</div>
@@ -34,7 +40,7 @@
 					</div>
 
 					<!-- Detail Store Card -->
-					<div class="flex flex-col space-y-2 mb-6" id="store-detail-card">
+					<div class="flex flex-col space-y-2 mb-4" id="store-detail-card">
 						<ion-card v-if="storeData" class="shadow-lg shadow-gray-300">
 							<ion-card-header>
 								<div class="flex justify-between">
@@ -52,7 +58,82 @@
 
 							<ion-card-content>
 								<div class="border-t border-gray-200">
-									<dl>
+									<dl v-if="currentRoute === 'purchaseOrder'">
+										<div class="bg-lime-50 p-4 sm:grid-cols-3 sm:gap-4 sm:px-6">
+											<dt class="text-md font-bold text-gray-900">
+												Nama Toko
+											</dt>
+											<dd class="mt-1 text-sm text-gray-900 sm:mt-0 sm:col-span-2">
+												{{ storeData.nama_toko }}
+											</dd>
+										</div>
+										<div class="bg-lime-100 p-4 sm:grid-cols-3 sm:gap-4 sm:px-6">
+											<dt class="text-md font-bold text-gray-900">
+												Nama Alias Toko
+											</dt>
+											<dd class="mt-1 text-sm text-gray-900 sm:mt-0 sm:col-span-2">
+												{{ storeData.alias_toko }}
+											</dd>
+										</div>
+										<div class="bg-lime-50 p-4 sm:grid-cols-3 sm:gap-4 sm:px-6">
+											<dt class="text-md font-bold text-gray-900">
+												Alamat Toko
+											</dt>
+											<dd class="mt-1 text-sm text-gray-900 sm:mt-0 sm:col-span-2">
+												{{ storeData.alamat_toko }}
+											</dd>
+										</div>
+										<div class="bg-lime-100 p-4 sm:grid-cols-3 sm:gap-4 sm:px-6">
+											<dt class="text-md font-bold text-gray-900">
+												Nomor Telepon Toko
+											</dt>
+											<dd class="mt-1 text-sm text-gray-900 sm:mt-0 sm:col-span-2">
+												{{ storeData.nomor_telepon_toko }}
+											</dd>
+										</div>
+										<div class="bg-lime-50 p-4 sm:grid-cols-3 sm:gap-4 sm:px-6">
+											<dt class="text-md font-bold text-gray-900">
+												Nomor Fax Toko
+											</dt>
+											<dd class="mt-1 text-sm text-gray-900 sm:mt-0 sm:col-span-2">
+												{{ storeData.nomor_fax_toko }}
+											</dd>
+										</div>
+										<div class="bg-lime-100 p-4 sm:grid-cols-3 sm:gap-4 sm:px-6">
+											<dt class="text-md font-bold text-gray-900">
+												Kode Unik Toko
+											</dt>
+											<dd class="mt-1 text-sm text-gray-900 sm:mt-0 sm:col-span-2">
+												{{ storeData.kode_toko }}
+											</dd>
+										</div>
+										<div class="bg-lime-50 p-4 sm:grid-cols-3 sm:gap-4 sm:px-6">
+											<dt class="text-md font-bold text-gray-900">
+												Nama Pemilik Toko
+											</dt>
+											<dd v-if="storeData.nama_pemilik_toko"
+												class="mt-1 text-sm text-gray-900 sm:mt-0 sm:col-span-2">
+												{{ storeData.nama_pemilik_toko }}
+											</dd>
+											<dd v-else class="mt-1 text-sm text-gray-900 sm:mt-0 sm:col-span-2">
+												<ion-badge color="danger">Tidak Ada</ion-badge>
+											</dd>
+										</div>
+										<div class="bg-lime-100 p-4 sm:grid-cols-3 sm:gap-4 sm:px-6">
+											<dt class="text-md font-bold text-gray-900">
+												Email Pemilik Toko
+											</dt>
+											<dd v-if="storeData.email_pemilik_toko"
+												class="mt-1 text-sm text-gray-900 sm:mt-0 sm:col-span-2">
+												{{ storeData.email_pemilik_toko }}
+											</dd>
+											<dd v-else class="mt-1 text-sm text-gray-900 sm:mt-0 sm:col-span-2">
+												<ion-badge color="danger">Tidak Ada</ion-badge>
+											</dd>
+										</div>
+									</dl>
+
+									<dl v-else>
 										<div class="bg-sky-50 p-4 sm:grid-cols-3 sm:gap-4 sm:px-6">
 											<dt class="text-md font-bold text-gray-900">
 												Nama Toko
@@ -132,20 +213,10 @@
 					</div>
 					<!-- End of Detail Store Card -->
 
-					<div class="flex justify-center items-center 
-					mb-2">
-						<button @click="redirectToStorePurchaseOrderPage(storeId)" data-modal-target="large-modal"
-							data-modal-toggle="large-modal"
-							class="block w-full md:w-auto text-white bg-blue-400 hover:bg-blue-500 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800"
-							type="button">
-							Tambah Order
-						</button>
-					</div>
-
 					<h6 v-if="objOrder.length > 0" class="text-center font-bold py-4">Daftar Promo</h6>
 
-					<div class="relative overflow-x-auto">
-						<ion-card class="py-2 odd:bg-blue-500 even:bg-sky-400">
+					<div class="relative overflow-x-auto mb-4">
+						<ion-card v-if="currentRoute === 'purchaseOrder'" class="py-2 bg-lime-500">
 							<ion-card-header class="bg-gray-50">
 								<h6 class="font-bold text-left p-2.5">Daftar Program Terkini</h6>
 								<ion-list>
@@ -155,16 +226,47 @@
 								</ion-list>
 								<ion-infinite-scroll @ionInfinite="ionInfinite">
 									<ion-infinite-scroll-content loading-text="Load more programs..."
-									loading-spinner="bubbles"></ion-infinite-scroll-content>
+										loading-spinner="bubbles"></ion-infinite-scroll-content>
+								</ion-infinite-scroll>
+							</ion-card-header>
+						</ion-card>
+
+						<ion-card v-else class="py-2 bg-blue-500">
+							<ion-card-header class="bg-gray-50">
+								<h6 class="font-bold text-left p-2.5">Daftar Program Terkini</h6>
+								<ion-list>
+									<ion-item v-for="(program, index) in visiblePromoPrograms" :key="index + 1">
+										<ion-label>{{ program.name_program }}</ion-label>
+									</ion-item>
+								</ion-list>
+								<ion-infinite-scroll @ionInfinite="ionInfinite">
+									<ion-infinite-scroll-content loading-text="Load more programs..."
+										loading-spinner="bubbles"></ion-infinite-scroll-content>
 								</ion-infinite-scroll>
 							</ion-card-header>
 						</ion-card>
 					</div>
 
+					<div class="flex justify-center items-center mb-2">
+						<button v-if="currentRoute === 'purchaseOrder'"
+							@click="redirectToStorePurchaseOrderPage(storeId)" data-modal-target="large-modal"
+							data-modal-toggle="large-modal"
+							class="block w-full md:w-auto text-gray-900 bg-lime-400 hover:bg-lime-500 focus:ring-4 focus:outline-none focus:ring-lime-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center transition-all"
+							type="button">
+							Tambah Order
+						</button>
+						<button v-else @click="redirectToStorePurchaseOrderPage(storeId)"
+							data-modal-target="large-modal" data-modal-toggle="large-modal"
+							class="block w-full md:w-auto text-white bg-blue-400 hover:bg-blue-500 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center transition-all"
+							type="button">
+							Tambah Order
+						</button>
+					</div>
+
 					<h6 v-if="objOrder.length > 0" class="text-center font-bold py-4">Daftar Order</h6>
 
 					<div v-for="(order, index) in objOrder" :key="index + 1" class="relative overflow-x-auto">
-						<ion-card class="py-2 odd:bg-blue-500 even:bg-sky-400">
+						<ion-card v-if="currentRoute === 'purchaseOrder'" class="py-2 bg-lime-400">
 							<ion-card-header class="bg-gray-50">
 								<div class="flex flex-col w-full h-full space-y-2">
 									<div class="flex flex-row w-full h-full justify-between space-x-2">
@@ -192,6 +294,63 @@
 									<div class="flex flex-row w-full h-full justify-between space-x-2">
 										<label for="nama-toko" class="flex-initial w-56 font-semibold">Quantity</label>
 										<div class="flex">
+											<ion-button size="small" @click="reduceOrder(index, 0)" color="success">
+												<ion-icon slot="icon-only" :icon="removeOutline"></ion-icon>
+											</ion-button>
+											<input id="orderInput" :value="order.qty" type="number" pattern="[0-9]"
+												min="0" :max="order.stock" readonly class="text-right" />
+											<ion-button size="small" @click="addMoreOrder(index, order.stock)" color="success">
+												<ion-icon slot="icon-only" :icon="addOutline"></ion-icon>
+											</ion-button>
+										</div>
+									</div>
+									<div class="flex flex-row w-full h-full justify-between space-x-2">
+										<label for="nama-toko" class="flex-initial w-56 font-semibold">Total
+											Harga</label>
+										<p class="flex-initial w-44 text-right">{{ new Intl.NumberFormat('id-ID', {
+											style: 'currency',
+											currency: 'IDR'
+										}).format((calculateTotalPriceHandler(order.prodPrice,
+											order.qty)).toFixed(3)) }}</p>
+									</div>
+								</div>
+							</ion-card-header>
+							<ion-card-content class="bg-gray-50">
+								<div class="flex w-full justify-center items-center px-4 pb-2 space-x-4">
+									<ion-button color="danger"
+										@click="deleteRecentOrder(index, order.prodNumber)">Hapus</ion-button>
+								</div>
+							</ion-card-content>
+						</ion-card>
+
+						<ion-card v-else class="py-2 bg-blue-500">
+							<ion-card-header class="bg-gray-50">
+								<div class="flex flex-col w-full h-full space-y-2">
+									<div class="flex flex-row w-full h-full justify-between space-x-2">
+										<label for="nama-toko" class="flex-initial w-56 font-semibold">Kode
+											Produk</label>
+										<p class="flex-initial w-44 text-right">{{ order.prodNumber }}</p>
+									</div>
+									<div class="flex flex-row w-full h-full justify-between space-x-2">
+										<label for="nama-produk" class="flex-initial w-56 font-semibold">Nama
+											Produk</label>
+										<p class="flex-initial w-44 text-right">{{ order.prodName }}</p>
+									</div>
+									<div class="flex flex-row w-full h-full justify-between space-x-2">
+										<label for="stok" class="flex-initial w-56 font-semibold">Stok</label>
+										<p class="flex-initial w-44 text-right">{{ order.stock }}</p>
+									</div>
+									<div class="flex flex-row w-full h-full justify-between space-x-2">
+										<label for="harga-produk" class="flex-initial w-56 font-semibold">Harga
+											Produk</label>
+										<p class="flex-initial w-44 text-right">{{ new Intl.NumberFormat('id-ID', {
+											style: 'currency',
+											currency: 'IDR'
+										}).format(order.prodPrice) }}</p>
+									</div>
+									<div class="flex flex-row w-full h-full justify-between space-x-2">
+										<label for="qty" class="flex-initial w-56 font-semibold">Quantity</label>
+										<div class="flex">
 											<ion-button size="small" @click="reduceOrder(index, 0)">
 												<ion-icon slot="icon-only" :icon="removeOutline"></ion-icon>
 											</ion-button>
@@ -202,24 +361,27 @@
 											</ion-button>
 										</div>
 									</div>
-									<!-- <div class="flex flex-row w-full h-full justify-between space-x-2">
-										<label for="nama-toko" class="flex-initial w-56 font-semibold">Total Harga</label>
-										<p class="flex-initial w-44 text-right">Rp. {{ (parseFloat(order.prodPrice) * order.qty).toFixed(3) }}</p>
-									</div> -->
 									<div class="flex flex-row w-full h-full justify-between space-x-2">
-										<label for="nama-toko" class="flex-initial w-56 font-semibold">Total
+										<label for="total-harga" class="flex-initial w-56 font-semibold">Total
 											Harga</label>
 										<p class="flex-initial w-44 text-right">{{ new Intl.NumberFormat('id-ID', {
 											style: 'currency',
 											currency: 'IDR'
-										}).format((parseFloat(order.prodPrice) * order.qty).toFixed(3)) }}</p>
+										}).format((calculateTotalPriceHandler(order.prodPrice,
+											order.qty)).toFixed(3)) }}</p>
+									</div>
+									<div class="flex flex-row w-full h-full justify-between space-x-2">
+										<label for="promo" class="flex-initial w-56 font-semibold">Dapat Promo</label>
+										<!-- <p v-for="(promo, index) in relatedPromosOfSelectedProduct" :key="index+1" class="flex-initial w-44 text-right">{{ promo }}</p> -->
 									</div>
 								</div>
 							</ion-card-header>
 							<ion-card-content class="bg-gray-50">
 								<div class="flex w-full justify-center items-center px-4 pb-2 space-x-4">
-									<ion-button color="danger"
+									<ion-button color="danger" id="reset-order-btn"
 										@click="deleteRecentOrder(index, order.prodNumber)">Hapus</ion-button>
+									<!-- <ion-button color="success" v-if="order.qty > 0"
+										@click="totalProductsPrice(order.prodPrice, order.qty)">Konfirmasi</ion-button> -->
 								</div>
 							</ion-card-content>
 						</ion-card>
@@ -231,8 +393,16 @@
 						<ion-select-option value="Transfer">Transfer</ion-select-option>
 					</ion-select>
 
-					<div class="flex justify-between items-center py-4" v-if="objOrder.length">
-						<button @click="setOpen(true)" data-modal-target="large-modal" data-modal-toggle="large-modal"
+					<div class="flex justify-between items-center py-2" v-if="objOrder.length">
+						<button @click="checkProductsHasPromo"
+							class="block w-full md:w-auto text-white bg-green-400 hover:bg-green-500 focus:ring-4 focus:outline-none font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800"
+							type="button">
+							Cek Promo
+						</button>
+					</div>
+
+					<div class="flex justify-between items-center py-2" v-if="objOrder.length">
+						<button @click="setOpen(true)"
 							class="block w-full md:w-auto text-white bg-green-400 hover:bg-green-500 focus:ring-4 focus:outline-none font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800"
 							type="button">
 							Konfirmasi OTP
@@ -356,7 +526,7 @@ import {
 import { computed, onMounted, ref } from 'vue';
 import { useRoute } from 'vue-router';
 import { refreshAccessTokenHandler } from '@/services/auth.js';
-import { catchToast, catchToastError } from '@/services/toastHandlers';
+import { catchToast, catchToastError, catchToastInfo } from '@/services/toastHandlers';
 import {
 	objOrder,
 	nomorWhatsappOTP,
@@ -365,10 +535,11 @@ import {
 	thirdOTPNumber,
 	fourthOTPNumber,
 	selectedProduct,
+	currentRoute,
 } from '@/services/globalVariables';
-import { redirectToAbsensiPage, redirectToStorePurchaseOrderPage } from '@/services/redirectHandlers';
+import { redirectToStorePurchaseOrderPage, redirectBackOneStep, redirectToHomePage, redirectToAbsensiPage, redirectToPurchaseOrderPage } from '@/services/redirectHandlers';
 import { API_URL } from '@/services/globalVariables';
-
+import { IonSelectOption, IonSelect } from '@ionic/vue';
 
 const route = useRoute();
 
@@ -378,19 +549,44 @@ const setOpen = (open) => (isOpen.value = open, flagOTP.value = true);
 const flagOTP = ref(true);
 const storeData = ref(null);
 const storeId = ref(route.params.id);
-const productsData = ref([]);
 
+const brandsData = ref([]);
+const productsData = ref([]);
 const promoProgramsData = ref([]);
+
+// const hasProductGetPromo = ref(false);
+// const relatedPromosOfSelectedProduct = ref([]);
 
 const lastIndex = ref(5);
 const visiblePromoPrograms = computed(() => {
-  return promoProgramsData.value && promoProgramsData.value.length > 0
-    ? promoProgramsData.value.slice(0, lastIndex.value)
-    : [];
+	return promoProgramsData.value && promoProgramsData.value.length > 0
+		? promoProgramsData.value.slice(0, lastIndex.value)
+		: [];
 });
 const reachedEnd = computed(() => {
-  return Array.isArray(promoProgramsData.value) && lastIndex.value >= promoProgramsData.value.length;
+	return Array.isArray(promoProgramsData.value) && lastIndex.value >= promoProgramsData.value.length;
 });
+
+const calculateTotalPriceHandler = (prodPrice, qty) => {
+	const total = parseFloat(prodPrice) * qty;
+	return total;
+}
+
+// const totalProductsPrice = (prodPrice, qty) => {
+// 	productsTotalPrice.value.push(calculateTotalPriceHandler(prodPrice, qty));
+
+// 	console.log(productsTotalPrice.value);
+// }
+
+// const sumTotalProductsPrice = () => {
+// 	let total = 0;
+
+// 	productsTotalPrice.value.forEach(price => {
+// 		total += price;
+// 	});
+
+// 	return total;
+// }
 
 const idToko = ref(null);
 const metodePembayaran = ref("Tunai");
@@ -401,16 +597,51 @@ function handleChange(event) {
 	metodePembayaran.value = event.detail.value;
 }
 
-const ionInfinite = (event) => {
-  if (!reachedEnd.value) {
-    setTimeout(() => {
-      lastIndex.value += 5;
+function checkProductsHasPromo() {
+	const productMap = new Map();
 
-      event.target.complete();
-    }, 1000);
-  } else {
-    event.target.disabled = true;
-  }
+	productsData.value.forEach(product => {
+		productMap.set(product.prod_number, product);
+	});
+
+	promoProgramsData.value.forEach(promo => {
+		const eligibleProducts = promo.details.map(detail => productMap.get(detail.product)).filter(Boolean);
+
+		if (eligibleProducts.length > 0) {
+			const productWithLowestPrice = eligibleProducts.reduce((lowest, product) => {
+				return product.prod_base_price < lowest.prod_base_price ? product : lowest;
+			});
+
+			catchToastInfo(`${productWithLowestPrice.prod_number} mendapatkan promo ${promo.name_program}`, 3000);
+		}
+	});
+
+	// brandsData.value.forEach(brand => {
+	// 	promoProgramsData.value.forEach(promo => {
+	// 		const foundProduct = productsData.value.find(product => product.brand_id === brand.brand_id);
+
+	// 		promo.details.filter(data => {
+	// 			if (data.product === foundProduct.prod_number) {
+	// 				console.log(`${foundProduct.prod_number} mendapatkan promo ${promo.name_program}`);
+	// 			}
+	// 			return data.product === foundProduct.prod_number;
+	// 		}).map((data) => {
+	// 			console.log(data);
+	// 		})
+	// 	});
+	// });
+}
+
+const ionInfinite = (event) => {
+	if (!reachedEnd.value) {
+		setTimeout(() => {
+			lastIndex.value += 5;
+
+			event.target.complete();
+		}, 1000);
+	} else {
+		event.target.disabled = true;
+	}
 }
 
 async function confirmOTP() {
@@ -585,8 +816,12 @@ function deleteRecentOrder(index, prodNumber) {
 	if (selectedProduct.value.includes(prodNumber)) {
 		const productIndex = selectedProduct.value.indexOf(prodNumber);
 
+		// productsTotalPrice.value.splice(productIndex, 1);
+
 		selectedProduct.value.splice(productIndex, 1);
 	}
+
+	// console.log(productsTotalPrice.value);
 }
 
 async function fetchPromoProgram() {
@@ -605,10 +840,39 @@ async function fetchPromoProgram() {
 		});
 
 		promoProgramsData.value = response.data.resource.data;
+
+		console.log(promoProgramsData.value);
 	} catch (error) {
 		catchToastError("Failed to fetch program promo data", 3000);
 
 		console.error("Failed to fetch program promo data", error);
+	}
+}
+
+async function fetchBrandsData(query = '') {
+	try {
+		refreshAccessTokenHandler();
+
+		const tokens = localStorage.getItem("tokens") ? JSON.parse(localStorage.getItem("tokens")) : null;
+
+		const headers = {
+			'Content-Type': 'application/json',
+			'Authorization': `Bearer ${tokens.access_token}`
+		};
+
+		const response = await axios.get(`${API_URL.value}/api/v2/brands`, {
+			headers: headers,
+			params: {
+				q: query,
+			},
+		});
+
+		brandsData.value = response.data.resource.data;
+
+		console.log(brandsData.value);
+	} catch (error) {
+		catchToastError("Failed to fetch brand data", 3000);
+		console.log("Failed to fetch brand data", error);
 	}
 }
 
@@ -672,6 +936,7 @@ onMounted(() => {
 	fetchStoreDetailData(storeId.value);
 	fetchPromoProgram();
 	fetchProductsData();
+	fetchBrandsData();
 });
 </script>
 

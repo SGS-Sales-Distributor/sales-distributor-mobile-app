@@ -6,12 +6,39 @@ export async function catchToast (responseMsg, duration) {
         message: `${responseMsg}`,
         duration: duration,
         position: "top",
-        positionAnchor: "header",
         color: 'success',
         mode: 'md',
         buttons: [
             {
                 icon: close,
+                handler: () => {
+                    toast.dismiss();
+                },
+                role: 'cancel',
+                htmlAttributes: {
+                    'aria-label': 'close',
+                },
+            },
+        ],
+    });
+
+    return toast.present();
+}
+
+export async function catchToastInfo (responseMsg, duration) {
+    const toast = await toastController.create({
+        message: `${responseMsg}`,
+        duration: duration,
+        position: "top",
+        color: 'primary',
+        mode: 'md',
+        buttons: [
+            {
+                icon: close,
+                handler: () => {
+                    toast.dismiss();
+                },
+                role: 'cancel',
                 htmlAttributes: {
                     'aria-label': 'close',
                 },
@@ -27,12 +54,15 @@ export async function catchToastError (errorMsg, duration) {
         message: errorMsg,
         duration: duration,
         position: "top",
-        positionAnchor: "header",
         color: "danger",
         mode: 'md',
         buttons: [
             {
                 icon: close,
+                handler: () => {
+                    toast.dismiss();
+                },
+                role: 'cancel',
                 htmlAttributes: {
                     'aria-label': 'close',
                 },
@@ -48,8 +78,20 @@ export async function catchToastWarn (warnMsg, duration) {
         message: warnMsg,
         duration: duration,
         position: "top",
-        positionAnchor: "header",
         color: "warning",
+        mode: 'md',
+        buttons: [
+            {
+                icon: close,
+                handler: () => {
+                    toast.dismiss();
+                },
+                role: 'cancel',
+                htmlAttributes: {
+                    'aria-label': 'close',
+                },
+            },
+        ],
     });
 
     return toast.present();
