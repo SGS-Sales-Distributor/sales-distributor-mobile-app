@@ -257,7 +257,7 @@ import { computed, nextTick, onMounted, ref, shallowRef } from 'vue';
 import { alertController } from '@ionic/vue';
 
 import { printCurrentPosition, checkLocationAccess } from '@/services/locationHandlers';
-import { statusGPS, API_URL, latitude, longitude } from '@/services/globalVariables';
+import { statusGPS, API_URL, latitude, longitude, currentRoute } from '@/services/globalVariables';
 import { catchToast, catchToastError } from '@/services/toastHandlers';
 import { refreshAccessTokenHandler } from '@/services/auth.js';
 import { presentLoading, stopLoading } from '@/services/loadingHandlers';
@@ -417,7 +417,7 @@ async function fetchStoresData(query = '') {
       'Authorization': `Bearer ${tokens.access_token}`
     };
 
-    const response = await axios.get(`${API_URL.value}/api/v2/stores`, {
+    const response = await axios.get(`${API_URL.value}/api/v2/stores/call-plans`, {
       headers: headers,
       params: {
         q: query,
@@ -671,6 +671,8 @@ async function takeCheckOutPicture() {
 }
 
 onMounted(() => {
+  currentRoute.value = null;
+  
   presentLoading();
 
   refreshAccessTokenHandler();
