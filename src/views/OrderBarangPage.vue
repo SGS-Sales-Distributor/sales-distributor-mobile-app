@@ -29,7 +29,7 @@
 
             <ion-list>
                 <ion-item>
-                    <ion-select @ionChange="handleChange($event)" label="Daftar Brand"
+                    <ion-select @ionChange="handleChange($event)" @ionCancel="cancelSelectionHandler()" label="Daftar Brand"
                         interface="action-sheet" :value="selectedBrand" placeholder="Pilih Brand"
                         cancel-text="Batalkan Pilihan">
                         <ion-select-option v-for="(brand, index) in brandsData" :key="index+1" :value="brand.brand_id">{{ brand.brand_name }}</ion-select-option>
@@ -37,7 +37,7 @@
                 </ion-item>
             </ion-list>
 
-            <ion-searchbar :debounce="300" @ionInput="handleInput($event)" placeholder="Cari nama, nomor produk..."
+            <ion-searchbar v-if="selectedBrandBtn" :debounce="300" @ionInput="handleInput($event)" placeholder="Cari nama, nomor produk..."
                 color="light"></ion-searchbar>
 
             <div v-for="(product, index) in visibleProducts" :key="index + 1" class="relative overflow-x-auto">
@@ -135,6 +135,7 @@ import { IonSearchbar, IonSelect, IonSelectOption } from '@ionic/vue';
 const productsData = ref([]);
 
 const selectedBrand = ref("Sariayu");
+const selectedBrandBtn = ref(false);
 const brandsData = ref([]);
 
 const lastIndex = ref(5);
@@ -162,9 +163,17 @@ const ionInfinite = (event) => {
 }
 
 function handleChange(event) {
+    selectedBrandBtn.value = true;
+
     selectedBrand.value = event.detail.value;
 
     fetchProductsData(selectedBrand.value);
+}
+
+function cancelSelectionHandler() {
+    selectedBrandBtn.value = false;
+
+    productsData.value = [];
 }
 
 function handleInput(event) {
@@ -210,8 +219,6 @@ async function fetchProductsData(query = '') {
         });
 
         productsData.value = response.data.resource.data;
-
-        console.log(productsData.value);
     } catch (error) {
         catchToastError("Failed to fetch product data", 3000);
 
@@ -238,8 +245,6 @@ async function fetchBrandsData(query = '') {
         });
 
         brandsData.value = response.data.resource.data;
-
-        console.log(brandsData.value);
     } catch (error) {
         catchToastError("Failed to fetch product data", 3000);
 

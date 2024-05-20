@@ -424,7 +424,7 @@ async function fetchStoresData(query = '') {
       },
     });
 
-    storeInfoDistri.value = response.data.resource.data;
+    storeInfoDistri.value = response.data.resource;
 
     let canAbsenVisit = true;
 

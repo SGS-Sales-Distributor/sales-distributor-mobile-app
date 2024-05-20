@@ -406,6 +406,8 @@
 							class="block w-full md:w-auto text-white bg-green-400 hover:bg-green-500 focus:ring-4 focus:outline-none font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800"
 							type="button">
 							Konfirmasi OTP
+
+
 						</button>
 					</div>
 
@@ -448,7 +450,7 @@
 							<div v-if="!flagOTP"
 								class="relative flex min-h-screen flex-col justify-center overflow-hidden bg-gray-50 py-12">
 								<div
-									class="relative bg-white px-6 pt-10 pb-9 shadow-xl mx-auto w-full max-w-lg rounded-2xl">
+									class="relative bg-white px-6 py-8 mx-auto w-full max-w-lg rounded-2xl">
 									<div class="mx-auto flex w-full max-w-md flex-col space-y-16">
 										<div class="flex flex-col items-center justify-center text-center space-y-2">
 											<div class="font-semibold text-3xl">
@@ -537,7 +539,7 @@ import {
 	selectedProduct,
 	currentRoute,
 } from '@/services/globalVariables';
-import { redirectToStorePurchaseOrderPage, redirectBackOneStep, redirectToHomePage, redirectToAbsensiPage, redirectToPurchaseOrderPage } from '@/services/redirectHandlers';
+import { redirectToStorePurchaseOrderPage, redirectToAbsensiPage, redirectToPurchaseOrderPage } from '@/services/redirectHandlers';
 import { API_URL } from '@/services/globalVariables';
 import { IonSelectOption, IonSelect } from '@ionic/vue';
 
@@ -567,6 +569,7 @@ const reachedEnd = computed(() => {
 	return Array.isArray(promoProgramsData.value) && lastIndex.value >= promoProgramsData.value.length;
 });
 
+// need to add check promo later!!!
 const calculateTotalPriceHandler = (prodPrice, qty) => {
 	const total = parseFloat(prodPrice) * qty;
 	return total;
@@ -600,36 +603,25 @@ function handleChange(event) {
 function checkProductsHasPromo() {
 	const productMap = new Map();
 
-	productsData.value.forEach(product => {
-		productMap.set(product.prod_number, product);
+	objOrder.value.forEach(product => {
+		productMap.set(product.prodNumber, product);
 	});
 
 	promoProgramsData.value.forEach(promo => {
-		const eligibleProducts = promo.details.map(detail => productMap.get(detail.product)).filter(Boolean);
+		const eligibleProducts = promo.details.map(detail => {
+			const product = productMap.get(detail.product);
+
+			return product && product.qty >= detail.condition ? product : null;
+		}).filter(Boolean);
 
 		if (eligibleProducts.length > 0) {
 			const productWithLowestPrice = eligibleProducts.reduce((lowest, product) => {
 				return product.prod_base_price < lowest.prod_base_price ? product : lowest;
 			});
 
-			catchToastInfo(`${productWithLowestPrice.prod_number} mendapatkan promo ${promo.name_program}`, 3000);
+			catchToastInfo(`${productWithLowestPrice.prodNumber} mendapatkan promo ${promo.name_program}`, 3000);
 		}
 	});
-
-	// brandsData.value.forEach(brand => {
-	// 	promoProgramsData.value.forEach(promo => {
-	// 		const foundProduct = productsData.value.find(product => product.brand_id === brand.brand_id);
-
-	// 		promo.details.filter(data => {
-	// 			if (data.product === foundProduct.prod_number) {
-	// 				console.log(`${foundProduct.prod_number} mendapatkan promo ${promo.name_program}`);
-	// 			}
-	// 			return data.product === foundProduct.prod_number;
-	// 		}).map((data) => {
-	// 			console.log(data);
-	// 		})
-	// 	});
-	// });
 }
 
 const ionInfinite = (event) => {
@@ -758,8 +750,6 @@ async function sendOTP(nomorWhatsappOTP) {
 
 		const tokens = localStorage.getItem("tokens") ? JSON.parse(localStorage.getItem("tokens")) : null;
 
-		console.log(objOrder.value);
-
 		const headers = {
 			'Authorization': `Bearer ${tokens.access_token}`,
 		}
@@ -791,7 +781,11 @@ async function sendOTP(nomorWhatsappOTP) {
 }
 
 function addMoreOrder(index, maks) {
-	objOrder.value[index].qty += 1;
+	if (objOrder.value[index].qty < maks) {
+		objOrder.value[index].qty++;
+
+		checkProductsHasPromo();
+	}
 
 	if (objOrder.value[index].qty > maks) {
 		catchToastError(`Tidak boleh order melebihi dari ${maks}`, 3000);
@@ -801,7 +795,11 @@ function addMoreOrder(index, maks) {
 }
 
 function reduceOrder(index, min) {
-	objOrder.value[index].qty -= 1;
+	if (objOrder.value[index].qty > min) {
+		objOrder.value[index].qty--;
+
+		checkProductsHasPromo();
+	}
 
 	if (objOrder.value[index].qty < min) {
 		catchToastError("Tidak boleh order kurang dari 0", 3000);
@@ -840,8 +838,6 @@ async function fetchPromoProgram() {
 		});
 
 		promoProgramsData.value = response.data.resource.data;
-
-		console.log(promoProgramsData.value);
 	} catch (error) {
 		catchToastError("Failed to fetch program promo data", 3000);
 
@@ -868,11 +864,10 @@ async function fetchBrandsData(query = '') {
 		});
 
 		brandsData.value = response.data.resource.data;
-
-		console.log(brandsData.value);
 	} catch (error) {
 		catchToastError("Failed to fetch brand data", 3000);
-		console.log("Failed to fetch brand data", error);
+
+		console.error("Failed to fetch brand data", error);
 	}
 }
 
