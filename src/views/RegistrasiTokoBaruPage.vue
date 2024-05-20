@@ -119,7 +119,7 @@ import HeaderSection from './../components/HeaderSection.vue'
 import { onMounted, ref } from 'vue';
 import { refreshAccessTokenHandler } from '@/services/auth';
 import axios from 'axios';
-import { API_URL, fieldTypes } from '@/services/globalVariables';
+import { API_URL, fieldTypes, savedStoreData } from '@/services/globalVariables';
 import { redirectToOwnerFormPage, redirectToRegisterStorePage } from '@/services/redirectHandlers';
 import { presentLoading, stopLoading } from '@/services/loadingHandlers';
 import { catchToast, catchToastError } from '@/services/toastHandlers';
@@ -204,7 +204,7 @@ async function saveStoreData() {
 
         stopLoading();
 
-        localStorage.setItem("store", JSON.stringify(response.data.resource));
+        savedStoreData.value = response.data.resource;
 
         console.log(response.data.resource);
 

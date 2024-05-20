@@ -15,6 +15,7 @@ export const longitude = ref(0);
 
 // Used for get Detail Store.
 export const detailStoreInfoDistri = ref(null);
+export const savedStoreData = ref(null);
 
 // Used for Loading.
 export const loading = ref(null);

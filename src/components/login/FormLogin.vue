@@ -152,7 +152,7 @@ async function login() {
 
     redirectToHomePage();
   } catch (error) {
-    catchToastError(error.message, 3000);
+    catchToastError("Gagal Login, email atau password salah!", 3000);
     
     console.error('Failed to logged in: ', error);
   } finally {

@@ -15,6 +15,10 @@
             <h2 v-if="store.store_name" class="text-center">
               Form Daftar Owner Toko {{ store.store_name }}
             </h2>
+
+            <h2 v-else class="text-center">
+              Form Daftar Owner Toko -
+            </h2>
           </div>
           <div class="text-md">
             <button type="button"
