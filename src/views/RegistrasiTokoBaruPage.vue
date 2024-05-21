@@ -206,6 +206,8 @@ async function saveStoreData() {
 
         savedStoreData.value = response.data.resource;
 
+        localStorage.setItem("store", JSON.stringify(savedStoreData.value));
+
         console.log(response.data.resource);
 
         catchToast(response.data.message);
