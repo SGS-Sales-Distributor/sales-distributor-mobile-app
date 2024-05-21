@@ -20,16 +20,22 @@
       <ion-label class="text-sm font-semibold">Katalog Produk</ion-label>
     </div>
     <div class="flex flex-col items-center justify-center space-y-2">
-      <ion-button id="purchase-order-button" shape="round" href="/order">
-        <ion-icon class="text-2xl" slot="icon-only"  :icon="card"></ion-icon>
-      </ion-button>
-      <ion-label class="text-sm font-semibold">Purchase Order</ion-label>
-    </div>
-    <div class="flex flex-col items-center justify-center space-y-2">
       <ion-button id="achievement-button" shape="round">
         <ion-icon class="text-2xl" slot="icon-only"  :icon="trophy"></ion-icon>
       </ion-button>
       <ion-label class="text-sm font-semibold">Reward</ion-label>
+    </div>
+    <div class="flex flex-col items-center justify-center space-y-2">
+      <ion-button id="list-purchase-order-button" shape="round" href="/order-history">
+        <ion-icon class="text-2xl" slot="icon-only"  :icon="listCircle"></ion-icon>
+      </ion-button>
+      <ion-label class="text-sm font-semibold">List Purchase Order</ion-label>
+    </div>
+    <div class="flex flex-col items-center justify-center space-y-2">
+      <ion-button id="purchase-order-button" shape="round" href="/order">
+        <ion-icon class="text-2xl" slot="icon-only"  :icon="card"></ion-icon>
+      </ion-button>
+      <ion-label class="text-sm font-semibold">Direct Purchase Order</ion-label>
     </div>
   </div>
   <!-- End main feature -->
@@ -42,6 +48,7 @@ import {
   trophy,
   cube,
   card,
+  listCircle,
 } from 'ionicons/icons';
 import { IonButton } from '@ionic/vue';
 </script>
@@ -85,6 +92,17 @@ import { IonButton } from '@ionic/vue';
   --background-hover: #B5C0D0;
   --background-activated: #B5C0D0;
   --background-focused: #B5C0D0;
+  --color: #202020;
+  --box-shadow: 0 2px 6px 0 rgb(0, 0, 0, 0.25);
+  --padding-top: 10px;
+  --padding-bottom: 10px;
+}
+
+#list-purchase-order-button {
+  --background: #FFA62F;
+  --background-hover: #FFA62F;
+  --background-activated: #FFA62F;
+  --background-focused: #FFA62F;
   --color: #202020;
   --box-shadow: 0 2px 6px 0 rgb(0, 0, 0, 0.25);
   --padding-top: 10px;

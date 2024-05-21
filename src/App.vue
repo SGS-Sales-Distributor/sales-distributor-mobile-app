@@ -20,7 +20,8 @@ async function authUser() {
 
     if (!tokens) {
       console.error("Access Token and Refresh Token not found.");
-      return;
+      
+      redirectToLoginPage();
     }
 
     const headers = {

@@ -52,6 +52,14 @@ export function  redirectToPurchaseOrderPage() {
     }, 300);
 }
 
+export function redirectToPurchaseOrderDetail() {
+    setTimeout(() => {
+        router.push({
+            name: ''
+        })
+    }, 300);
+}
+
 export function redirectToStorePurchaseOrderPage(storeId) {
     setTimeout(() => {
         router.push({

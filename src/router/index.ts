@@ -13,6 +13,7 @@ import PurchaseOrderPage from './../views/PurchaseOrderPage.vue'
 
 import { isAuthenticated } from "@/services/auth";
 import "maplibre-gl/dist/maplibre-gl.css";
+import PurchaseOrderHistoryPage from "@/views/PurchaseOrderHistoryPage.vue";
 
 const routes: Array<RouteRecordRaw> = [
   {
@@ -50,6 +51,11 @@ const routes: Array<RouteRecordRaw> = [
         path: "/order",
         name: "purchaseOrder",
         component: PurchaseOrderPage,
+      },
+      {
+        path: "/order-history",
+        name: "purchaseOrderHistory",
+        component: PurchaseOrderHistoryPage,
       },
       { 
         path: "/store/:id",

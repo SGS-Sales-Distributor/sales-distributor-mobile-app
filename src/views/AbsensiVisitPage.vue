@@ -49,9 +49,6 @@
                     <dd class="mt-1 text-sm text-gray-900 sm:mt-0 sm:col-span-2">
                       {{ detailStoreInfoDistri.nama_toko }}
                     </dd>
-                    <dd class="mt-1 text-sm text-gray-900 sm:mt-0 sm:col-span-2">
-                      {{ detailStoreInfoDistri.visit_id }}
-                    </dd>
                   </div>
                   <div class="bg-sky-100 p-4 sm:grid-cols-3 sm:gap-4 sm:px-6">
                     <dt class="text-md font-bold text-gray-900">
@@ -91,30 +88,6 @@
                     </dt>
                     <dd class="mt-1 text-sm text-gray-900 sm:mt-0 sm:col-span-2">
                       {{ detailStoreInfoDistri.kode_toko }}
-                    </dd>
-                  </div>
-                  <div class="bg-sky-50 p-4 sm:grid-cols-3 sm:gap-4 sm:px-6">
-                    <dt class="text-md font-bold text-gray-900">
-                      Nama Pemilik Toko
-                    </dt>
-                    <dd v-if="detailStoreInfoDistri.nama_pemilik_toko"
-                      class="mt-1 text-sm text-gray-900 sm:mt-0 sm:col-span-2">
-                      {{ detailStoreInfoDistri.nama_pemilik_toko }}
-                    </dd>
-                    <dd v-else class="mt-1 text-sm text-gray-900 sm:mt-0 sm:col-span-2">
-                      <ion-badge color="danger">Tidak Ada</ion-badge>
-                    </dd>
-                  </div>
-                  <div class="bg-sky-100 p-4 sm:grid-cols-3 sm:gap-4 sm:px-6">
-                    <dt class="text-md font-bold text-gray-900">
-                      Email Pemilik Toko
-                    </dt>
-                    <dd v-if="detailStoreInfoDistri.email_pemilik_toko"
-                      class="mt-1 text-sm text-gray-900 sm:mt-0 sm:col-span-2">
-                      {{ detailStoreInfoDistri.email_pemilik_toko }}
-                    </dd>
-                    <dd v-else class="mt-1 text-sm text-gray-900 sm:mt-0 sm:col-span-2">
-                      <ion-badge color="danger">Tidak Ada</ion-badge>
                     </dd>
                   </div>
                 </dl>
@@ -426,6 +399,8 @@ async function fetchStoresData(query = '') {
 
     storeInfoDistri.value = response.data.resource;
 
+    console.log(storeInfoDistri.value);
+
     let canAbsenVisit = true;
 
     Object.keys(storeInfoDistri.value).forEach(key => {
@@ -442,7 +417,6 @@ async function fetchStoresData(query = '') {
       } else {
         value.enablePurchaseOrderBtn = true;
       }
-
 
       if (!statusGPS.value) {
         value.enablePurchaseOrderBtn = true;
@@ -672,11 +646,8 @@ async function takeCheckOutPicture() {
 
 onMounted(() => {
   currentRoute.value = null;
-  
   presentLoading();
-
   refreshAccessTokenHandler();
-
   fetchStoresData();
   printCurrentPosition();
   checkLocationAccess();

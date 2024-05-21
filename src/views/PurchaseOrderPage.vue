@@ -16,6 +16,10 @@
                                 <ion-card-header class="bg-gray-50">
                                     <div class="flex flex-col w-full h-full space-y-2">
                                         <div class="flex flex-row w-full h-full justify-between space-x-2">
+                                            <label for="nama-toko" class="flex-initial w-56 font-semibold">ID Toko</label>
+                                            <p class="flex-initial w-44 text-right">{{ store.store_id }}</p>
+                                        </div>
+                                        <div class="flex flex-row w-full h-full justify-between space-x-2">
                                             <label for="nama-toko" class="flex-initial w-56 font-semibold">Nama
                                                 Toko</label>
                                             <p class="flex-initial w-44 text-right">{{ store.nama_toko }}</p>

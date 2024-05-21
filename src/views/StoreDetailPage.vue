@@ -41,7 +41,7 @@
 
 					<!-- Detail Store Card -->
 					<div class="flex flex-col space-y-2 mb-4" id="store-detail-card">
-						<ion-card v-if="storeData" class="shadow-lg shadow-gray-300">
+						<ion-card v-if="storeData">
 							<ion-card-header>
 								<div class="flex justify-between">
 									<ion-card-title>
@@ -107,30 +107,6 @@
 												{{ storeData.kode_toko }}
 											</dd>
 										</div>
-										<div class="bg-lime-50 p-4 sm:grid-cols-3 sm:gap-4 sm:px-6">
-											<dt class="text-md font-bold text-gray-900">
-												Nama Pemilik Toko
-											</dt>
-											<dd v-if="storeData.nama_pemilik_toko"
-												class="mt-1 text-sm text-gray-900 sm:mt-0 sm:col-span-2">
-												{{ storeData.nama_pemilik_toko }}
-											</dd>
-											<dd v-else class="mt-1 text-sm text-gray-900 sm:mt-0 sm:col-span-2">
-												<ion-badge color="danger">Tidak Ada</ion-badge>
-											</dd>
-										</div>
-										<div class="bg-lime-100 p-4 sm:grid-cols-3 sm:gap-4 sm:px-6">
-											<dt class="text-md font-bold text-gray-900">
-												Email Pemilik Toko
-											</dt>
-											<dd v-if="storeData.email_pemilik_toko"
-												class="mt-1 text-sm text-gray-900 sm:mt-0 sm:col-span-2">
-												{{ storeData.email_pemilik_toko }}
-											</dd>
-											<dd v-else class="mt-1 text-sm text-gray-900 sm:mt-0 sm:col-span-2">
-												<ion-badge color="danger">Tidak Ada</ion-badge>
-											</dd>
-										</div>
 									</dl>
 
 									<dl v-else>
@@ -180,30 +156,6 @@
 											</dt>
 											<dd class="mt-1 text-sm text-gray-900 sm:mt-0 sm:col-span-2">
 												{{ storeData.kode_toko }}
-											</dd>
-										</div>
-										<div class="bg-sky-50 p-4 sm:grid-cols-3 sm:gap-4 sm:px-6">
-											<dt class="text-md font-bold text-gray-900">
-												Nama Pemilik Toko
-											</dt>
-											<dd v-if="storeData.nama_pemilik_toko"
-												class="mt-1 text-sm text-gray-900 sm:mt-0 sm:col-span-2">
-												{{ storeData.nama_pemilik_toko }}
-											</dd>
-											<dd v-else class="mt-1 text-sm text-gray-900 sm:mt-0 sm:col-span-2">
-												<ion-badge color="danger">Tidak Ada</ion-badge>
-											</dd>
-										</div>
-										<div class="bg-sky-100 p-4 sm:grid-cols-3 sm:gap-4 sm:px-6">
-											<dt class="text-md font-bold text-gray-900">
-												Email Pemilik Toko
-											</dt>
-											<dd v-if="storeData.email_pemilik_toko"
-												class="mt-1 text-sm text-gray-900 sm:mt-0 sm:col-span-2">
-												{{ storeData.email_pemilik_toko }}
-											</dd>
-											<dd v-else class="mt-1 text-sm text-gray-900 sm:mt-0 sm:col-span-2">
-												<ion-badge color="danger">Tidak Ada</ion-badge>
 											</dd>
 										</div>
 									</dl>
@@ -299,7 +251,8 @@
 											</ion-button>
 											<input id="orderInput" :value="order.qty" type="number" pattern="[0-9]"
 												min="0" :max="order.stock" readonly class="text-right" />
-											<ion-button size="small" @click="addMoreOrder(index, order.stock)" color="success">
+											<ion-button size="small" @click="addMoreOrder(index, order.stock)"
+												color="success">
 												<ion-icon slot="icon-only" :icon="addOutline"></ion-icon>
 											</ion-button>
 										</div>
@@ -395,7 +348,7 @@
 
 					<div class="flex justify-between items-center py-2" v-if="objOrder.length">
 						<button @click="checkProductsHasPromo"
-							class="block w-full md:w-auto text-white bg-green-400 hover:bg-green-500 focus:ring-4 focus:outline-none font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800"
+							class="block w-full md:w-auto text-white bg-green-400 hover:bg-green-500 focus:ring-4 focus:outline-none font-medium rounded-lg text-sm px-5 py-2.5 text-center transition-all"
 							type="button">
 							Cek Promo
 						</button>
@@ -403,11 +356,9 @@
 
 					<div class="flex justify-between items-center py-2" v-if="objOrder.length">
 						<button @click="setOpen(true)"
-							class="block w-full md:w-auto text-white bg-green-400 hover:bg-green-500 focus:ring-4 focus:outline-none font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800"
+							class="block w-full md:w-auto text-white bg-green-400 focus:ring-4 focus:outline-none font-medium rounded-lg text-sm px-5 py-2.5 text-center transition-all"
 							type="button">
 							Konfirmasi OTP
-
-
 						</button>
 					</div>
 
@@ -449,8 +400,7 @@
 							</div>
 							<div v-if="!flagOTP"
 								class="relative flex min-h-screen flex-col justify-center overflow-hidden bg-gray-50 py-12">
-								<div
-									class="relative bg-white px-6 py-8 mx-auto w-full max-w-lg rounded-2xl">
+								<div class="relative bg-white px-6 py-8 mx-auto w-full max-w-lg rounded-2xl">
 									<div class="mx-auto flex w-full max-w-md flex-col space-y-16">
 										<div class="flex flex-col items-center justify-center text-center space-y-2">
 											<div class="font-semibold text-3xl">
@@ -555,7 +505,6 @@ const storeId = ref(route.params.id);
 const brandsData = ref([]);
 const productsData = ref([]);
 const promoProgramsData = ref([]);
-
 // const hasProductGetPromo = ref(false);
 // const relatedPromosOfSelectedProduct = ref([]);
 
@@ -603,11 +552,11 @@ function handleChange(event) {
 function checkProductsHasPromo() {
 	const productMap = new Map();
 
-	objOrder.value.forEach(product => {
+	for (const product of objOrder.value) {
 		productMap.set(product.prodNumber, product);
-	});
+	}
 
-	promoProgramsData.value.forEach(promo => {
+	for (const promo of promoProgramsData.value) {
 		const eligibleProducts = promo.details.map(detail => {
 			const product = productMap.get(detail.product);
 
@@ -621,7 +570,7 @@ function checkProductsHasPromo() {
 
 			catchToastInfo(`${productWithLowestPrice.prodNumber} mendapatkan promo ${promo.name_program}`, 3000);
 		}
-	});
+	}
 }
 
 const ionInfinite = (event) => {
@@ -888,6 +837,8 @@ async function fetchStoreDetailData(id) {
 
 		storeData.value = response.data.resource;
 
+		console.log(storeData.value);
+
 		nomorWhatsappOTP.value = storeData.value.nomor_telepon_toko;
 
 		idToko.value = storeData.value.store_id;
@@ -941,5 +892,11 @@ ion-col {
 	border: solid 1px #fff;
 	color: #fff;
 	text-align: center;
+}
+
+button:disabled,
+button[disabled] {
+	background: rgb(228, 228, 228);
+	color: rgb(126, 126, 126);
 }
 </style>
