@@ -16,9 +16,9 @@
         <!-- End of Card Content -->
 
         <!-- Detail Store Card -->
-        <div v-if="statusGPS" class="flex flex-col space-y-2" id="store-detail-card">
-          <ion-card v-if="detailStoreInfoDistri" class="shadow-lg shadow-gray-300">
-            <ion-card-header>
+        <div v-if="statusGPS" class="flex flex-col space-y-2 mb-4" id="store-detail-card">
+          <ion-card v-if="detailStoreInfoDistri" class="py-2 bg-gradient-to-r from-sky-400 via-blue-500 to-blue-700">
+            <ion-card-header class="bg-white">
               <div class="flex justify-between">
                 <ion-card-title>
                   <span class="font-bold text-gray-900 text-2xl">Data Detail Toko</span>
@@ -39,60 +39,14 @@
               </ion-card-subtitle>
             </ion-card-header>
 
-            <ion-card-content>
-              <div class="border-t border-gray-200">
-                <dl>
-                  <div class="bg-sky-50 p-4 sm:grid-cols-3 sm:gap-4 sm:px-6">
-                    <dt class="text-md font-bold text-gray-900">
-                      Nama Toko
-                    </dt>
-                    <dd class="mt-1 text-sm text-gray-900 sm:mt-0 sm:col-span-2">
-                      {{ detailStoreInfoDistri.nama_toko }}
-                    </dd>
-                  </div>
-                  <div class="bg-sky-100 p-4 sm:grid-cols-3 sm:gap-4 sm:px-6">
-                    <dt class="text-md font-bold text-gray-900">
-                      Nama Alias Toko
-                    </dt>
-                    <dd class="mt-1 text-sm text-gray-900 sm:mt-0 sm:col-span-2">
-                      {{ detailStoreInfoDistri.alias_toko }}
-                    </dd>
-                  </div>
-                  <div class="bg-sky-50 p-4 sm:grid-cols-3 sm:gap-4 sm:px-6">
-                    <dt class="text-md font-bold text-gray-900">
-                      Alamat Toko
-                    </dt>
-                    <dd class="mt-1 text-sm text-gray-900 sm:mt-0 sm:col-span-2">
-                      {{ detailStoreInfoDistri.alamat_toko }}
-                    </dd>
-                  </div>
-                  <div class="bg-sky-100 p-4 sm:grid-cols-3 sm:gap-4 sm:px-6">
-                    <dt class="text-md font-bold text-gray-900">
-                      Nomor Telepon Toko
-                    </dt>
-                    <dd class="mt-1 text-sm text-gray-900 sm:mt-0 sm:col-span-2">
-                      {{ detailStoreInfoDistri.nomor_telepon_toko }}
-                    </dd>
-                  </div>
-                  <div class="bg-sky-50 p-4 sm:grid-cols-3 sm:gap-4 sm:px-6">
-                    <dt class="text-md font-bold text-gray-900">
-                      Nomor Fax Toko
-                    </dt>
-                    <dd class="mt-1 text-sm text-gray-900 sm:mt-0 sm:col-span-2">
-                      {{ detailStoreInfoDistri.nomor_fax_toko }}
-                    </dd>
-                  </div>
-                  <div class="bg-sky-100 p-4 sm:grid-cols-3 sm:gap-4 sm:px-6">
-                    <dt class="text-md font-bold text-gray-900">
-                      Kode Unik Toko
-                    </dt>
-                    <dd class="mt-1 text-sm text-gray-900 sm:mt-0 sm:col-span-2">
-                      {{ detailStoreInfoDistri.kode_toko }}
-                    </dd>
-                  </div>
-                </dl>
-              </div>
-            </ion-card-content>
+            <StoreDetailContent 
+            :nama-toko="detailStoreInfoDistri.nama_toko"
+            :alias-toko="detailStoreInfoDistri.alias_toko"
+            :alamat-toko="detailStoreInfoDistri.alamat_toko"
+            :nomor-telepon="detailStoreInfoDistri.nomor_telepon_toko"
+            :nomor-fax="detailStoreInfoDistri.nomor_fax_toko"
+            :kode-toko="detailStoreInfoDistri.kode_toko"
+            />
           </ion-card>
         </div>
         <!-- End of Detail Store Card -->
@@ -136,7 +90,7 @@
           placeholder="Cari nama toko..." color="light"></ion-searchbar>
 
         <div v-for="(store, index) in visibleStores" :key="index + 1" class="relative overflow-x-auto">
-          <ion-card v-if="statusGPS" class="py-2 odd:bg-blue-500 even:bg-sky-400">
+          <ion-card v-if="statusGPS" class="py-2 bg-gradient-to-r from-sky-400 via-blue-500 to-blue-700">
             <ion-card-header class="bg-gray-50">
               <div class="flex flex-col w-full h-full space-y-2">
                 <div class="flex flex-row w-full h-full justify-between space-x-2">
@@ -212,6 +166,7 @@
 </template>
 
 <script setup>
+import StoreDetailContent from './../components/order/StoreDetailContent.vue'
 import axios from 'axios';
 import { IonSearchbar } from '@ionic/vue';
 
@@ -230,7 +185,7 @@ import { computed, nextTick, onMounted, ref, shallowRef } from 'vue';
 import { alertController } from '@ionic/vue';
 
 import { printCurrentPosition, checkLocationAccess } from '@/services/locationHandlers';
-import { statusGPS, API_URL, latitude, longitude, currentRoute } from '@/services/globalVariables';
+import { statusGPS, API_URL, latitude, longitude } from '@/services/globalVariables';
 import { catchToast, catchToastError } from '@/services/toastHandlers';
 import { refreshAccessTokenHandler } from '@/services/auth.js';
 import { presentLoading, stopLoading } from '@/services/loadingHandlers';
@@ -441,7 +396,7 @@ async function fetchOneStoreData(id) {
       'Authorization': `Bearer ${tokens.access_token}`
     };
 
-    const response = await axios.get(`${API_URL.value}/api/v2/stores/${id}`, {
+    const response = await axios.get(`${API_URL.value}/api/v2/stores/${id}/call-plans`, {
       headers: headers
     });
 
@@ -645,7 +600,6 @@ async function takeCheckOutPicture() {
 }
 
 onMounted(() => {
-  currentRoute.value = null;
   presentLoading();
   refreshAccessTokenHandler();
   fetchStoresData();

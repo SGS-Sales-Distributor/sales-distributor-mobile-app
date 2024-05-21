@@ -8,21 +8,15 @@
                     <div class="p-8 rounded-lg max-w-sm w-full">
                         <h2 class="text-2xl font-semibold text-center mb-4">Daftar Outlet Baru</h2>
                         <p class="text-gray-600 text-center mb-6">Masukkan data yang diperlukan.</p>
-                        <Form
-                        method="post"
-                        novalidate 
-                        :validation-schema="validation"
-                        >
+                        <Form method="post" novalidate :validation-schema="validation">
                             <div class="mb-4">
                                 <label for="store_name" class="block text-gray-700 text-sm font-semibold mb-2">Nama Toko
                                     *</label>
                                 <Field v-model="formData.store_name" :type="fieldTypes.text" id="store_name"
                                     name="store_name"
                                     class="form-input w-full px-4 py-2 border rounded-lg text-gray-700 focus:ring-blue-500"
-                                    placeholder="Masukkan nama toko" 
-                                    aria-label="store_name"
-                                    aria-describedby="store_name"
-                                    />
+                                    placeholder="Masukkan nama toko" aria-label="store_name"
+                                    aria-describedby="store_name" />
                                 <ErrorMessage name="store_name" class="text-rose-500" />
                             </div>
                             <div class="mb-4">
@@ -31,10 +25,8 @@
                                 <Field v-model="formData.store_alias" :type="fieldTypes.text" id="store_alias"
                                     name="store_alias"
                                     class="form-input w-full px-4 py-2 border rounded-lg text-gray-700 focus:ring-blue-500"
-                                    placeholder="Masukkan nama alias toko" 
-                                    aria-label="store_alias"
-                                    aria-describedby="store_alias"
-                                    />
+                                    placeholder="Masukkan nama alias toko" aria-label="store_alias"
+                                    aria-describedby="store_alias" />
                                 <ErrorMessage name="store_alias" class="text-rose-500" />
                             </div>
                             <div class="mb-4">
@@ -44,8 +36,7 @@
                                 <Field v-model="formData.store_address" name="store_address" as="textarea"
                                     id="store_address"
                                     class="form-input w-full px-4 py-2 border rounded-lg text-gray-700 focus:ring-blue-500"
-                                    placeholder="Masukkan alamat toko" cols="20" rows="10"
-                                    aria-label="store_address"
+                                    placeholder="Masukkan alamat toko" cols="20" rows="10" aria-label="store_address"
                                     aria-describedby="store_address">
                                 </Field>
                                 <ErrorMessage name="store_address" class="text-rose-500" />
@@ -56,10 +47,8 @@
                                 <Field v-model="formData.store_phone" :type="fieldTypes.phone" id="store_phone"
                                     name="store_phone"
                                     class="form-input w-full px-4 py-2 border rounded-lg text-gray-700 focus:ring-blue-500"
-                                    placeholder="+6285677445566" 
-                                    aria-label="store_phone"
-                                    aria-describedby="store_phone"
-                                    />
+                                    placeholder="+6285677445566" aria-label="store_phone"
+                                    aria-describedby="store_phone" />
                                 <ErrorMessage name="store_phone" class="text-rose-500" />
                             </div>
                             <div class="mb-4">
@@ -68,10 +57,7 @@
                                 <Field v-model="formData.store_fax" :type="fieldTypes.phone" id="store_fax"
                                     name="store_fax"
                                     class="form-input w-full px-4 py-2 border rounded-lg text-gray-700 focus:ring-blue-500"
-                                    placeholder="1234-5678-9012" 
-                                    aria-label="store_fax"
-                                    aria-describedby="store_fax"
-                                    />
+                                    placeholder="1234-5678-9012" aria-label="store_fax" aria-describedby="store_fax" />
                                 <ErrorMessage name="store_fax" class="text-rose-500" />
                             </div>
                             <div class="mb-4">
@@ -109,6 +95,74 @@
                     </div>
                 </div>
             </div>
+
+            <ion-modal :is-open="isOpen">
+                <ion-header>
+                    <ion-toolbar>
+                        <ion-title>Form Data Pemilik Toko</ion-title>
+                        <ion-buttons slot="end">
+                            <ion-button @click="setOpen(false)">Tutup</ion-button>
+                        </ion-buttons>
+                    </ion-toolbar>
+                </ion-header>
+
+                <ion-content>
+                    <div class="relative flex min-h-screen flex-col items-center overflow-hidden">
+                        <div class="relative bg-white px-6 mx-auto w-full max-w-lg rounded-2xl">
+                            <div class="mx-auto flex w-full max-w-md flex-col space-y-16">
+                                <div class="flex flex-col space-y-2">
+                                    <div class="relative overflow-x-auto">
+                                        <div class="py-6 rounded-lg max-w-sm-full w-full">
+                                            <h2 class="text-xl font-semibold text-center mb-4">Detail Order {{
+                                                savedStoreName }}
+                                            </h2>
+                                            <div class="relative overflow-x-auto">
+                                                <ion-card
+                                                    class="py-2 bg-gradient-to-r from-yellow-300 via-yellow-400 to-orange-400">
+                                                    <ion-card-header class="bg-gray-50">
+                                                        <div class="flex flex-col w-full h-full space-y-2">
+                                                            <div
+                                                                class="flex flex-row w-full h-full justify-between space-x-2">
+                                                                <label for="nama-toko"
+                                                                    class="flex-initial w-56 font-semibold">Baris</label>
+                                                                <p class="flex-initial w-44 text-right"># {{
+                                                                    detail.lineNo }}</p>
+                                                            </div>
+                                                            <div
+                                                                class="flex flex-row w-full h-full justify-between space-x-2">
+                                                                <label for="nama-toko"
+                                                                    class="flex-initial w-56 font-semibold">Kode
+                                                                    Barang</label>
+                                                                <p class="flex-initial w-44 text-right">{{
+                                                                    detail.item_code }}</p>
+                                                            </div>
+                                                            <div
+                                                                class="flex flex-row w-full h-full justify-between space-x-2">
+                                                                <label for="nama-toko"
+                                                                    class="flex-initial w-56 font-semibold">Nama
+                                                                    Barang</label>
+                                                                <p class="flex-initial w-44 text-right">{{
+                                                                    detail.nama_produk }}</p>
+                                                            </div>
+                                                            <div
+                                                                class="flex flex-row w-full h-full justify-between space-x-2">
+                                                                <label for="nama-toko"
+                                                                    class="flex-initial w-56 font-semibold">Kuantiti</label>
+                                                                <p class="flex-initial w-44 text-right">{{
+                                                                    detail.qty }} Pcs</p>
+                                                            </div>
+                                                        </div>
+                                                    </ion-card-header>
+                                                </ion-card>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </ion-content>
+            </ion-modal>
         </ion-content>
     </ion-page>
 </template>
@@ -126,6 +180,12 @@ import { catchToast, catchToastError } from '@/services/toastHandlers';
 import { alertController } from '@ionic/vue';
 import { Form, Field, ErrorMessage } from 'vee-validate';
 
+const isOpen = ref(false);
+const setOpen = (open) => (
+    isOpen.value = open
+);
+
+const savedStoreName = ref('');
 const storeTypes = ref([]);
 const storeCabangs = ref([]);
 
@@ -278,7 +338,7 @@ onMounted(() => {
     refreshAccessTokenHandler();
     fetchStoreTypes();
     fetchStoreCabangs();
-    
+
     stopLoading();
 });
 </script>

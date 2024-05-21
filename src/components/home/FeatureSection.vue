@@ -23,19 +23,19 @@
       <ion-button id="achievement-button" shape="round">
         <ion-icon class="text-2xl" slot="icon-only"  :icon="trophy"></ion-icon>
       </ion-button>
-      <ion-label class="text-sm font-semibold">Reward</ion-label>
+      <ion-label class="text-sm font-semibold">Achieve Reward</ion-label>
     </div>
     <div class="flex flex-col items-center justify-center space-y-2">
       <ion-button id="list-purchase-order-button" shape="round" href="/order-history">
         <ion-icon class="text-2xl" slot="icon-only"  :icon="listCircle"></ion-icon>
       </ion-button>
-      <ion-label class="text-sm font-semibold">List Purchase Order</ion-label>
+      <ion-label class="text-sm font-semibold">List PO</ion-label>
     </div>
     <div class="flex flex-col items-center justify-center space-y-2">
-      <ion-button id="purchase-order-button" shape="round" href="/order">
+      <ion-button id="purchase-order-button" shape="round" href="/direct-order">
         <ion-icon class="text-2xl" slot="icon-only"  :icon="card"></ion-icon>
       </ion-button>
-      <ion-label class="text-sm font-semibold">Direct Purchase Order</ion-label>
+      <ion-label class="text-sm font-semibold">Direct PO</ion-label>
     </div>
   </div>
   <!-- End main feature -->

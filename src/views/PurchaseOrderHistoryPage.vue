@@ -9,7 +9,7 @@
                         <h2 class="text-2xl font-semibold text-center mb-4">List Purchase Order</h2>
                         <p class="text-gray-600 text-center mb-6">Daftar Purchase Order Terbaru.</p>
                         <div v-for="(order, index) in purchaseOrders" :key="index + 1" class="relative overflow-x-auto">
-                            <ion-card class="py-2 bg-yellow-300">
+                            <ion-card class="py-2 bg-gradient-to-r from-yellow-300 via-yellow-400 to-orange-400">
                                 <ion-card-header class="bg-gray-50">
                                     <div class="flex flex-col w-full h-full space-y-2">
                                         <div class="flex flex-row w-full h-full justify-between space-x-2">
@@ -66,7 +66,7 @@
                     <ion-toolbar>
                         <ion-title>Detail Order</ion-title>
                         <ion-buttons slot="end">
-                            <ion-button @click="setOpen(false)">Close</ion-button>
+                            <ion-button @click="setOpen(false)">Tutup</ion-button>
                         </ion-buttons>
                     </ion-toolbar>
                 </ion-header>
@@ -77,20 +77,20 @@
                             <div class="mx-auto flex w-full max-w-md flex-col space-y-16">
                                 <div class="flex flex-col space-y-2">
                                     <div class="relative overflow-x-auto">
-                                        <div class="py-4 rounded-lg max-w-sm-full w-full">
-                                            <h2 class="text-2xl font-semibold text-center mb-4">Detail Order {{
+                                        <div class="py-6 rounded-lg max-w-sm-full w-full">
+                                            <h2 class="text-xl font-semibold text-center mb-4">Detail Order {{
                                                 selectedOrderNumber }}
                                             </h2>
                                             <div v-for="(detail, index) in purchaseOrderDetails" :key="index + 1"
                                                 class="relative overflow-x-auto">
-                                                <ion-card class="py-2 bg-yellow-300">
+                                                <ion-card class="py-2 bg-gradient-to-r from-yellow-300 via-yellow-400 to-orange-400">
                                                     <ion-card-header class="bg-gray-50">
                                                         <div class="flex flex-col w-full h-full space-y-2">
                                                             <div
                                                                 class="flex flex-row w-full h-full justify-between space-x-2">
                                                                 <label for="nama-toko"
                                                                     class="flex-initial w-56 font-semibold">Baris</label>
-                                                                <p class="flex-initial w-44 text-right">{{
+                                                                <p class="flex-initial w-44 text-right"># {{
                                                                     detail.lineNo }}</p>
                                                             </div>
                                                             <div
@@ -143,7 +143,6 @@ import { API_URL } from '@/services/globalVariables';
 import { presentLoading, stopLoading } from '@/services/loadingHandlers';
 
 const isOpen = ref(false);
-
 const setOpen = (open) => (
     isOpen.value = open
 );

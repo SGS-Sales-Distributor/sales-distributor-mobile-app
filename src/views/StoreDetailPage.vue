@@ -5,13 +5,7 @@
 			<header class="bg-transparent p-4 rounded-b-3xl">
 				<div class="flex justify-between">
 					<div>
-						<button v-if="currentRoute === 'purchaseOrder'" type="button"
-							class="relative inline-flex items-center p-2 text-sm font-medium text-center text-white bg-transparent rounded-lg focus:ring-4 focus:outline-none focus:ring-blue-300"
-							@click="redirectToPurchaseOrderPage">
-							<ion-icon class="text-2xl" :icon="chevronBackOutline" color="dark"></ion-icon>
-						</button>
-
-						<button v-else type="button"
+						<button type="button"
 							class="relative inline-flex items-center p-2 text-sm font-medium text-center text-white bg-transparent rounded-lg focus:ring-4 focus:outline-none focus:ring-blue-300"
 							@click="redirectToAbsensiPage">
 							<ion-icon class="text-2xl" :icon="chevronBackOutline" color="dark"></ion-icon>
@@ -33,16 +27,13 @@
 				</div>
 			</header>
 			<!-- End of header -->
+			
 			<div class="container mx-auto">
 				<div class="flex flex-col mih-h-full p-6">
-					<div v-if="storeData">
-						<p class="text-center text-xl"></p>
-					</div>
-
 					<!-- Detail Store Card -->
 					<div class="flex flex-col space-y-2 mb-4" id="store-detail-card">
-						<ion-card v-if="storeData">
-							<ion-card-header>
+						<ion-card v-if="storeData" class="py-2 bg-gradient-to-r from-sky-400 via-blue-500 to-blue-700">
+							<ion-card-header class="bg-white">
 								<div class="flex justify-between">
 									<ion-card-title>
 										<span class="font-bold text-gray-900 text-2xl">Data Detail Toko</span>
@@ -56,134 +47,22 @@
 								</ion-card-subtitle>
 							</ion-card-header>
 
-							<ion-card-content>
-								<div class="border-t border-gray-200">
-									<dl v-if="currentRoute === 'purchaseOrder'">
-										<div class="bg-lime-50 p-4 sm:grid-cols-3 sm:gap-4 sm:px-6">
-											<dt class="text-md font-bold text-gray-900">
-												Nama Toko
-											</dt>
-											<dd class="mt-1 text-sm text-gray-900 sm:mt-0 sm:col-span-2">
-												{{ storeData.nama_toko }}
-											</dd>
-										</div>
-										<div class="bg-lime-100 p-4 sm:grid-cols-3 sm:gap-4 sm:px-6">
-											<dt class="text-md font-bold text-gray-900">
-												Nama Alias Toko
-											</dt>
-											<dd class="mt-1 text-sm text-gray-900 sm:mt-0 sm:col-span-2">
-												{{ storeData.alias_toko }}
-											</dd>
-										</div>
-										<div class="bg-lime-50 p-4 sm:grid-cols-3 sm:gap-4 sm:px-6">
-											<dt class="text-md font-bold text-gray-900">
-												Alamat Toko
-											</dt>
-											<dd class="mt-1 text-sm text-gray-900 sm:mt-0 sm:col-span-2">
-												{{ storeData.alamat_toko }}
-											</dd>
-										</div>
-										<div class="bg-lime-100 p-4 sm:grid-cols-3 sm:gap-4 sm:px-6">
-											<dt class="text-md font-bold text-gray-900">
-												Nomor Telepon Toko
-											</dt>
-											<dd class="mt-1 text-sm text-gray-900 sm:mt-0 sm:col-span-2">
-												{{ storeData.nomor_telepon_toko }}
-											</dd>
-										</div>
-										<div class="bg-lime-50 p-4 sm:grid-cols-3 sm:gap-4 sm:px-6">
-											<dt class="text-md font-bold text-gray-900">
-												Nomor Fax Toko
-											</dt>
-											<dd class="mt-1 text-sm text-gray-900 sm:mt-0 sm:col-span-2">
-												{{ storeData.nomor_fax_toko }}
-											</dd>
-										</div>
-										<div class="bg-lime-100 p-4 sm:grid-cols-3 sm:gap-4 sm:px-6">
-											<dt class="text-md font-bold text-gray-900">
-												Kode Unik Toko
-											</dt>
-											<dd class="mt-1 text-sm text-gray-900 sm:mt-0 sm:col-span-2">
-												{{ storeData.kode_toko }}
-											</dd>
-										</div>
-									</dl>
 
-									<dl v-else>
-										<div class="bg-sky-50 p-4 sm:grid-cols-3 sm:gap-4 sm:px-6">
-											<dt class="text-md font-bold text-gray-900">
-												Nama Toko
-											</dt>
-											<dd class="mt-1 text-sm text-gray-900 sm:mt-0 sm:col-span-2">
-												{{ storeData.nama_toko }}
-											</dd>
-										</div>
-										<div class="bg-sky-100 p-4 sm:grid-cols-3 sm:gap-4 sm:px-6">
-											<dt class="text-md font-bold text-gray-900">
-												Nama Alias Toko
-											</dt>
-											<dd class="mt-1 text-sm text-gray-900 sm:mt-0 sm:col-span-2">
-												{{ storeData.alias_toko }}
-											</dd>
-										</div>
-										<div class="bg-sky-50 p-4 sm:grid-cols-3 sm:gap-4 sm:px-6">
-											<dt class="text-md font-bold text-gray-900">
-												Alamat Toko
-											</dt>
-											<dd class="mt-1 text-sm text-gray-900 sm:mt-0 sm:col-span-2">
-												{{ storeData.alamat_toko }}
-											</dd>
-										</div>
-										<div class="bg-sky-100 p-4 sm:grid-cols-3 sm:gap-4 sm:px-6">
-											<dt class="text-md font-bold text-gray-900">
-												Nomor Telepon Toko
-											</dt>
-											<dd class="mt-1 text-sm text-gray-900 sm:mt-0 sm:col-span-2">
-												{{ storeData.nomor_telepon_toko }}
-											</dd>
-										</div>
-										<div class="bg-sky-50 p-4 sm:grid-cols-3 sm:gap-4 sm:px-6">
-											<dt class="text-md font-bold text-gray-900">
-												Nomor Fax Toko
-											</dt>
-											<dd class="mt-1 text-sm text-gray-900 sm:mt-0 sm:col-span-2">
-												{{ storeData.nomor_fax_toko }}
-											</dd>
-										</div>
-										<div class="bg-sky-100 p-4 sm:grid-cols-3 sm:gap-4 sm:px-6">
-											<dt class="text-md font-bold text-gray-900">
-												Kode Unik Toko
-											</dt>
-											<dd class="mt-1 text-sm text-gray-900 sm:mt-0 sm:col-span-2">
-												{{ storeData.kode_toko }}
-											</dd>
-										</div>
-									</dl>
-								</div>
-							</ion-card-content>
+							<StoreDetailContent 
+							:nama-toko="storeData.nama_toko"
+							:alias-toko="storeData.alias_toko"
+							:alamat-toko="storeData.alamat_toko"
+							:nomor-telepon="storeData.nomor_telepon_toko"
+							:nomor-fax="storeData.nomor_fax_toko"
+							:kode-toko="storeData.kode_toko"
+							/>
 						</ion-card>
 					</div>
 					<!-- End of Detail Store Card -->
 
-					<h6 v-if="objOrder.length > 0" class="text-center font-bold py-4">Daftar Promo</h6>
-
+					<!-- Start of Program List -->
 					<div class="relative overflow-x-auto mb-4">
-						<ion-card v-if="currentRoute === 'purchaseOrder'" class="py-2 bg-lime-500">
-							<ion-card-header class="bg-gray-50">
-								<h6 class="font-bold text-left p-2.5">Daftar Program Terkini</h6>
-								<ion-list>
-									<ion-item v-for="(program, index) in visiblePromoPrograms" :key="index + 1">
-										<ion-label>{{ program.name_program }}</ion-label>
-									</ion-item>
-								</ion-list>
-								<ion-infinite-scroll @ionInfinite="ionInfinite">
-									<ion-infinite-scroll-content loading-text="Load more programs..."
-										loading-spinner="bubbles"></ion-infinite-scroll-content>
-								</ion-infinite-scroll>
-							</ion-card-header>
-						</ion-card>
-
-						<ion-card v-else class="py-2 bg-blue-500">
+						<ion-card class="py-2 bg-gradient-to-r from-sky-400 via-blue-500 to-blue-700">
 							<ion-card-header class="bg-gray-50">
 								<h6 class="font-bold text-left p-2.5">Daftar Program Terkini</h6>
 								<ion-list>
@@ -198,85 +77,13 @@
 							</ion-card-header>
 						</ion-card>
 					</div>
+					<!-- End of Program List -->
 
-					<div class="flex justify-center items-center mb-2">
-						<button v-if="currentRoute === 'purchaseOrder'"
-							@click="redirectToStorePurchaseOrderPage(storeId)" data-modal-target="large-modal"
-							data-modal-toggle="large-modal"
-							class="block w-full md:w-auto text-gray-900 bg-lime-400 hover:bg-lime-500 focus:ring-4 focus:outline-none focus:ring-lime-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center transition-all"
-							type="button">
-							Tambah Order
-						</button>
-						<button v-else @click="redirectToStorePurchaseOrderPage(storeId)"
-							data-modal-target="large-modal" data-modal-toggle="large-modal"
-							class="block w-full md:w-auto text-white bg-blue-400 hover:bg-blue-500 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center transition-all"
-							type="button">
-							Tambah Order
-						</button>
-					</div>
-
-					<h6 v-if="objOrder.length > 0" class="text-center font-bold py-4">Daftar Order</h6>
+					<!-- Start of Order List -->
+					<h6 v-if="objOrder.length > 0" class="text-center font-bold py-2">Daftar Order</h6>
 
 					<div v-for="(order, index) in objOrder" :key="index + 1" class="relative overflow-x-auto">
-						<ion-card v-if="currentRoute === 'purchaseOrder'" class="py-2 bg-lime-400">
-							<ion-card-header class="bg-gray-50">
-								<div class="flex flex-col w-full h-full space-y-2">
-									<div class="flex flex-row w-full h-full justify-between space-x-2">
-										<label for="nama-toko" class="flex-initial w-56 font-semibold">Kode
-											Produk</label>
-										<p class="flex-initial w-44 text-right">{{ order.prodNumber }}</p>
-									</div>
-									<div class="flex flex-row w-full h-full justify-between space-x-2">
-										<label for="nama-toko" class="flex-initial w-56 font-semibold">Nama
-											Produk</label>
-										<p class="flex-initial w-44 text-right">{{ order.prodName }}</p>
-									</div>
-									<div class="flex flex-row w-full h-full justify-between space-x-2">
-										<label for="nama-toko" class="flex-initial w-56 font-semibold">Stok</label>
-										<p class="flex-initial w-44 text-right">{{ order.stock }}</p>
-									</div>
-									<div class="flex flex-row w-full h-full justify-between space-x-2">
-										<label for="nama-toko" class="flex-initial w-56 font-semibold">Harga
-											Produk</label>
-										<p class="flex-initial w-44 text-right">{{ new Intl.NumberFormat('id-ID', {
-											style: 'currency',
-											currency: 'IDR'
-										}).format(order.prodPrice) }}</p>
-									</div>
-									<div class="flex flex-row w-full h-full justify-between space-x-2">
-										<label for="nama-toko" class="flex-initial w-56 font-semibold">Quantity</label>
-										<div class="flex">
-											<ion-button size="small" @click="reduceOrder(index, 0)" color="success">
-												<ion-icon slot="icon-only" :icon="removeOutline"></ion-icon>
-											</ion-button>
-											<input id="orderInput" :value="order.qty" type="number" pattern="[0-9]"
-												min="0" :max="order.stock" readonly class="text-right" />
-											<ion-button size="small" @click="addMoreOrder(index, order.stock)"
-												color="success">
-												<ion-icon slot="icon-only" :icon="addOutline"></ion-icon>
-											</ion-button>
-										</div>
-									</div>
-									<div class="flex flex-row w-full h-full justify-between space-x-2">
-										<label for="nama-toko" class="flex-initial w-56 font-semibold">Total
-											Harga</label>
-										<p class="flex-initial w-44 text-right">{{ new Intl.NumberFormat('id-ID', {
-											style: 'currency',
-											currency: 'IDR'
-										}).format((calculateTotalPriceHandler(order.prodPrice,
-											order.qty)).toFixed(3)) }}</p>
-									</div>
-								</div>
-							</ion-card-header>
-							<ion-card-content class="bg-gray-50">
-								<div class="flex w-full justify-center items-center px-4 pb-2 space-x-4">
-									<ion-button color="danger"
-										@click="deleteRecentOrder(index, order.prodNumber)">Hapus</ion-button>
-								</div>
-							</ion-card-content>
-						</ion-card>
-
-						<ion-card v-else class="py-2 bg-blue-500">
+						<ion-card class="py-2 bg-gradient-to-r from-sky-400 via-blue-500 to-blue-700">
 							<ion-card-header class="bg-gray-50">
 								<div class="flex flex-col w-full h-full space-y-2">
 									<div class="flex flex-row w-full h-full justify-between space-x-2">
@@ -339,6 +146,7 @@
 							</ion-card-content>
 						</ion-card>
 					</div>
+					<!-- End of Order List -->
 
 					<ion-select v-if="objOrder.length > 0" @ionChange="handleChange($event)" label="Metode Pembayaran"
 						placeholder="Pilih" :value="metodePembayaran">
@@ -346,7 +154,16 @@
 						<ion-select-option value="Transfer">Transfer</ion-select-option>
 					</ion-select>
 
-					<div class="flex justify-between items-center py-2" v-if="objOrder.length">
+					<div class="flex justify-center items-center mb-2">
+						<button @click="redirectToStorePurchaseOrderPage(storeId)"
+							data-modal-target="large-modal" data-modal-toggle="large-modal"
+							class="block w-full md:w-auto text-white bg-blue-400 hover:bg-blue-500 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center transition-all"
+							type="button">
+							Tambah Order
+						</button>
+					</div>
+
+					<div class="flex justify-center items-center py-2" v-if="objOrder.length">
 						<button @click="checkProductsHasPromo"
 							class="block w-full md:w-auto text-white bg-green-400 hover:bg-green-500 focus:ring-4 focus:outline-none font-medium rounded-lg text-sm px-5 py-2.5 text-center transition-all"
 							type="button">
@@ -354,7 +171,7 @@
 						</button>
 					</div>
 
-					<div class="flex justify-between items-center py-2" v-if="objOrder.length">
+					<div class="flex justify-center items-center py-2" v-if="objOrder.length">
 						<button @click="setOpen(true)"
 							class="block w-full md:w-auto text-white bg-green-400 focus:ring-4 focus:outline-none font-medium rounded-lg text-sm px-5 py-2.5 text-center transition-all"
 							type="button">
@@ -479,6 +296,7 @@ import { computed, onMounted, ref } from 'vue';
 import { useRoute } from 'vue-router';
 import { refreshAccessTokenHandler } from '@/services/auth.js';
 import { catchToast, catchToastError, catchToastInfo } from '@/services/toastHandlers';
+import StoreDetailContent from '@/components/order/StoreDetailContent.vue';
 import {
 	objOrder,
 	nomorWhatsappOTP,
@@ -487,9 +305,8 @@ import {
 	thirdOTPNumber,
 	fourthOTPNumber,
 	selectedProduct,
-	currentRoute,
 } from '@/services/globalVariables';
-import { redirectToStorePurchaseOrderPage, redirectToAbsensiPage, redirectToPurchaseOrderPage } from '@/services/redirectHandlers';
+import { redirectToStorePurchaseOrderPage, redirectToAbsensiPage } from '@/services/redirectHandlers';
 import { API_URL } from '@/services/globalVariables';
 import { IonSelectOption, IonSelect } from '@ionic/vue';
 
@@ -499,6 +316,12 @@ const isOpen = ref(false);
 const setOpen = (open) => (isOpen.value = open, flagOTP.value = true);
 
 const flagOTP = ref(true);
+
+const idToko = ref(null);
+const metodePembayaran = ref("Tunai");
+const resendOTP = ref(null);
+const resendNomorPO = ref(null);
+
 const storeData = ref(null);
 const storeId = ref(route.params.id);
 
@@ -539,11 +362,6 @@ const calculateTotalPriceHandler = (prodPrice, qty) => {
 
 // 	return total;
 // }
-
-const idToko = ref(null);
-const metodePembayaran = ref("Tunai");
-const resendOTP = ref(null);
-const resendNomorPO = ref(null);
 
 function handleChange(event) {
 	metodePembayaran.value = event.detail.value;
@@ -763,12 +581,8 @@ function deleteRecentOrder(index, prodNumber) {
 	if (selectedProduct.value.includes(prodNumber)) {
 		const productIndex = selectedProduct.value.indexOf(prodNumber);
 
-		// productsTotalPrice.value.splice(productIndex, 1);
-
 		selectedProduct.value.splice(productIndex, 1);
 	}
-
-	// console.log(productsTotalPrice.value);
 }
 
 async function fetchPromoProgram() {
@@ -831,19 +645,15 @@ async function fetchStoreDetailData(id) {
 			'Authorization': `Bearer ${tokens.access_token}`
 		};
 
-		const response = await axios.get(`${API_URL.value}/api/v2/stores/${id}`, {
+		const response = await axios.get(`${API_URL.value}/api/v2/stores/${id}/call-plans`, {
 			headers: headers
 		});
 
 		storeData.value = response.data.resource;
 
-		console.log(storeData.value);
-
 		nomorWhatsappOTP.value = storeData.value.nomor_telepon_toko;
 
 		idToko.value = storeData.value.store_id;
-
-		localStorage.setItem("store", storeData.value);
 	} catch (error) {
 		catchToastError(`Failed to fetch store ${id}`, 3000);
 

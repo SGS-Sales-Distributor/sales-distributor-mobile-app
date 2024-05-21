@@ -44,19 +44,27 @@ export function redirectToStoreDetailPage(storeId) {
     }, 300);
 }
 
-export function  redirectToPurchaseOrderPage() {
+export function redirectToDirectPurchaseOrderStoreDetailPage(storeId) {
     setTimeout(() => {
         router.push({
-            name: 'purchaseOrder',
+            name:  'directPurchaseOrderStoreDetail', params: { id: storeId }
         });
     }, 300);
 }
 
-export function redirectToPurchaseOrderDetail() {
+export function redirectToDirectPurchaseOrderStoreDetailOrderPage(storeId) {
     setTimeout(() => {
         router.push({
-            name: ''
-        })
+            name:  'directPurchaseOrderStoreDetailOrder', params: { id: storeId }
+        });
+    }, 300);
+}
+
+export function  redirectToPurchaseOrderPage() {
+    setTimeout(() => {
+        router.push({
+            name: 'directPurchaseOrder',
+        });
     }, 300);
 }
 

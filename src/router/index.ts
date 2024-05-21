@@ -6,14 +6,16 @@ import HomePage from "@/views/HomePage.vue";
 import AbsensiVisitPage from "@/views/AbsensiVisitPage.vue";
 import ProfilePage from "@/views/ProfilePage.vue";
 import StoreDetailPage from "@/views/StoreDetailPage.vue";
-import OrderBarangPage from "@/views/OrderBarangPage.vue";
+import StoreDetailOrderPage from "@/views/StoreDetailOrderPage.vue";
 import RegistrasiTokoBaruPage from './../views/RegistrasiTokoBaruPage.vue'
 import RegistrasiOwnerBaruPage from './../views/RegistrasiOwnerBaruPage.vue'
+import PurchaseOrderHistoryPage from "@/views/PurchaseOrderHistoryPage.vue";
 import PurchaseOrderPage from './../views/PurchaseOrderPage.vue'
+import PurchaseOrderStoreDetailPage from './../views/PurchaseOrderStoreDetailPage.vue'
+import PurchaseOrderStoreDetailOrderPage from './../views/PurchaseOrderStoreDetailOrderPage.vue'
 
 import { isAuthenticated } from "@/services/auth";
 import "maplibre-gl/dist/maplibre-gl.css";
-import PurchaseOrderHistoryPage from "@/views/PurchaseOrderHistoryPage.vue";
 
 const routes: Array<RouteRecordRaw> = [
   {
@@ -48,9 +50,19 @@ const routes: Array<RouteRecordRaw> = [
         component: HomePage,
       },
       {
-        path: "/order",
-        name: "purchaseOrder",
+        path: "/direct-order",
+        name: "directPurchaseOrder",
         component: PurchaseOrderPage,
+      },
+      {
+        path: "/direct-order/store/:id",
+        name: "directPurchaseOrderStoreDetail",
+        component: PurchaseOrderStoreDetailPage,
+      },
+      {
+        path: "/direct-order/store/:id/order",
+        name: "directPurchaseOrderStoreDetailOrder",
+        component: PurchaseOrderStoreDetailOrderPage,
       },
       {
         path: "/order-history",
@@ -65,7 +77,7 @@ const routes: Array<RouteRecordRaw> = [
       {
         path: "/store/:id/order",
         name: "storePurchaseOrder",
-        component: OrderBarangPage,
+        component: StoreDetailOrderPage,
       },
       {
         path: "/store/register",

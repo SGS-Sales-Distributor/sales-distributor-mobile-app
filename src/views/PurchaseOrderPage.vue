@@ -12,13 +12,9 @@
                         <ion-searchbar :debounce="300" @ionInput="searchStoreHandler($event)"
                             placeholder="Cari nama toko..." color="light"></ion-searchbar>
                         <div v-for="(store, index) in visibleStores" :key="index + 1" class="relative overflow-x-auto">
-                            <ion-card class="py-2 bg-lime-500">
-                                <ion-card-header class="bg-gray-50">
+                            <ion-card class="py-2 bg-gradient-to-r from-green-300 via-lime-400 to-lime-600">
+                                <ion-card-header class="bg-white">
                                     <div class="flex flex-col w-full h-full space-y-2">
-                                        <div class="flex flex-row w-full h-full justify-between space-x-2">
-                                            <label for="nama-toko" class="flex-initial w-56 font-semibold">ID Toko</label>
-                                            <p class="flex-initial w-44 text-right">{{ store.store_id }}</p>
-                                        </div>
                                         <div class="flex flex-row w-full h-full justify-between space-x-2">
                                             <label for="nama-toko" class="flex-initial w-56 font-semibold">Nama
                                                 Toko</label>
@@ -58,7 +54,7 @@
                                 <ion-card-content class="bg-gray-50">
                                     <div class="flex w-full justify-center items-center px-4 pb-2 space-x-4">
                                         <ion-button shape="round" color="success"
-                                            @click="redirectToStoreDetailPage(store.store_id)">Pilih</ion-button>
+                                            @click="redirectToDirectPurchaseOrderStoreDetailPage(store.store_id)">Pilih</ion-button>
                                     </div>
                                 </ion-card-content>
                             </ion-card>
@@ -77,16 +73,12 @@
 <script setup>
 import axios from 'axios';
 import HeaderSection from './../components/HeaderSection.vue';
-import { API_URL, currentRoute } from '@/services/globalVariables';
+import { API_URL } from '@/services/globalVariables';
 import { computed, onMounted, ref } from 'vue';
 import { catchToastError } from '@/services/toastHandlers';
 import { refreshAccessTokenHandler } from '@/services/auth';
-import { redirectToStoreDetailPage } from '@/services/redirectHandlers';
-import { useRoute } from 'vue-router';
+import { redirectToDirectPurchaseOrderStoreDetailPage } from '@/services/redirectHandlers';
 import { IonSearchbar } from '@ionic/vue';
-
-const route = useRoute();
-const currentPageRouteName = computed(() => route.name);
 
 const storesData = ref([]);
 const lastIndex = ref(5);
@@ -146,8 +138,6 @@ async function fetchStoresData(query = '') {
 }
 
 onMounted(() => {
-    currentRoute.value = currentPageRouteName.value;
-
     fetchStoresData();
 })
 </script>
