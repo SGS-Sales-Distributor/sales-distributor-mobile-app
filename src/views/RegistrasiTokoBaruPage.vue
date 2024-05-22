@@ -86,83 +86,15 @@
                                 <ErrorMessage name="subcabang_id" class="text-rose-500" />
                             </div>
                             <button type="button" @click="storeDataAlert"
-                                class="w-full bg-blue-500 text-white px-4 py-2 rounded-lg hover:bg-blue-600 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-opacity-50">Daftarkan
+                                class="w-full bg-gradient-to-r from-sky-400 via-blue-500 to-blue-700 text-white px-4 py-2 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-opacity-50">Daftarkan
                             </button>
                             <p class="text-gray-600 text-xs text-center mt-4">
-                                Dengan menekan tombol Daftarkan, maka toko bisa melakukan purchase order.
+                                Setelah menekan tombol Daftarkan, maka anda diarahkan ke halaman Form Data Pemilik.
                             </p>
                         </Form>
                     </div>
                 </div>
             </div>
-
-            <ion-modal :is-open="isOpen">
-                <ion-header>
-                    <ion-toolbar>
-                        <ion-title>Form Data Pemilik Toko</ion-title>
-                        <ion-buttons slot="end">
-                            <ion-button @click="setOpen(false)">Tutup</ion-button>
-                        </ion-buttons>
-                    </ion-toolbar>
-                </ion-header>
-
-                <ion-content>
-                    <div class="relative flex min-h-screen flex-col items-center overflow-hidden">
-                        <div class="relative bg-white px-6 mx-auto w-full max-w-lg rounded-2xl">
-                            <div class="mx-auto flex w-full max-w-md flex-col space-y-16">
-                                <div class="flex flex-col space-y-2">
-                                    <div class="relative overflow-x-auto">
-                                        <div class="py-6 rounded-lg max-w-sm-full w-full">
-                                            <h2 class="text-xl font-semibold text-center mb-4">Detail Order {{
-                                                savedStoreName }}
-                                            </h2>
-                                            <div class="relative overflow-x-auto">
-                                                <ion-card
-                                                    class="py-2 bg-gradient-to-r from-yellow-300 via-yellow-400 to-orange-400">
-                                                    <ion-card-header class="bg-gray-50">
-                                                        <div class="flex flex-col w-full h-full space-y-2">
-                                                            <div
-                                                                class="flex flex-row w-full h-full justify-between space-x-2">
-                                                                <label for="nama-toko"
-                                                                    class="flex-initial w-56 font-semibold">Baris</label>
-                                                                <p class="flex-initial w-44 text-right"># {{
-                                                                    detail.lineNo }}</p>
-                                                            </div>
-                                                            <div
-                                                                class="flex flex-row w-full h-full justify-between space-x-2">
-                                                                <label for="nama-toko"
-                                                                    class="flex-initial w-56 font-semibold">Kode
-                                                                    Barang</label>
-                                                                <p class="flex-initial w-44 text-right">{{
-                                                                    detail.item_code }}</p>
-                                                            </div>
-                                                            <div
-                                                                class="flex flex-row w-full h-full justify-between space-x-2">
-                                                                <label for="nama-toko"
-                                                                    class="flex-initial w-56 font-semibold">Nama
-                                                                    Barang</label>
-                                                                <p class="flex-initial w-44 text-right">{{
-                                                                    detail.nama_produk }}</p>
-                                                            </div>
-                                                            <div
-                                                                class="flex flex-row w-full h-full justify-between space-x-2">
-                                                                <label for="nama-toko"
-                                                                    class="flex-initial w-56 font-semibold">Kuantiti</label>
-                                                                <p class="flex-initial w-44 text-right">{{
-                                                                    detail.qty }} Pcs</p>
-                                                            </div>
-                                                        </div>
-                                                    </ion-card-header>
-                                                </ion-card>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </ion-content>
-            </ion-modal>
         </ion-content>
     </ion-page>
 </template>
@@ -180,12 +112,6 @@ import { catchToast, catchToastError } from '@/services/toastHandlers';
 import { alertController } from '@ionic/vue';
 import { Form, Field, ErrorMessage } from 'vee-validate';
 
-const isOpen = ref(false);
-const setOpen = (open) => (
-    isOpen.value = open
-);
-
-const savedStoreName = ref('');
 const storeTypes = ref([]);
 const storeCabangs = ref([]);
 
@@ -232,12 +158,18 @@ async function storeDataAlert() {
             {
                 text: "Lanjutkan",
                 cssClass: "alert-button-confirm",
-                handler: () => {
-                    console.log("Pembuatan outlet berhasil");
+                handler: async () => {
+                    try {
+                        console.log("Pembuatan outlet berhasil");
 
-                    saveStoreData();
+                        await saveStoreData();
 
-                    redirectToOwnerFormPage();
+                        redirectToOwnerFormPage();
+                    } catch (error) {
+                        console.log("Gagal membuat data toko", error);
+
+                        redirectToRegisterStorePage();
+                    }
                 },
             },
         ],

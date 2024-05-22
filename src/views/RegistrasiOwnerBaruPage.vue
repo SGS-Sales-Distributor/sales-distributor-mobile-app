@@ -33,8 +33,9 @@
       <div class="container mx-auto">
         <div class="flex items-center justify-center min-h-screen">
           <div class="p-8 rounded-lg max-w-sm w-full">
-            <h2 class="text-2xl font-semibold text-center mb-4">Form Pendaftaran Owner Dari Outlet {{ store.store_name
+            <h2 v-if="store.store_name" class="text-2xl font-semibold text-center mb-4">Form Pendaftaran Owner Dari Outlet {{ store.store_name
               }}</h2>
+              <h2 v-else class="text-2xl font-semibold text-center mb-4">Form Pendaftaran Owner Dari Outlet - </h2>
             <p class="text-gray-600 text-center mb-6">Masukkan data yang diperlukan.</p>
             <Form method="post" novalidate :validation-schema="validation">
               <div class="mb-4">
@@ -77,7 +78,7 @@
                 </Field>
               </div>
               <button type="button" @click="storeDataAlert"
-                class="w-full bg-blue-500 text-white px-4 py-2 rounded-lg hover:bg-blue-600 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-opacity-50">Daftarkan
+                class="w-full bg-gradient-to-r from-sky-400 via-blue-500 to-blue-700 text-white px-4 py-2 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-opacity-50">Daftarkan
               </button>
               <p class="text-gray-600 text-xs text-center mt-4">
                 Dengan menekan tombol Daftarkan, maka toko bisa melakukan purchase order.
@@ -104,7 +105,7 @@ import { catchToast, catchToastError } from '@/services/toastHandlers';
 import { fieldTypes } from '@/services/globalVariables';
 import { alertController } from '@ionic/vue';
 
-const store = ref(JSON.parse(localStorage.getItem("store")));
+const store = ref(localStorage.getItem("store") ? JSON.parse(localStorage.getItem("store")) : null);
 
 const formData = ref({
   owner: null,
@@ -187,14 +188,12 @@ async function saveOwnerData(storeId) {
     catchToastError("Gagal membuat data pemilik toko", 3000);
 
     console.error("Failed to save owner data", error);
-  } finally {
-    stopLoading();
   }
 }
 
 onMounted(() => {
+  presentLoading();
   refreshAccessTokenHandler();
-
   stopLoading();
 })
 </script>

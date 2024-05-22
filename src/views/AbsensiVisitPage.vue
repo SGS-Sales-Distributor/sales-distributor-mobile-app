@@ -567,8 +567,6 @@ async function takeCheckInPicture() {
       console.error('Failed to capture photo or image path is missing');
     }
   } catch (error) {
-    catchToastError("Error when capturing photo", 3000);
-
     console.error('Error when capturing photo: ', error);
   }
 }
@@ -593,8 +591,6 @@ async function takeCheckOutPicture() {
       console.error('Failed to capture photo or image path is missing');
     }
   } catch (error) {
-    catchToastError("Error when capturing photo");
-
     console.error('Error when capturing photo: ', error);
   }
 }
@@ -605,7 +601,6 @@ onMounted(() => {
   fetchStoresData();
   printCurrentPosition();
   checkLocationAccess();
-
   stopLoading();
 });
 </script>

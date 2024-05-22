@@ -149,7 +149,7 @@
 					<!-- End of Order List -->
 
 					<ion-select v-if="objOrder.length > 0" @ionChange="handleChange($event)" label="Metode Pembayaran"
-						placeholder="Pilih" :value="metodePembayaran">
+						placeholder="Pilih" :value="metodePembayaran" class="mb-4">
 						<ion-select-option value="Tunai">Tunai</ion-select-option>
 						<ion-select-option value="Transfer">Transfer</ion-select-option>
 					</ion-select>
@@ -163,13 +163,13 @@
 						</button>
 					</div>
 
-					<div class="flex justify-center items-center py-2" v-if="objOrder.length">
+					<!-- <div class="flex justify-center items-center py-2" v-if="objOrder.length">
 						<button @click="checkProductsHasPromo"
 							class="block w-full md:w-auto text-white bg-green-400 hover:bg-green-500 focus:ring-4 focus:outline-none font-medium rounded-lg text-sm px-5 py-2.5 text-center transition-all"
 							type="button">
 							Cek Promo
 						</button>
-					</div>
+					</div> -->
 
 					<div class="flex justify-center items-center py-2" v-if="objOrder.length">
 						<button @click="setOpen(true)"
@@ -207,7 +207,7 @@
 										<div class="flex flex-col space-y-5">
 											<div>
 												<button @click="sendOTP(nomorWhatsappOTP)"
-													class="flex flex-row items-center justify-center text-center w-full border rounded-xl outline-none py-5 bg-blue-700 border-none text-white text-sm shadow-sm">
+													class="flex flex-row items-center justify-center text-center w-full border rounded-xl outline-none py-5 bg-blue-700 border-none text-white text-base font-semibold shadow-sm">
 													Kirim OTP
 												</button>
 											</div>
@@ -220,6 +220,8 @@
 								<div class="relative bg-white px-6 py-8 mx-auto w-full max-w-lg rounded-2xl">
 									<div class="mx-auto flex w-full max-w-md flex-col space-y-16">
 										<div class="flex flex-col items-center justify-center text-center space-y-2">
+											<img src="/public/verify.png"
+                                                alt="Verification Images">
 											<div class="font-semibold text-3xl">
 												<p>Verifikasi OTP Whatsapp</p>
 											</div>
@@ -235,22 +237,22 @@
 													class="flex flex-row items-center justify-between mx-auto w-full max-w-xs">
 													<div class="w-16 h-16 ">
 														<input v-model="firstOTPNumber"
-															class="w-full h-full flex flex-col items-center justify-center text-center px-5 outline-none rounded-xl border border-gray-200 text-lg bg-white focus:bg-gray-50 focus:ring-1 ring-blue-700"
+															class="w-full h-full flex flex-col items-center justify-center text-center px-5 outline-none rounded-xl border border-gray-300 text-lg bg-white focus:bg-gray-50 focus:ring-1 ring-blue-700"
 															type="text" name="" id="" maxlength="1">
 													</div>
 													<div class="w-16 h-16 ">
 														<input v-model="secondOTPNumber"
-															class="w-full h-full flex flex-col items-center justify-center text-center px-5 outline-none rounded-xl border border-gray-200 text-lg bg-white focus:bg-gray-50 focus:ring-1 ring-blue-700"
+															class="w-full h-full flex flex-col items-center justify-center text-center px-5 outline-none rounded-xl border border-gray-300 text-lg bg-white focus:bg-gray-50 focus:ring-1 ring-blue-700"
 															type="text" name="" id="" maxlength="1">
 													</div>
 													<div class="w-16 h-16 ">
 														<input v-model="thirdOTPNumber"
-															class="w-full h-full flex flex-col items-center justify-center text-center px-5 outline-none rounded-xl border border-gray-200 text-lg bg-white focus:bg-gray-50 focus:ring-1 ring-blue-700"
+															class="w-full h-full flex flex-col items-center justify-center text-center px-5 outline-none rounded-xl border border-gray-300 text-lg bg-white focus:bg-gray-50 focus:ring-1 ring-blue-700"
 															type="text" name="" id="" maxlength="1">
 													</div>
 													<div class="w-16 h-16 ">
 														<input v-model="fourthOTPNumber"
-															class="w-full h-full flex flex-col items-center justify-center text-center px-5 outline-none rounded-xl border border-gray-200 text-lg bg-white focus:bg-gray-50 focus:ring-1 ring-blue-700"
+															class="w-full h-full flex flex-col items-center justify-center text-center px-5 outline-none rounded-xl border border-gray-300 text-lg bg-white focus:bg-gray-50 focus:ring-1 ring-blue-700"
 															type="text" name="" id="" maxlength="1">
 													</div>
 												</div>
@@ -258,7 +260,7 @@
 												<div class="flex flex-col space-y-5">
 													<div>
 														<button @click="confirmOTP"
-															class="flex flex-row items-center justify-center text-center w-full border rounded-xl outline-none py-5 bg-blue-700 border-none text-white text-sm shadow-sm">
+															class="flex flex-row items-center justify-center text-center w-full border rounded-xl outline-none py-5 bg-blue-700 border-none text-white text-base font-semibold shadow-sm">
 															Verifikasi OTP
 														</button>
 													</div>
