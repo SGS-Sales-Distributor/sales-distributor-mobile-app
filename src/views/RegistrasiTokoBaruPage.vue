@@ -202,7 +202,7 @@ async function saveStoreData() {
 
         console.log(response.data.resource);
 
-        catchToast(response.data.message);
+        catchToast(response.data.message, 3000);
     } catch (error) {
         catchToastError("Gagal membuat data toko baru", 3000);
 
@@ -266,11 +266,9 @@ async function fetchStoreCabangs(query = '') {
 
 onMounted(() => {
     presentLoading();
-
     refreshAccessTokenHandler();
     fetchStoreTypes();
     fetchStoreCabangs();
-
     stopLoading();
 });
 </script>

@@ -157,13 +157,13 @@
                         </button>
                     </div>
 
-                    <div class="flex justify-center items-center py-2" v-if="objOrder.length">
+                    <!-- <div class="flex justify-center items-center py-2" v-if="objOrder.length">
                         <button @click="checkProductsHasPromo"
                             class="block w-full md:w-auto text-white bg-green-400 hover:bg-green-500 focus:ring-4 focus:outline-none font-medium rounded-lg text-sm px-5 py-2.5 text-center transition-all"
                             type="button">
                             Cek Promo
                         </button>
-                    </div>
+                    </div> -->
 
                     <div class="flex justify-center items-center py-2" v-if="objOrder.length">
                         <button @click="setOpen(true)"
