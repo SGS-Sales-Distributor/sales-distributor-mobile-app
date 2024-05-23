@@ -61,7 +61,7 @@
                         </div>
                         <ion-infinite-scroll @ionInfinite="ionInfinite">
                             <ion-infinite-scroll-content loading-text="Load more stores..."
-                                loading-spinner="bubbles"></ion-infinite-scroll-content>
+                                loading-spinner="circular"></ion-infinite-scroll-content>
                         </ion-infinite-scroll>
                     </div>
                 </div>
@@ -79,6 +79,7 @@ import { catchToastError } from '@/services/toastHandlers';
 import { refreshAccessTokenHandler } from '@/services/auth';
 import { redirectToDirectPurchaseOrderStoreDetailPage } from '@/services/redirectHandlers';
 import { IonSearchbar } from '@ionic/vue';
+import { presentLoading, stopLoading } from '@/services/loadingHandlers';
 
 const storesData = ref([]);
 const lastIndex = ref(5);
@@ -111,8 +112,6 @@ function searchStoreHandler(event) {
 
 async function fetchStoresData(query = '') {
     try {
-        refreshAccessTokenHandler();
-
         const tokens = localStorage.getItem("tokens") ? JSON.parse(localStorage.getItem("tokens")) : null;
 
         const headers = {
@@ -138,8 +137,11 @@ async function fetchStoresData(query = '') {
 }
 
 onMounted(() => {
+    presentLoading();
+    refreshAccessTokenHandler();
     fetchStoresData();
-})
+    stopLoading();
+});
 </script>
 
 <style scoped></style>

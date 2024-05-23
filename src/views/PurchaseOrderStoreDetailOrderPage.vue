@@ -172,8 +172,6 @@ function orderProduct(prodNumber, prodName, stock, hargaProduk) {
 
 async function fetchProductsData(query = '') {
     try {
-        refreshAccessTokenHandler();
-
         const tokens = localStorage.getItem("tokens") ? JSON.parse(localStorage.getItem("tokens")) : null;
 
         const headers = {
@@ -198,8 +196,6 @@ async function fetchProductsData(query = '') {
 
 async function fetchBrandsData(query = '') {
     try {
-        refreshAccessTokenHandler();
-
         const tokens = localStorage.getItem("tokens") ? JSON.parse(localStorage.getItem("tokens")) : null;
 
         const headers = {
@@ -224,10 +220,10 @@ async function fetchBrandsData(query = '') {
 
 onMounted(() => {
     presentLoading();
-    fetchProductsData();
+    refreshAccessTokenHandler();
     fetchBrandsData();
     stopLoading();
-})
+});
 </script>
 
 <style scoped></style>

@@ -8,7 +8,13 @@
                     <div class="py-2 rounded-lg max-w-sm-full w-full">
                         <h2 class="text-2xl font-semibold text-center mb-4">List Purchase Order</h2>
                         <p class="text-gray-600 text-center mb-6">Daftar Purchase Order Terbaru.</p>
-                        <div v-for="(order, index) in purchaseOrders" :key="index + 1" class="relative overflow-x-auto">
+
+                        <ion-searchbar v-if="visiblePurchaseOrders.length > 0" :debounce="300"
+                            @ionInput="searchStoreHandler($event)" placeholder="Cari nomor order, nama toko..."
+                            color="light"></ion-searchbar>
+
+                        <div v-for="(order, index) in visiblePurchaseOrders" :key="index + 1"
+                            class="relative overflow-x-auto">
                             <ion-card class="py-2 bg-gradient-to-r from-yellow-300 via-yellow-400 to-orange-400">
                                 <ion-card-header class="bg-gray-50">
                                     <div class="flex flex-col w-full h-full space-y-2">
@@ -57,6 +63,10 @@
                                 </ion-card-content>
                             </ion-card>
                         </div>
+                        <ion-infinite-scroll @ionInfinite="ionInfinite">
+                            <ion-infinite-scroll-content loading-text="Load more orders..."
+                                loading-spinner="circular"></ion-infinite-scroll-content>
+                        </ion-infinite-scroll>
                     </div>
                 </div>
             </div>
@@ -83,7 +93,8 @@
                                             </h2>
                                             <div v-for="(detail, index) in purchaseOrderDetails" :key="index + 1"
                                                 class="relative overflow-x-auto">
-                                                <ion-card class="py-2 bg-gradient-to-r from-yellow-300 via-yellow-400 to-orange-400">
+                                                <ion-card
+                                                    class="py-2 bg-gradient-to-r from-yellow-300 via-yellow-400 to-orange-400">
                                                     <ion-card-header class="bg-gray-50">
                                                         <div class="flex flex-col w-full h-full space-y-2">
                                                             <div
@@ -134,7 +145,7 @@
 </template>
 
 <script setup>
-import { onMounted, ref } from 'vue';
+import { computed, onMounted, ref } from 'vue';
 import HeaderSection from './../components/HeaderSection.vue'
 import { refreshAccessTokenHandler } from '@/services/auth';
 import { catchToastError } from '@/services/toastHandlers';
@@ -150,6 +161,34 @@ const setOpen = (open) => (
 const selectedOrderNumber = ref('');
 const purchaseOrders = ref([]);
 const purchaseOrderDetails = ref([]);
+
+const lastIndex = ref(5);
+const visiblePurchaseOrders = computed(() => {
+    return purchaseOrders.value && purchaseOrders.value.length > 0
+        ? purchaseOrders.value.slice(0, lastIndex.value)
+        : [];
+});
+const reachedEnd = computed(() => {
+    return Array.isArray(purchaseOrders.value) && lastIndex.value >= purchaseOrders.value.length;
+});
+
+const ionInfinite = (event) => {
+    if (!reachedEnd.value) {
+        setTimeout(() => {
+            lastIndex.value += 5;
+
+            event.target.complete();
+        }, 1000);
+    } else {
+        event.target.disabled = true;
+    }
+}
+
+function searchStoreHandler(event) {
+  const query = event.target.value.toLowerCase();
+
+  fetchPurchaseOrdersData(query);
+}
 
 function detailBtnHandler(open, orderId, orderNumber) {
     setOpen(open);
@@ -171,11 +210,13 @@ async function fetchPurchaserOrderDetailData(orderId) {
     }
 }
 
-async function fetchPurchaseOrdersData() {
+async function fetchPurchaseOrdersData(query = '') {
     try {
-        refreshAccessTokenHandler();
-
-        const response = await axios.get(`${API_URL.value}/api/sgs/purchase-orders`);
+        const response = await axios.get(`${API_URL.value}/api/sgs/purchase-orders`, {
+            params: {
+                q: query,
+            }
+        });
 
         purchaseOrders.value = response.data.resource;
     } catch (error) {
@@ -187,6 +228,7 @@ async function fetchPurchaseOrdersData() {
 
 onMounted(() => {
     presentLoading();
+    refreshAccessTokenHandler();
     fetchPurchaseOrdersData();
     stopLoading();
 })

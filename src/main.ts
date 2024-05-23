@@ -44,8 +44,6 @@ import {
   IonProgressBar,
   IonBadge,
   IonInput,
-  useBackButton,
-  useIonRouter,
 } from "@ionic/vue";
 
 /* Core CSS required for Ionic components to work properly */
@@ -80,17 +78,10 @@ import "./theme/variables.css";
 
 import "./tailwind.css";
 import { ErrorMessage, Field, Form } from "vee-validate";
-import { catchToastError } from "@/services/toastHandlers";
 
-const app = createApp(App).use(IonicVue).use(router);
-
-app.config.errorHandler = function (error, vm, info) {
-  console.error("Error: ", error);
-  console.log("Vue Instance: ", vm);
-  console.log("Info", info);
-
-  catchToastError(error, 3000);
-};
+const app = createApp(App)
+.use(IonicVue)
+.use(router);
 
 // ionic components
 app.component("ion-page", IonPage);

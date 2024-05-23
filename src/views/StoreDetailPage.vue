@@ -27,7 +27,7 @@
 				</div>
 			</header>
 			<!-- End of header -->
-			
+
 			<div class="container mx-auto">
 				<div class="flex flex-col mih-h-full p-6">
 					<!-- Detail Store Card -->
@@ -48,14 +48,9 @@
 							</ion-card-header>
 
 
-							<StoreDetailContent 
-							:nama-toko="storeData.nama_toko"
-							:alias-toko="storeData.alias_toko"
-							:alamat-toko="storeData.alamat_toko"
-							:nomor-telepon="storeData.nomor_telepon_toko"
-							:nomor-fax="storeData.nomor_fax_toko"
-							:kode-toko="storeData.kode_toko"
-							/>
+							<StoreDetailContent :nama-toko="storeData.nama_toko" :alias-toko="storeData.alias_toko"
+								:alamat-toko="storeData.alamat_toko" :nomor-telepon="storeData.nomor_telepon_toko"
+								:nomor-fax="storeData.nomor_fax_toko" :kode-toko="storeData.kode_toko" />
 						</ion-card>
 					</div>
 					<!-- End of Detail Store Card -->
@@ -155,8 +150,8 @@
 					</ion-select>
 
 					<div class="flex justify-center items-center mb-2">
-						<button @click="redirectToStorePurchaseOrderPage(storeId)"
-							data-modal-target="large-modal" data-modal-toggle="large-modal"
+						<button @click="redirectToStorePurchaseOrderPage(storeId)" data-modal-target="large-modal"
+							data-modal-toggle="large-modal"
 							class="block w-full md:w-auto text-white bg-blue-400 hover:bg-blue-500 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center transition-all"
 							type="button">
 							Tambah Order
@@ -174,7 +169,7 @@
 					<div class="flex justify-center items-center py-2" v-if="objOrder.length">
 						<button @click="setOpen(true)"
 							class="block w-full md:w-auto text-white bg-green-400 focus:ring-4 focus:outline-none font-medium rounded-lg text-sm px-5 py-2.5 text-center transition-all"
-							type="button">
+							type="button" :disabled="enableConfirmOTP">
 							Konfirmasi OTP
 						</button>
 					</div>
@@ -220,8 +215,7 @@
 								<div class="relative bg-white px-6 py-8 mx-auto w-full max-w-lg rounded-2xl">
 									<div class="mx-auto flex w-full max-w-md flex-col space-y-16">
 										<div class="flex flex-col items-center justify-center text-center space-y-2">
-											<img src="/public/verify.png"
-                                                alt="Verification Images">
+											<img src="/public/verify.png" alt="Verification Images">
 											<div class="font-semibold text-3xl">
 												<p>Verifikasi OTP Whatsapp</p>
 											</div>
@@ -311,6 +305,7 @@ import {
 import { redirectToStorePurchaseOrderPage, redirectToAbsensiPage } from '@/services/redirectHandlers';
 import { API_URL } from '@/services/globalVariables';
 import { IonSelectOption, IonSelect } from '@ionic/vue';
+import { presentLoading, stopLoading } from '@/services/loadingHandlers';
 
 const route = useRoute();
 
@@ -330,6 +325,8 @@ const storeId = ref(route.params.id);
 const brandsData = ref([]);
 const productsData = ref([]);
 const promoProgramsData = ref([]);
+
+const enableConfirmOTP = ref(true);
 // const hasProductGetPromo = ref(false);
 // const relatedPromosOfSelectedProduct = ref([]);
 
@@ -347,6 +344,14 @@ const reachedEnd = computed(() => {
 const calculateTotalPriceHandler = (prodPrice, qty) => {
 	const total = parseFloat(prodPrice) * qty;
 	return total;
+}
+
+const showConfirmOTP = (qty) => {
+	if (qty > 0) {
+		enableConfirmOTP.value = false;
+	} else {
+		enableConfirmOTP.value = true;
+	}
 }
 
 // const totalProductsPrice = (prodPrice, qty) => {
@@ -553,7 +558,9 @@ function addMoreOrder(index, maks) {
 	if (objOrder.value[index].qty < maks) {
 		objOrder.value[index].qty++;
 
-		checkProductsHasPromo();
+		showConfirmOTP(objOrder.value[index].qty);
+		
+		// checkProductsHasPromo();
 	}
 
 	if (objOrder.value[index].qty > maks) {
@@ -567,7 +574,8 @@ function reduceOrder(index, min) {
 	if (objOrder.value[index].qty > min) {
 		objOrder.value[index].qty--;
 
-		checkProductsHasPromo();
+		showConfirmOTP(objOrder.value[index].qty);
+		// checkProductsHasPromo();
 	}
 
 	if (objOrder.value[index].qty < min) {
@@ -589,8 +597,6 @@ function deleteRecentOrder(index, prodNumber) {
 
 async function fetchPromoProgram() {
 	try {
-		refreshAccessTokenHandler();
-
 		const tokens = localStorage.getItem("tokens") ? JSON.parse(localStorage.getItem("tokens")) : null;
 
 		const headers = {
@@ -612,8 +618,6 @@ async function fetchPromoProgram() {
 
 async function fetchBrandsData(query = '') {
 	try {
-		refreshAccessTokenHandler();
-
 		const tokens = localStorage.getItem("tokens") ? JSON.parse(localStorage.getItem("tokens")) : null;
 
 		const headers = {
@@ -638,8 +642,6 @@ async function fetchBrandsData(query = '') {
 
 async function fetchStoreDetailData(id) {
 	try {
-		refreshAccessTokenHandler();
-
 		const tokens = localStorage.getItem("tokens") ? JSON.parse(localStorage.getItem("tokens")) : null;
 
 		const headers = {
@@ -690,11 +692,13 @@ async function fetchProductsData(query = '') {
 }
 
 onMounted(() => {
+	presentLoading();
 	refreshAccessTokenHandler();
 	fetchStoreDetailData(storeId.value);
 	fetchPromoProgram();
 	fetchProductsData();
 	fetchBrandsData();
+	stopLoading();
 });
 </script>
 

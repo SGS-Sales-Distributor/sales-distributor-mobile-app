@@ -31,17 +31,18 @@
             <!-- Start of Brand List -->
             <ion-list>
                 <ion-item>
-                    <ion-select @ionChange="handleChange($event)" @ionCancel="cancelSelectionHandler()" label="Daftar Brand"
-                        interface="action-sheet" :value="selectedBrand" placeholder="Pilih Brand"
+                    <ion-select @ionChange="handleChange($event)" @ionCancel="cancelSelectionHandler()"
+                        label="Daftar Brand" interface="action-sheet" :value="selectedBrand" placeholder="Pilih Brand"
                         cancel-text="Batalkan Pilihan">
-                        <ion-select-option v-for="(brand, index) in brandsData" :key="index+1" :value="brand.brand_id">{{ brand.brand_name }}</ion-select-option>
+                        <ion-select-option v-for="(brand, index) in brandsData" :key="index + 1"
+                            :value="brand.brand_id">{{ brand.brand_name }}</ion-select-option>
                     </ion-select>
                 </ion-item>
             </ion-list>
             <!-- End of Brand List -->
 
-            <ion-searchbar v-if="selectedBrandBtn" :debounce="300" @ionInput="handleInput($event)" placeholder="Cari nama, nomor produk..."
-                color="light"></ion-searchbar>
+            <ion-searchbar v-if="selectedBrandBtn" :debounce="300" @ionInput="handleInput($event)"
+                placeholder="Cari nama, nomor produk..." color="light"></ion-searchbar>
 
             <div v-for="(product, index) in visibleProducts" :key="index + 1" class="relative overflow-x-auto">
                 <ion-card class="py-2 bg-gradient-to-r from-sky-400 via-blue-500 to-blue-700">
@@ -174,8 +175,6 @@ function orderProduct(prodNumber, prodName, stock, hargaProduk) {
 
 async function fetchProductsData(query = '') {
     try {
-        refreshAccessTokenHandler();
-
         const tokens = localStorage.getItem("tokens") ? JSON.parse(localStorage.getItem("tokens")) : null;
 
         const headers = {
@@ -200,8 +199,6 @@ async function fetchProductsData(query = '') {
 
 async function fetchBrandsData(query = '') {
     try {
-        refreshAccessTokenHandler();
-
         const tokens = localStorage.getItem("tokens") ? JSON.parse(localStorage.getItem("tokens")) : null;
 
         const headers = {
@@ -226,10 +223,8 @@ async function fetchBrandsData(query = '') {
 
 onMounted(() => {
     presentLoading();
-
     refreshAccessTokenHandler();
     fetchBrandsData();
-
     stopLoading();
 });
 </script>

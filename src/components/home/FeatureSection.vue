@@ -3,37 +3,37 @@
   <div class="grid grid-cols-4 gap-6 text-center">
     <div class="flex flex-col items-center justify-center space-y-2">
       <ion-button id="absensi-button" shape="round" href="/absensi">
-        <ion-icon class="text-2xl" slot="icon-only"  :icon="camera"></ion-icon>
+        <ion-icon class="text-2xl text-gray-900" slot="icon-only"  :icon="camera"></ion-icon>
       </ion-button>
       <ion-label class="text-sm font-semibold">Absensi Visit</ion-label>
     </div>
     <div class="flex flex-col items-center justify-center space-y-2">
       <ion-button id="registrasi-toko-button" shape="round" href="/store/register">
-        <ion-icon class="text-2xl" slot="icon-only"  :icon="storefront"></ion-icon>
+        <ion-icon class="text-2xl text-gray-900" slot="icon-only"  :icon="storefront"></ion-icon>
       </ion-button>
       <ion-label class="text-sm font-semibold">Registrasi Toko</ion-label>
     </div>
     <div class="flex flex-col items-center justify-center space-y-2">
-      <ion-button id="katalog-produk-button" shape="round">
-        <ion-icon class="text-2xl" slot="icon-only" :icon="cube"></ion-icon>
+      <ion-button id="katalog-produk-button" shape="round" href="/product">
+        <ion-icon class="text-2xl text-gray-900" slot="icon-only" :icon="cube"></ion-icon>
       </ion-button>
       <ion-label class="text-sm font-semibold">Katalog Produk</ion-label>
     </div>
     <div class="flex flex-col items-center justify-center space-y-2">
       <ion-button id="achievement-button" shape="round">
-        <ion-icon class="text-2xl" slot="icon-only"  :icon="trophy"></ion-icon>
+        <ion-icon class="text-2xl text-gray-900" slot="icon-only" :icon="trophy"></ion-icon>
       </ion-button>
       <ion-label class="text-sm font-semibold">Achieve Reward</ion-label>
     </div>
     <div class="flex flex-col items-center justify-center space-y-2">
       <ion-button id="list-purchase-order-button" shape="round" href="/order-history">
-        <ion-icon class="text-2xl" slot="icon-only"  :icon="listCircle"></ion-icon>
+        <ion-icon class="text-2xl text-gray-900" slot="icon-only"  :icon="listCircle"></ion-icon>
       </ion-button>
       <ion-label class="text-sm font-semibold">List PO</ion-label>
     </div>
     <div class="flex flex-col items-center justify-center space-y-2">
       <ion-button id="purchase-order-button" shape="round" href="/direct-order">
-        <ion-icon class="text-2xl" slot="icon-only"  :icon="card"></ion-icon>
+        <ion-icon class="text-2xl text-gray-900" slot="icon-only"  :icon="card"></ion-icon>
       </ion-button>
       <ion-label class="text-sm font-semibold">Direct PO</ion-label>
     </div>

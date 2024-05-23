@@ -1,24 +1,11 @@
 <template>
-    <Form
-    novalidate 
-    class="space-y-6" 
-    method="post"
-    @submit="login"
-    :validation-schema="formLoginValidate">
-        <!-- Email Input -->
-        <div>
-            <label for="email" class="block text-sm font-medium leading-6 text-gray-900">Email address</label>
-            <div class="mt-2">
-                <Field
-                v-model="formData.email" 
-                :type="emailFieldType"
-                id="email" 
-                name="email" 
-                autocomplete="email" 
-                placeholder="Masukkan alamat email anda" 
-                aria-label="email" 
-                aria-describedby="email"
-                class="
+  <Form novalidate class="space-y-6" method="post" @submit="login" :validation-schema="formLoginValidate">
+    <!-- Email Input -->
+    <div>
+      <label for="email" class="block text-sm font-medium leading-6 text-gray-900">Email address</label>
+      <div class="mt-2">
+        <Field v-model="formData.email" :type="emailFieldType" id="email" name="email" autocomplete="email"
+          placeholder="Masukkan alamat email anda" aria-label="email" aria-describedby="email" class="
                 block 
                 w-full 
                 bg-transparent
@@ -38,26 +25,17 @@
                 placeholder:text-gray-400
                 transition-all  
                 sm:text-md 
-                sm:leading-6"
-                />
-                <ErrorMessage name="email" class="mt-4 text-rose-500" />
-            </div>
-        </div>
+                sm:leading-6" />
+        <ErrorMessage as="div" name="email" class="mt-1.5 text-rose-500" />
+      </div>
+    </div>
 
-        <!-- Password Input -->
-        <div>
-            <label for="password" class="block text-sm font-medium leading-6 text-gray-900">Password</label>
-            <div class="mt-2 relative">
-                <Field 
-                v-model="formData.password"
-                :type="passwordFieldType"
-                id="password" 
-                name="password"
-                placeholder="******"
-                autocomplete="current-password" 
-                aria-label="password" 
-                aria-describedby="password"
-                class="
+    <!-- Password Input -->
+    <div>
+      <label for="password" class="block text-sm font-medium leading-6 text-gray-900">Password</label>
+      <div class="mt-2 relative">
+        <Field v-model="formData.password" :type="passwordFieldType" id="password" name="password" placeholder="******"
+          autocomplete="current-password" aria-label="password" aria-describedby="password" class="
                 block 
                 w-full 
                 bg-transparent
@@ -77,39 +55,43 @@
                 placeholder:text-gray-400
                 transition-all  
                 sm:text-md 
-                sm:leading-6"
-                />
-                <button 
-                type="button" 
-                @click="togglePasswordVisibility" 
-                class="absolute inset-y-0 right-0 px-3 flex items-center">
-                  <svg v-if="passwordFieldType === 'password'" xmlns="http://www.w3.org/2000/svg" width="18" height="18" fill="currentColor" class="bi bi-eye" viewBox="0 0 16 16">
-                    <path d="M16 8s-3-5.5-8-5.5S0 8 0 8s3 5.5 8 5.5S16 8 16 8M1.173 8a13 13 0 0 1 1.66-2.043C4.12 4.668 5.88 3.5 8 3.5s3.879 1.168 5.168 2.457A13 13 0 0 1 14.828 8q-.086.13-.195.288c-.335.48-.83 1.12-1.465 1.755C11.879 11.332 10.119 12.5 8 12.5s-3.879-1.168-5.168-2.457A13 13 0 0 1 1.172 8z"/>
-                    <path d="M8 5.5a2.5 2.5 0 1 0 0 5 2.5 2.5 0 0 0 0-5M4.5 8a3.5 3.5 0 1 1 7 0 3.5 3.5 0 0 1-7 0"/>
-                  </svg>
-                  <svg v-else xmlns="http://www.w3.org/2000/svg" width="18" height="18" fill="currentColor" class="bi bi-eye-slash" viewBox="0 0 16 16">
-                    <path d="M13.359 11.238C15.06 9.72 16 8 16 8s-3-5.5-8-5.5a7 7 0 0 0-2.79.588l.77.771A6 6 0 0 1 8 3.5c2.12 0 3.879 1.168 5.168 2.457A13 13 0 0 1 14.828 8q-.086.13-.195.288c-.335.48-.83 1.12-1.465 1.755q-.247.248-.517.486z"/>
-                    <path d="M11.297 9.176a3.5 3.5 0 0 0-4.474-4.474l.823.823a2.5 2.5 0 0 1 2.829 2.829zm-2.943 1.299.822.822a3.5 3.5 0 0 1-4.474-4.474l.823.823a2.5 2.5 0 0 0 2.829 2.829"/>
-                    <path d="M3.35 5.47q-.27.24-.518.487A13 13 0 0 0 1.172 8l.195.288c.335.48.83 1.12 1.465 1.755C4.121 11.332 5.881 12.5 8 12.5c.716 0 1.39-.133 2.02-.36l.77.772A7 7 0 0 1 8 13.5C3 13.5 0 8 0 8s.939-1.721 2.641-3.238l.708.709zm10.296 8.884-12-12 .708-.708 12 12z"/>
-                  </svg>
-                </button>
-              </div>
-              <ErrorMessage name="password" class="mt-4 text-rose-500" />
-        </div>
+                sm:leading-6" />
+        <button type="button" @click="togglePasswordVisibility"
+          class="absolute inset-y-0 right-0 px-3 flex items-center">
+          <svg v-if="passwordFieldType === 'password'" xmlns="http://www.w3.org/2000/svg" width="18" height="18"
+            fill="currentColor" class="bi bi-eye" viewBox="0 0 16 16">
+            <path
+              d="M16 8s-3-5.5-8-5.5S0 8 0 8s3 5.5 8 5.5S16 8 16 8M1.173 8a13 13 0 0 1 1.66-2.043C4.12 4.668 5.88 3.5 8 3.5s3.879 1.168 5.168 2.457A13 13 0 0 1 14.828 8q-.086.13-.195.288c-.335.48-.83 1.12-1.465 1.755C11.879 11.332 10.119 12.5 8 12.5s-3.879-1.168-5.168-2.457A13 13 0 0 1 1.172 8z" />
+            <path d="M8 5.5a2.5 2.5 0 1 0 0 5 2.5 2.5 0 0 0 0-5M4.5 8a3.5 3.5 0 1 1 7 0 3.5 3.5 0 0 1-7 0" />
+          </svg>
+          <svg v-else xmlns="http://www.w3.org/2000/svg" width="18" height="18" fill="currentColor"
+            class="bi bi-eye-slash" viewBox="0 0 16 16">
+            <path
+              d="M13.359 11.238C15.06 9.72 16 8 16 8s-3-5.5-8-5.5a7 7 0 0 0-2.79.588l.77.771A6 6 0 0 1 8 3.5c2.12 0 3.879 1.168 5.168 2.457A13 13 0 0 1 14.828 8q-.086.13-.195.288c-.335.48-.83 1.12-1.465 1.755q-.247.248-.517.486z" />
+            <path
+              d="M11.297 9.176a3.5 3.5 0 0 0-4.474-4.474l.823.823a2.5 2.5 0 0 1 2.829 2.829zm-2.943 1.299.822.822a3.5 3.5 0 0 1-4.474-4.474l.823.823a2.5 2.5 0 0 0 2.829 2.829" />
+            <path
+              d="M3.35 5.47q-.27.24-.518.487A13 13 0 0 0 1.172 8l.195.288c.335.48.83 1.12 1.465 1.755C4.121 11.332 5.881 12.5 8 12.5c.716 0 1.39-.133 2.02-.36l.77.772A7 7 0 0 1 8 13.5C3 13.5 0 8 0 8s.939-1.721 2.641-3.238l.708.709zm10.296 8.884-12-12 .708-.708 12 12z" />
+          </svg>
+        </button>
+      </div>
+      <ErrorMessage as="div" name="password" class="mt-1.5 text-rose-500" />
+    </div>
 
-        <!-- Submit button -->
-        <div class="flex flex-col space-y-6">
-            <button type="submit" class="flex w-full justify-center rounded-md bg-gradient-to-r from-sky-400 via-blue-500 to-blue-700 px-3 py-1.5 text-sm font-semibold leading-6 text-white shadow-sm hover:bg-blue-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-blue-600 transition-all">
-                <span>Login</span>
-            </button>
-        </div>
-        <!-- End of Submit Button -->
-      </Form>
+    <!-- Submit button -->
+    <div class="flex flex-col space-y-6">
+      <button type="submit"
+        class="flex w-full justify-center rounded-md bg-gradient-to-r from-sky-400 via-blue-500 to-blue-700 px-3 py-1.5 text-sm font-semibold leading-6 text-white shadow-sm hover:bg-blue-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-blue-600 transition-all">
+        <span>Login</span>
+      </button>
+    </div>
+    <!-- End of Submit Button -->
+  </Form>
 </template>
 
 <script setup>
 import * as Yup from 'yup';
-import { catchToast, catchToastError } from '@/services/toastHandlers'; 
+import { catchToast, catchToastError } from '@/services/toastHandlers';
 import axios from 'axios';
 import { ref } from 'vue';
 import { API_URL } from '@/services/globalVariables';
@@ -146,19 +128,34 @@ async function login() {
     presentLoading();
 
     const response = await axios.post(`${API_URL.value}/api/v2/auth/login`, formData.value);
-    
+
     const tokens = response.data.resource.tokens;
 
     localStorage.setItem("tokens", JSON.stringify(tokens));
 
     stopLoading();
-    
+
     catchToast(response.data.message, 3000);
+
+    if (response) {
+      const headers = {
+        'Content-Type': 'application/json',
+        'Authorization': `Bearer ${tokens.access_token}`
+      };
+
+      const checkUserResponse = await axios.get(`${API_URL.value}/api/v2/auth/me`, {
+        headers: headers,
+      });
+
+      const user = checkUserResponse.data.resource.data;
+
+      localStorage.setItem("user", JSON.stringify(user));
+    }
 
     redirectToHomePage();
   } catch (error) {
     catchToastError("Gagal Login, email atau password salah!", 3000);
-    
+
     console.error('Failed to logged in: ', error);
   } finally {
     stopLoading();

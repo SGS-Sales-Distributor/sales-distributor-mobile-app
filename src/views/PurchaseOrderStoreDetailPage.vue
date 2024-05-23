@@ -148,14 +148,19 @@
                         <ion-select-option value="Transfer">Transfer</ion-select-option>
                     </ion-select>
 
-                    <div class="flex justify-center items-center mb-2">
+                    <div class="fixed bottom-4 right-8">
                         <button @click="redirectToDirectPurchaseOrderStoreDetailOrderPage(storeId)"
                             data-modal-target="large-modal" data-modal-toggle="large-modal"
-                            class="block w-full md:w-auto text-gray-900 bg-lime-400 hover:bg-lime-500 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center transition-all"
+                            class="w-12 h-12 rounded-full text-gray-900 bg-lime-400 hover:bg-lime-500 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium text-sm text-center transition-all flex items-center justify-center"
                             type="button">
-                            Tambah Order
+                            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="currentColor"
+                                class="bi bi-plus-lg" viewBox="0 0 16 16">
+                                <path fill-rule="evenodd"
+                                    d="M8 2a.5.5 0 0 1 .5.5v5h5a.5.5 0 0 1 0 1h-5v5a.5.5 0 0 1-1 0v-5h-5a.5.5 0 0 1 0-1h5v-5A.5.5 0 0 1 8 2" />
+                            </svg>
                         </button>
                     </div>
+
 
                     <!-- <div class="flex justify-center items-center py-2" v-if="objOrder.length">
                         <button @click="checkProductsHasPromo"
@@ -168,7 +173,7 @@
                     <div class="flex justify-center items-center py-2" v-if="objOrder.length">
                         <button @click="setOpen(true)"
                             class="block w-full md:w-auto text-white bg-green-400 focus:ring-4 focus:outline-none font-medium rounded-lg text-sm px-5 py-2.5 text-center transition-all"
-                            type="button">
+                            type="button" :disabled="enableConfirmOTP">
                             Konfirmasi OTP
                         </button>
                     </div>
@@ -215,8 +220,7 @@
                                 <div class="relative bg-white px-6 py-8 mx-auto w-full max-w-lg rounded-2xl">
                                     <div class="mx-auto flex w-full max-w-md flex-col space-y-16">
                                         <div class="flex flex-col items-center justify-center text-center space-y-2">
-                                            <img src="/public/verify.png"
-                                                alt="Verification Images">
+                                            <img src="/public/verify.png" alt="Verification Images">
                                             <div class="font-semibold text-3xl">
                                                 <p>Verifikasi OTP Whatsapp</p>
                                             </div>
@@ -316,6 +320,7 @@ const storeId = ref(route.params.id);
 const metodePembayaran = ref("Tunai");
 
 const promoProgramsData = ref([]);
+const enableConfirmOTP = ref(true);
 
 const lastIndex = ref(5);
 const visiblePromoPrograms = computed(() => {
@@ -348,11 +353,21 @@ function handleChange(event) {
     metodePembayaran.value = event.detail.value;
 }
 
+const showConfirmOTP = (qty) => {
+    if (qty > 0) {
+        enableConfirmOTP.value = false;
+    } else {
+        enableConfirmOTP.value = true;
+    }
+}
+
 function addMoreOrder(index, maks) {
     if (objOrder.value[index].qty < maks) {
         objOrder.value[index].qty++;
 
-        checkProductsHasPromo();
+        showConfirmOTP(objOrder.value[index].qty);
+
+        checkProductsHasPromo(objOrder.value[index].qty);
     }
 
     if (objOrder.value[index].qty > maks) {
@@ -366,7 +381,9 @@ function reduceOrder(index, min) {
     if (objOrder.value[index].qty > min) {
         objOrder.value[index].qty--;
 
-        checkProductsHasPromo();
+        showConfirmOTP(objOrder.value[index].qty);
+
+        // checkProductsHasPromo();
     }
 
     if (objOrder.value[index].qty < min) {
@@ -386,28 +403,52 @@ function deleteRecentOrder(index, prodNumber) {
     }
 }
 
-function checkProductsHasPromo() {
-    const productMap = new Map();
+function checkProductsHasPromo(orderQty) {
+    if (orderQty === 3) {
+        const productMap = new Map();
 
-    for (const product of objOrder.value) {
-        productMap.set(product.prodNumber, product);
-    }
-
-    for (const promo of promoProgramsData.value) {
-        const eligibleProducts = promo.details.map(detail => {
-            const product = productMap.get(detail.product);
-
-            return product && product.qty >= detail.condition ? product : null;
-        }).filter(Boolean);
-
-        if (eligibleProducts.length > 0) {
-            const productWithLowestPrice = eligibleProducts.reduce((lowest, product) => {
-                return product.prod_base_price < lowest.prod_base_price ? product : lowest;
-            });
-
-            catchToastInfo(`${productWithLowestPrice.prodNumber} mendapatkan promo ${promo.name_program}`, 3000);
+        for (const product of objOrder.value) {
+            productMap.set(product.prodNumber, product);
         }
+
+        for (const promo of promoProgramsData.value) {
+            const eligibleProducts = promo.details.map(detail => {
+                const product = productMap.get(detail.product);
+
+                return product.qty >= detail.condition ? product : null;
+            }).filter(Boolean);
+
+            if (eligibleProducts.length > 0) {
+                const productWithLowestPrice = eligibleProducts.reduce((lowest, product) => {
+                    return product.prod_base_price < lowest.prod_base_price ? product : lowest;
+                });
+
+                console.log(productWithLowestPrice);
+            }
+        }
+
+        console.log(productMap);
+    } else {
+        console.log("Tidak dapat promo");
     }
+
+    // console.log(productMap);
+
+    // for (const promo of promoProgramsData.value) {
+    //     const eligibleProducts = promo.details.map(detail => {
+    //         const product = productMap.get(detail.product);
+
+    //         return product && product.qty >= detail.condition ? product : null;
+    //     }).filter(Boolean);
+
+    //     if (eligibleProducts.length > 0) {
+    //         const productWithLowestPrice = eligibleProducts.reduce((lowest, product) => {
+    //             return product.prod_base_price < lowest.prod_base_price ? product : lowest;
+    //         });
+
+    //         catchToastInfo(`${productWithLowestPrice.prodNumber} mendapatkan promo ${promo.name_program}`, 3000);
+    //     }
+    // }
 }
 
 async function confirmOTP() {
@@ -556,8 +597,6 @@ async function sendOTP(nomorWhatsappOTP) {
 
 async function fetchStoreDetailDataWithoutCallPlan(id) {
     try {
-        refreshAccessTokenHandler();
-
         const tokens = localStorage.getItem("tokens") ? JSON.parse(localStorage.getItem("tokens")) : null;
 
         const headers = {
@@ -585,8 +624,6 @@ async function fetchStoreDetailDataWithoutCallPlan(id) {
 
 async function fetchPromoProgram() {
     try {
-        refreshAccessTokenHandler();
-
         const tokens = localStorage.getItem("tokens") ? JSON.parse(localStorage.getItem("tokens")) : null;
 
         const headers = {
@@ -608,6 +645,7 @@ async function fetchPromoProgram() {
 
 onMounted(() => {
     presentLoading();
+    refreshAccessTokenHandler();
     fetchStoreDetailDataWithoutCallPlan(storeId.value);
     fetchPromoProgram();
     stopLoading();

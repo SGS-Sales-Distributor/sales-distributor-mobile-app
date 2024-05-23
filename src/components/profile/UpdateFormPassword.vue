@@ -1,49 +1,40 @@
 <template>
-    <form
-    novalidate
-    @submit.prevent="changePassword(authUser.number)"
-    :validation-schema="formChangePasswordValidate">
-        <div class="mb-6">
-            <label for="current-password" class="block mb-2 text-sm font-bold text-gray-900 text-left">Kata Sandi Saat Ini:</label>
-            <input
-            v-model="formChangePasswordData.current_password" 
-            type="password" 
-            id="current-password" 
-            class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5" 
-            placeholder="•••••••••"/>
-        </div> 
-        <div class="mb-6">
-            <label for="password" class="block mb-2 text-sm font-bold text-gray-900 text-left">Kata Sandi:</label>
-            <input 
-            v-model="formChangePasswordData.password"
-            type="password" 
-            id="password" 
-            class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5" 
-            placeholder="•••••••••"/>
-        </div> 
-        <div class="mb-6">
-            <label for="confirm-password" class="block mb-2 text-sm font-bold text-gray-900 text-left">Konfirmasi Kata Sandi:</label>
-            <input 
-            v-model="formChangePasswordData.password_confirmation"
-            type="password" 
-            id="confirm-password" 
-            class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5" 
-            placeholder="•••••••••"/>
-        </div> 
-        <button type="submit" class="text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm w-full sm:w-auto px-5 py-2.5 text-center">Simpan</button>
-    </form>
+  <form novalidate method="post" @submit="changePassword(user.number)" :validation-schema="validation">
+    <div class="mb-6">
+      <label for="current-password" class="block mb-2 text-sm font-bold text-gray-900 text-left">Kata Sandi Saat
+        Ini:</label>
+      <input v-model="formChangePasswordData.current_password" :type="fieldTypes.password" id="current-password"
+        class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5"
+        placeholder="•••••••••" />
+    </div>
+    <div class="mb-6">
+      <label for="password" class="block mb-2 text-sm font-bold text-gray-900 text-left">Kata Sandi:</label>
+      <input v-model="formChangePasswordData.password" :type="fieldTypes.password" id="password"
+        class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5"
+        placeholder="•••••••••" />
+    </div>
+    <div class="mb-6">
+      <label for="confirm-password" class="block mb-2 text-sm font-bold text-gray-900 text-left">Konfirmasi Kata
+        Sandi:</label>
+      <input v-model="formChangePasswordData.password_confirmation" :type="fieldTypes.password" id="confirm-password"
+        class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5"
+        placeholder="•••••••••" />
+    </div>
+    <button type="submit"
+      class="w-full bg-gradient-to-r from-sky-400 via-blue-500 to-blue-700 text-white px-4 py-2 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-opacity-50">Simpan</button>
+  </form>
 </template>
 
 <script setup>
 import * as Yup from 'yup';
 import { ref } from 'vue';
 import { refreshAccessTokenHandler } from '@/services/auth';
-import { API_URL } from '@/services/globalVariables';
+import { API_URL, fieldTypes } from '@/services/globalVariables';
 import { catchToast, catchToastError } from '@/services/toastHandlers';
 import axios from 'axios';
 import { presentLoading, stopLoading } from '@/services/loadingHandlers';
 
-const authUser = localStorage.getItem("user") ? JSON.parse(localStorage.getItem("user")) : null;
+const user = localStorage.getItem("user") ? JSON.parse(localStorage.getItem("user")) : null;
 
 const formChangePasswordData = ref({
   current_password: null,
@@ -51,7 +42,7 @@ const formChangePasswordData = ref({
   password_confirmation: null,
 });
 
-const formChangePasswordValidate = Yup.object().shape({
+const validation = Yup.object().shape({
   current_password: Yup.string()
     .required('Password diperlukan, tidak dapat kosong!')
     .max(100, 'Password tidak boleh lebih dari 100 karakter')
@@ -84,9 +75,9 @@ async function changePassword(userNumber) {
 
     presentLoading();
 
-    const response = await axios.patch(`${API_URL.value}/api/v2/salesmen/${userNumber}/change-password`, 
-        formChangePasswordValidate, {
-        headers: headers,
+    const response = await axios.patch(`${API_URL.value}/api/v2/salesmen/${userNumber}/change-password`,
+      formChangePasswordValidate, {
+      headers: headers,
     });
 
     stopLoading();
@@ -102,6 +93,4 @@ async function changePassword(userNumber) {
 }
 </script>
 
-<style scoped>
-
-</style>
+<style scoped></style>

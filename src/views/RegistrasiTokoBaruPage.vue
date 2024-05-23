@@ -17,7 +17,7 @@
                                     class="form-input w-full px-4 py-2 border rounded-lg text-gray-700 focus:ring-blue-500"
                                     placeholder="Masukkan nama toko" aria-label="store_name"
                                     aria-describedby="store_name" />
-                                <ErrorMessage name="store_name" class="text-rose-500" />
+                                <ErrorMessage as="div" name="store_name" class="mt-1.5 text-rose-500" />
                             </div>
                             <div class="mb-4">
                                 <label for="store_alias" class="block text-gray-700 text-sm font-semibold mb-2">Nama
@@ -27,7 +27,7 @@
                                     class="form-input w-full px-4 py-2 border rounded-lg text-gray-700 focus:ring-blue-500"
                                     placeholder="Masukkan nama alias toko" aria-label="store_alias"
                                     aria-describedby="store_alias" />
-                                <ErrorMessage name="store_alias" class="text-rose-500" />
+                                <ErrorMessage as="div" name="store_alias" class="mt-1.5 text-rose-500" />
                             </div>
                             <div class="mb-4">
                                 <label for="store_address" class="block text-gray-700 text-sm font-semibold mb-2">Alamat
@@ -39,7 +39,7 @@
                                     placeholder="Masukkan alamat toko" cols="20" rows="10" aria-label="store_address"
                                     aria-describedby="store_address">
                                 </Field>
-                                <ErrorMessage name="store_address" class="text-rose-500" />
+                                <ErrorMessage as="div" name="store_address" class="mt-1.5 text-rose-500" />
                             </div>
                             <div class="mb-4">
                                 <label for="store_phone" class="block text-gray-700 text-sm font-semibold mb-2">Nomor
@@ -49,7 +49,7 @@
                                     class="form-input w-full px-4 py-2 border rounded-lg text-gray-700 focus:ring-blue-500"
                                     placeholder="+6285677445566" aria-label="store_phone"
                                     aria-describedby="store_phone" />
-                                <ErrorMessage name="store_phone" class="text-rose-500" />
+                                <ErrorMessage as="div" name="store_phone" class="mt-1.5 text-rose-500" />
                             </div>
                             <div class="mb-4">
                                 <label for="store_fax" class="block text-gray-700 text-sm font-semibold mb-2">Nomor Fax
@@ -58,7 +58,7 @@
                                     name="store_fax"
                                     class="form-input w-full px-4 py-2 border rounded-lg text-gray-700 focus:ring-blue-500"
                                     placeholder="1234-5678-9012" aria-label="store_fax" aria-describedby="store_fax" />
-                                <ErrorMessage name="store_fax" class="text-rose-500" />
+                                <ErrorMessage as="div" name="store_fax" class="mt-1.5 text-rose-500" />
                             </div>
                             <div class="mb-4">
                                 <label for="store_type" class="block text-gray-700 text-sm font-semibold mb-2">Tipe Toko
@@ -71,7 +71,7 @@
                                         {{ type.store_type_name }}
                                     </option>
                                 </Field>
-                                <ErrorMessage name="store_type" class="text-rose-500" />
+                                <ErrorMessage as="div" name="store_type" class="mt-1.5 text-rose-500" />
                             </div>
                             <div class="mb-4">
                                 <label for="subcabang_id" class="block text-gray-700 text-sm font-semibold mb-2">Cabang
@@ -83,7 +83,7 @@
                                         {{ cabang.nama_cabang }}
                                     </option>
                                 </Field>
-                                <ErrorMessage name="subcabang_id" class="text-rose-500" />
+                                <ErrorMessage as="div" name="subcabang_id" class="mt-1.5 text-rose-500" />
                             </div>
                             <button type="button" @click="storeDataAlert"
                                 class="w-full bg-gradient-to-r from-sky-400 via-blue-500 to-blue-700 text-white px-4 py-2 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-opacity-50">Daftarkan
@@ -216,8 +216,6 @@ async function saveStoreData() {
 
 async function fetchStoreTypes(query = '') {
     try {
-        refreshAccessTokenHandler();
-
         const tokens = localStorage.getItem("tokens") ? JSON.parse(localStorage.getItem("tokens")) : null;
 
         const headers = {
@@ -241,8 +239,6 @@ async function fetchStoreTypes(query = '') {
 
 async function fetchStoreCabangs(query = '') {
     try {
-        refreshAccessTokenHandler();
-
         const tokens = localStorage.getItem("tokens") ? JSON.parse(localStorage.getItem("tokens")) : null;
 
         const headers = {

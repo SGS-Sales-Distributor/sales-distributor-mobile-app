@@ -26,6 +26,8 @@ export async function checkLocationAccess() {
             } else {
                 catchToastError("Akses Lokasi Ditolak, mohon nyalakan GPS secara manual!", 3000);
             
+                await Geolocation.requestPermissions();
+                
                 isLocationPermissionAllowed.value = false;
                 statusGPS.value = false;
             }

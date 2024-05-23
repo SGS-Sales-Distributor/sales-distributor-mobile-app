@@ -33,9 +33,10 @@
       <div class="container mx-auto">
         <div class="flex items-center justify-center min-h-screen">
           <div class="p-8 rounded-lg max-w-sm w-full">
-            <h2 v-if="store.store_name" class="text-2xl font-semibold text-center mb-4">Form Pendaftaran Owner Dari Outlet {{ store.store_name
+            <h2 v-if="store.store_name" class="text-2xl font-semibold text-center mb-4">Form Pendaftaran Owner Dari
+              Outlet {{ store.store_name
               }}</h2>
-              <h2 v-else class="text-2xl font-semibold text-center mb-4">Form Pendaftaran Owner Dari Outlet - </h2>
+            <h2 v-else class="text-2xl font-semibold text-center mb-4">Form Pendaftaran Owner Dari Outlet - </h2>
             <p class="text-gray-600 text-center mb-6">Masukkan data yang diperlukan.</p>
             <Form method="post" novalidate :validation-schema="validation">
               <div class="mb-4">
@@ -44,23 +45,23 @@
                 <Field v-model="formData.owner" :type="fieldTypes.text" id="owner" name="owner"
                   class="form-input w-full px-4 py-2 border rounded-lg text-gray-700 focus:ring-blue-500"
                   placeholder="Masukkan nama owner" aria-label="owner" aria-describedby="owner" />
-                <ErrorMessage name="owner" class="text-rose-500" />
+                <ErrorMessage as="div" name="owner" class="mt-1.5 text-rose-500" />
               </div>
               <div class="mb-4">
                 <label for="nik_owner" class="block text-gray-700 text-sm font-semibold mb-2">NIK Owner *</label>
                 <Field v-model="formData.nik_owner" :type="fieldTypes.text" id="nik_owner" name="nik_owner"
                   class="form-input w-full px-4 py-2 border rounded-lg text-gray-700 focus:ring-blue-500"
                   placeholder="Masukkan NIK owner" aria-label="nik_owner" aria-describedby="nik_owner" />
-                <ErrorMessage name="nik_owner" class="text-rose-500" />
+                <ErrorMessage as="div" name="nik_owner" class="mt-1.5 text-rose-500" />
               </div>
               <div class="mb-4">
-                <label for="email" class="block text-gray-700 text-sm font-semibold mb-2">Email Owner
+                <label for="email_owner" class="block text-gray-700 text-sm font-semibold mb-2">Email Owner
                   *</label>
-                <Field v-model="formData.email_owner" name="email" :type="fieldTypes.email" id="email"
+                <Field v-model="formData.email_owner" name="email_owner" :type="fieldTypes.email" id="email_owner"
                   class="form-input w-full px-4 py-2 border rounded-lg text-gray-700 focus:ring-blue-500"
-                  placeholder="Masukkan email owner" aria-label="email" aria-describedby="email">
+                  placeholder="Masukkan email owner" aria-label="email_owner" aria-describedby="email_owner">
                 </Field>
-                <ErrorMessage name="email" class="text-rose-500" />
+                <ErrorMessage as="div" name="email_owner" class="mt-1.5 text-rose-500" />
               </div>
               <div class="mb-4">
                 <label for="ktp_image" class="block text-gray-700 text-sm font-semibold mb-2">Gambar KTP Owner
@@ -94,8 +95,8 @@
 <script setup>
 import * as Yup from 'yup';
 import { chevronBackOutline, ellipsisVerticalOutline } from 'ionicons/icons';
-import { redirectToPurchaseOrderPage, redirectToRegisterStorePage } from '@/services/redirectHandlers';
-import { onMounted, ref } from 'vue';
+import { redirectToOwnerFormPage, redirectToPurchaseOrderPage, redirectToRegisterStorePage } from '@/services/redirectHandlers';
+import { onMounted, ref, shallowRef } from 'vue';
 import { Form, Field, ErrorMessage } from 'vee-validate';
 import { refreshAccessTokenHandler } from '@/services/auth';
 import { presentLoading, stopLoading } from '@/services/loadingHandlers';
@@ -104,8 +105,10 @@ import { API_URL } from '@/services/globalVariables';
 import { catchToast, catchToastError } from '@/services/toastHandlers';
 import { fieldTypes } from '@/services/globalVariables';
 import { alertController } from '@ionic/vue';
+import { Camera, CameraSource } from '@capacitor/camera';
 
 const store = ref(localStorage.getItem("store") ? JSON.parse(localStorage.getItem("store")) : null);
+const ktpImageUrl = shallowRef("");
 
 const formData = ref({
   owner: null,
@@ -126,13 +129,47 @@ const validation = Yup.object().shape({
     .required('Email tidak boleh kosong!')
     .max(100, 'Email tidak boleh lebih dari 100 karakter')
     .email(),
-  ktp_owner: Yup.string()
-    .nullable()
-    .max(255, 'Nama gambar KTP tidak boleh lebih dari 255 karakter'),
-  photo_other: Yup.string()
-    .nullable()
-    .max('Nama gambar Foto tambahan tidak boleh lebih dari 255 karaketer'),
+  ktp_owner: Yup.mixed()
+    .nullable(),
+  photo_other: Yup.mixed()
+    .nullable(),
 });
+
+function convertBlobToBase64(blob) {
+  return new Promise((resolve, reject) => {
+    const reader = new FileReader();
+
+    reader.onerror = reject;
+    reader.onload = () => {
+      resolve(reader.result);
+    };
+
+    reader.readAsDataURL(blob);
+  });
+}
+
+async function takeCheckInPicture() {
+  try {
+    const ktpImage = await Camera.getPhoto({
+      quality: 10,
+      allowEditing: false,
+      source: CameraSource.Camera,
+      resultType: CameraResultType.Uri,
+    });
+
+    if (ktpImage && ktpImage.webPath) {
+      ktpImageUrl.value = ktpImage.webPath.toString();
+
+      ktpImageLocation.value = await fetch(ktpImage.webPath).then((r) => r.blob());
+    } else {
+      catchToastError('Gagal mengambil foto ktp', 3000);
+
+      console.error('Failed to capture photo or image path is missing');
+    }
+  } catch (error) {
+    console.error('Error when capturing photo: ', error);
+  }
+}
 
 async function storeDataAlert() {
   const alert = await alertController.create({
@@ -149,12 +186,18 @@ async function storeDataAlert() {
       {
         text: "Lanjutkan",
         cssClass: "alert-button-confirm",
-        handler: () => {
-          console.log("Pembuatan data owner berhasil");
+        handler: async () => {
+          try {
+            console.log("Pembuatan data owner berhasil");
 
-          saveOwnerData(store.value.store_id);
+            await saveOwnerData(store.value.store_id);
 
-          redirectToPurchaseOrderPage();
+            redirectToPurchaseOrderPage();
+          } catch (error) {
+            console.log("Gagal membuat data pemilik toko", error);
+            
+            redirectToOwnerFormPage();
+          }
         },
       },
     ],

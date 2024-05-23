@@ -39,14 +39,10 @@
               </ion-card-subtitle>
             </ion-card-header>
 
-            <StoreDetailContent 
-            :nama-toko="detailStoreInfoDistri.nama_toko"
-            :alias-toko="detailStoreInfoDistri.alias_toko"
-            :alamat-toko="detailStoreInfoDistri.alamat_toko"
-            :nomor-telepon="detailStoreInfoDistri.nomor_telepon_toko"
-            :nomor-fax="detailStoreInfoDistri.nomor_fax_toko"
-            :kode-toko="detailStoreInfoDistri.kode_toko"
-            />
+            <StoreDetailContent :nama-toko="detailStoreInfoDistri.nama_toko"
+              :alias-toko="detailStoreInfoDistri.alias_toko" :alamat-toko="detailStoreInfoDistri.alamat_toko"
+              :nomor-telepon="detailStoreInfoDistri.nomor_telepon_toko"
+              :nomor-fax="detailStoreInfoDistri.nomor_fax_toko" :kode-toko="detailStoreInfoDistri.kode_toko" />
           </ion-card>
         </div>
         <!-- End of Detail Store Card -->
@@ -93,11 +89,11 @@
           <ion-card v-if="statusGPS" class="py-2 bg-gradient-to-r from-sky-400 via-blue-500 to-blue-700">
             <ion-card-header class="bg-gray-50">
               <div class="flex flex-col w-full h-full space-y-2">
-                <div class="flex flex-row w-full h-full justify-between space-x-2">
+                <div class="flex text-gray-900 flex-row w-full h-full justify-between space-x-2">
                   <label for="nama-toko" class="flex-initial w-56 font-semibold">Nama Toko</label>
                   <p class="flex-initial w-44 text-right">{{ store.nama_toko }}</p>
                 </div>
-                <div v-if="store.tanggal_visit" class="flex flex-row w-full justify-between space-x-2">
+                <div v-if="store.tanggal_visit" class="flex text-gray-900 flex-row w-full justify-between space-x-2">
                   <label for="nama-toko" class="flex-initial w-56 font-semibold">Tanggal Visit</label>
                   <p class="flex-initial w-44 text-right">{{ new Date(store.tanggal_visit).toLocaleDateString('id-ID', {
                     day: '2-digit',
@@ -106,35 +102,34 @@
                     year: 'numeric'
                   }) }}</p>
                 </div>
-                <div v-else class="flex flex-row w-full justify-between space-x-2">
+                <div v-else class="flex text-gray-900 flex-row w-full justify-between space-x-2">
                   <label for="nama-toko" class="flex-initial font-semibold">Tanggal Visit</label>
-                  <ion-badge color="danger">Belum Visit</ion-badge>
+                  <span>—</span>
                 </div>
-                <div v-if="store.waktu_masuk !== null" class="flex flex-row w-full justify-between space-x-2">
+                <div v-if="store.waktu_masuk !== null" class="flex text-gray-900 flex-row w-full justify-between space-x-2">
                   <label for="nama-toko" class="flex-initial w-56 font-semibold">Waktu Check-In</label>
                   <p class="flex-initial w-44 text-right">{{ store.waktu_masuk }} WIB</p>
                 </div>
-                <div v-else class="flex flex-row w-full justify-between space-x-2">
+                <div v-else class="flex text-gray-900 flex-row w-full justify-between space-x-2">
                   <label for="nama-toko" class="flex-initial font-semibold">Waktu Check-In</label>
-                  <ion-badge color="danger">Belum Absen</ion-badge>
+                  <span>—</span>
                 </div>
-                <div v-if="store.waktu_keluar" class="flex flex-row w-full justify-between space-x-2">
+                <div v-if="store.waktu_keluar" class="flex text-gray-900 flex-row w-full justify-between space-x-2">
                   <label for="nama-toko" class="flex-initial w-56 font-semibold">Waktu Check-Out</label>
                   <p class="flex-initial w-44 text-right">{{ store.waktu_keluar }} WIB</p>
                 </div>
-                <div v-else class="flex flex-row w-full justify-between space-x-2">
+                <div v-else class="flex text-gray-900 flex-row w-full justify-between space-x-2">
                   <label for="nama-toko" class="flex-initial font-semibold">Waktu Check-Out</label>
-                  <ion-badge color="danger">Belum Absen</ion-badge>
+                  <span>—</span>
                 </div>
-                <div class="flex flex-row w-full justify-between space-x-2">
+                <div class="flex text-gray-900 flex-row w-full justify-between space-x-2">
                   <label for="nama-toko" class="flex-initial w-56 font-semibold">Status Approval</label>
                   <div v-if="store.approval === 1" class="flex justify-center items-center">
                     <div class="h-2.5 w-2.5 rounded-full bg-green-500 me-2"></div>
                     <ion-badge color="success">Disetujui</ion-badge>
                   </div>
-                  <div v-else class="flex justify-center items-center">
-                    <div class="h-2.5 w-2.5 rounded-full bg-rose-600 me-2"></div>
-                    <ion-badge color="danger">Belum Disetujui</ion-badge>
+                  <div v-else class="flex text-gray-900 justify-center items-center">
+                    <span>—</span>
                   </div>
                 </div>
               </div>
@@ -158,7 +153,7 @@
         </div>
         <ion-infinite-scroll @ionInfinite="ionInfinite">
           <ion-infinite-scroll-content loading-text="Load more stores..."
-            loading-spinner="bubbles"></ion-infinite-scroll-content>
+            loading-spinner="circular"></ion-infinite-scroll-content>
         </ion-infinite-scroll>
       </div>
     </ion-content>
@@ -190,7 +185,8 @@ import { catchToast, catchToastError } from '@/services/toastHandlers';
 import { refreshAccessTokenHandler } from '@/services/auth.js';
 import { presentLoading, stopLoading } from '@/services/loadingHandlers';
 
-const user = ref(JSON.parse(localStorage.getItem("user")));
+const user = ref(localStorage.getItem("user") ? JSON.parse(localStorage.getItem("user")) : null);
+
 const isStoreDetailCardVisible = ref(false);
 const renderModCheckInBtn = ref(false);
 const renderModeCheckOutBtn = ref(false);
@@ -336,8 +332,6 @@ async function passCheckOutAlert() {
 // rest api (backend server)
 async function fetchStoresData(query = '') {
   try {
-    refreshAccessTokenHandler();
-
     const tokens = localStorage.getItem("tokens") ? JSON.parse(localStorage.getItem("tokens")) : null;
 
     const headers = {
@@ -387,8 +381,6 @@ async function fetchStoresData(query = '') {
 
 async function fetchOneStoreData(id) {
   try {
-    refreshAccessTokenHandler();
-
     const tokens = localStorage.getItem("tokens") ? JSON.parse(localStorage.getItem("tokens")) : null;
 
     const headers = {
