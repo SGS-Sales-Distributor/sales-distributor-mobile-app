@@ -33,7 +33,7 @@
                                         Filter
                                     </span>
                                 </button>
-                                <button id="sortOptionsDropdownBtn" data-dropdown-toggle="dropdown"
+                                <button id="someDropdown" data-dropdown-toggle="customDropdown"
                                     class="text-gray-900 bg-gray-200 font-medium rounded-full px-3 py-1.5 text-center inline-flex items-center"
                                     type="button">Urutkan
                                     <svg class="w-2.5 h-2.5 ms-3" aria-hidden="true" xmlns="http://www.w3.org/2000/svg"
@@ -44,18 +44,18 @@
                                 </button>
 
                                 <!-- Dropdown menu -->
-                                <div id="dropdown"
+                                <div id="customDropdown"
                                     class="z-10 hidden bg-white divide-y divide-gray-100 rounded-lg shadow w-44">
-                                    <ul class="py-2 text-sm text-gray-700" aria-labelledby="sortOptionsDropdownBtn">
-                                        <li class="hover:bg-gray-100 ">
+                                    <ul class="py-2 text-sm text-gray-700" aria-labelledby="someDropdown">
+                                        <li class="hover:bg-gray-100">
                                             <button @click="fetchBrandProductsData(brandId, 'latest')"
                                                 class="block px-4 py-2 text-gray-900">Produk Terbaru</button>
                                         </li>
-                                        <li class="hover:bg-gray-100 ">
+                                        <li class="hover:bg-gray-100">
                                             <button @click="fetchBrandProductsData(brandId, 'highest-price')"
                                                 class="block px-4 py-2 text-gray-900">Harga Tertinggi</button>
                                         </li>
-                                        <li class="hover:bg-gray-100 ">
+                                        <li class="hover:bg-gray-100">
                                             <button @click="fetchBrandProductsData(brandId, 'lowest-price')"
                                                 class="block px-4 py-2 text-gray-900">Harga Terendah</button>
                                         </li>
@@ -70,17 +70,17 @@
                                 <ion-card-header class="bg-gray-50">
                                     <div class="flex flex-col w-full h-full space-y-2">
                                         <div class="flex flex-row w-full h-full justify-between space-x-2">
-                                            <label for="nama-toko" class="flex-initial w-56 font-semibold">Nomor
+                                            <label for="nomor-produk" class="flex-initial w-56 font-semibold">Nomor
                                                 Produk</label>
                                             <p class="flex-initial w-44 text-right">{{ product.prod_number }}</p>
                                         </div>
                                         <div class="flex flex-row w-full h-full justify-between space-x-2">
-                                            <label for="nama-toko" class="flex-initial w-56 font-semibold">Nama
+                                            <label for="nama-produk" class="flex-initial w-56 font-semibold">Nama
                                                 Produk</label>
                                             <p class="flex-initial w-44 text-right">{{ product.prod_name }}</p>
                                         </div>
                                         <div class="flex flex-row w-full h-full justify-between space-x-2">
-                                            <label for="nama-toko" class="flex-initial w-56 font-semibold">Harga
+                                            <label for="harga-produk" class="flex-initial w-56 font-semibold">Harga
                                                 Produk</label>
                                             <p class="flex-initial w-44 text-right">{{ new Intl.NumberFormat('id-ID', {
                                                 style: 'currency',
@@ -88,7 +88,7 @@
                                             }).format(product.prod_base_price) }}</p>
                                         </div>
                                         <div class="flex flex-row w-full h-full justify-between space-x-2">
-                                            <label for="nama-toko" class="flex-initial w-56 font-semibold">Status
+                                            <label for="status-aktif" class="flex-initial w-56 font-semibold">Status
                                                 Aktif</label>
                                             <div v-if="product.prod_status_id === 1"
                                                 class="flex-initial w-44 text-right">
@@ -196,6 +196,7 @@ import axios from 'axios';
 import { API_URL } from '@/services/globalVariables';
 import { presentLoading, stopLoading } from '@/services/loadingHandlers';
 import { refreshAccessTokenHandler } from '@/services/auth';
+import { initFlowbite } from 'flowbite';
 
 const route = useRoute();
 
@@ -257,6 +258,7 @@ async function fetchBrandProductsData(brandId, query = "") {
 onMounted(() => {
     presentLoading();
     refreshAccessTokenHandler();
+    initFlowbite();
     fetchBrandProductsData(brandId.value, 'latest');
     stopLoading();
 });

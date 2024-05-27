@@ -164,6 +164,7 @@ import { API_URL } from '@/services/globalVariables';
 const user = ref(localStorage.getItem("user") ? JSON.parse(localStorage.getItem("user")) : null);
 
 const storesData = ref([]);
+const countStoreBasedOnCallPlan = ref(0);
 const countTotalVisits = ref(0);
 const countTotalVisitsBasedOnCallPlan = ref(0);
 
