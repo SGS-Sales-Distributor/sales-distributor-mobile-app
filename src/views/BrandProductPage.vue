@@ -14,10 +14,55 @@
                             Raine Beauty</h2>
                         <h2 v-else class="text-2xl font-semibold text-center mb-4">List Produk Smith</h2>
                         <p class="text-gray-600 text-center mb-6">Daftar Produk Terkini.</p>
-                        
-                        <ion-searchbar v-if="visibleProducts.length > 0" :debounce="300"
-                            @ionInput="searchProductHandler($event)" placeholder="Cari nomor barang, nama barang..."
-                            color="light"></ion-searchbar>
+
+                        <div class="flex flex-col md:flew-row gap-3" id="button-group">
+                            <ion-searchbar v-if="visibleProducts.length > 0" :debounce="300"
+                                class="justify-items-center items-center" @ionInput="searchProductHandler($event)"
+                                placeholder="Cari nomor barang, nama barang..." color="light"></ion-searchbar>
+
+                            <div class="flex flex-row gap-3 mb-3 justify-items-start items-start mx-2"
+                                id="button-group">
+                                <button id="open-modal"
+                                    class="flex justify-items-center items-center gap-3 bg-gray-200 rounded-full px-3 py-1.5">
+                                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor"
+                                        class="bi bi-sliders" viewBox="0 0 16 16">
+                                        <path fill-rule="evenodd"
+                                            d="M11.5 2a1.5 1.5 0 1 0 0 3 1.5 1.5 0 0 0 0-3M9.05 3a2.5 2.5 0 0 1 4.9 0H16v1h-2.05a2.5 2.5 0 0 1-4.9 0H0V3zM4.5 7a1.5 1.5 0 1 0 0 3 1.5 1.5 0 0 0 0-3M2.05 8a2.5 2.5 0 0 1 4.9 0H16v1H6.95a2.5 2.5 0 0 1-4.9 0H0V8zm9.45 4a1.5 1.5 0 1 0 0 3 1.5 1.5 0 0 0 0-3m-2.45 1a2.5 2.5 0 0 1 4.9 0H16v1h-2.05a2.5 2.5 0 0 1-4.9 0H0v-1z" />
+                                    </svg>
+                                    <span>
+                                        Filter
+                                    </span>
+                                </button>
+                                <button id="sortOptionsDropdownBtn" data-dropdown-toggle="dropdown"
+                                    class="text-gray-900 bg-gray-200 font-medium rounded-full px-3 py-1.5 text-center inline-flex items-center"
+                                    type="button">Urutkan
+                                    <svg class="w-2.5 h-2.5 ms-3" aria-hidden="true" xmlns="http://www.w3.org/2000/svg"
+                                        fill="none" viewBox="0 0 10 6">
+                                        <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"
+                                            stroke-width="2" d="m1 1 4 4 4-4" />
+                                    </svg>
+                                </button>
+
+                                <!-- Dropdown menu -->
+                                <div id="dropdown"
+                                    class="z-10 hidden bg-white divide-y divide-gray-100 rounded-lg shadow w-44">
+                                    <ul class="py-2 text-sm text-gray-700" aria-labelledby="sortOptionsDropdownBtn">
+                                        <li class="hover:bg-gray-100 ">
+                                            <button @click="fetchBrandProductsData(brandId, 'latest')"
+                                                class="block px-4 py-2 text-gray-900">Produk Terbaru</button>
+                                        </li>
+                                        <li class="hover:bg-gray-100 ">
+                                            <button @click="fetchBrandProductsData(brandId, 'highest-price')"
+                                                class="block px-4 py-2 text-gray-900">Harga Tertinggi</button>
+                                        </li>
+                                        <li class="hover:bg-gray-100 ">
+                                            <button @click="fetchBrandProductsData(brandId, 'lowest-price')"
+                                                class="block px-4 py-2 text-gray-900">Harga Terendah</button>
+                                        </li>
+                                    </ul>
+                                </div>
+                            </div>
+                        </div>
 
                         <div v-for="(product, index) in visibleProducts" :key="index + 1"
                             class="relative overflow-x-auto">
@@ -82,6 +127,62 @@
                     </div>
                 </div>
             </div>
+
+            <!-- Sheet Modal -->
+            <ion-modal ref="modal" trigger="open-modal" :initial-breakpoint="0.25" :breakpoints="[0, 0.25, 0.5, 0.75]">
+                <ion-content class="ion-padding">
+                    <div class="flex justify-start justify-items-start mx-auto mb-2">
+                        <h2 class="text-gray-900 text-lg">
+                            <span class="font-semibold">Urutkan</span>
+                        </h2>
+                    </div>
+                    <div class="flex flex-wrap gap-x-3 gap-y-4">
+                        <button type="button" @click="fetchBrandProductsData(brandId, 'latest')"
+                            class="flex justify-items-center items-center gap-3 bg-gray-200 rounded-full px-3 py-1.5">
+                            <span>
+                                Produk Terbaru
+                            </span>
+                        </button>
+                        <button type="button" @click="fetchBrandProductsData(brandId, 'product-name-asc')"
+                            class="flex justify-items-center items-center gap-3 bg-gray-200 rounded-full px-3 py-1.5">
+                            <span>
+                                Nama Produk ASC
+                            </span>
+                        </button>
+                        <button type="button" @click="fetchBrandProductsData(brandId, 'product-name-desc')"
+                            class="flex justify-items-center items-center gap-3 bg-gray-200 rounded-full px-3 py-1.5">
+                            <span>
+                                Nama Produk DESC
+                            </span>
+                        </button>
+                        <button type="button" @click="fetchBrandProductsData(brandId, 'product-number-asc')"
+                            class="flex justify-items-center items-center gap-3 bg-gray-200 rounded-full px-3 py-1.5">
+                            <span>
+                                Urutkan ASC
+                            </span>
+                        </button>
+                        <button type="button" @click="fetchBrandProductsData(brandId, 'product-number-desc')"
+                            class="flex justify-items-center items-center gap-3 bg-gray-200 rounded-full px-3 py-1.5">
+                            <span>
+                                Urutkan DESC
+                            </span>
+                        </button>
+                        <button type="button" @click="fetchBrandProductsData(brandId, 'highest-price')"
+                            class="flex justify-items-center items-center gap-3 bg-gray-200 rounded-full px-3 py-1.5">
+                            <span>
+                                Harga Tertinggi
+                            </span>
+                        </button>
+                        <button type="button" @click="fetchBrandProductsData(brandId, 'lowest-price')"
+                            class="flex justify-items-center items-center gap-3 bg-gray-200 rounded-full px-3 py-1.5">
+                            <span>
+                                Harga Terendah
+                            </span>
+                        </button>
+                    </div>
+                </ion-content>
+            </ion-modal>
+            <!-- End of Sheet Modal -->
         </ion-content>
     </ion-page>
 </template>
@@ -94,6 +195,7 @@ import { IonSearchbar } from '@ionic/vue';
 import axios from 'axios';
 import { API_URL } from '@/services/globalVariables';
 import { presentLoading, stopLoading } from '@/services/loadingHandlers';
+import { refreshAccessTokenHandler } from '@/services/auth';
 
 const route = useRoute();
 
@@ -154,7 +256,8 @@ async function fetchBrandProductsData(brandId, query = "") {
 
 onMounted(() => {
     presentLoading();
-    fetchBrandProductsData(brandId.value);
+    refreshAccessTokenHandler();
+    fetchBrandProductsData(brandId.value, 'latest');
     stopLoading();
 });
 </script>

@@ -9,12 +9,13 @@
                         <h2 class="text-2xl font-semibold text-center mb-4">List Purchase Order</h2>
                         <p class="text-gray-600 text-center mb-6">Daftar Purchase Order Terbaru.</p>
 
-                        <div class="flex flex-col md:flew-row gap-3 justify-items-center items-center">
+                        <div class="flex flex-col md:flew-row gap-3">
                             <ion-searchbar v-if="visiblePurchaseOrders.length > 0" :debounce="300"
+                                class="justify-items-center items-center"
                                 @ionInput="searchStoreHandler($event)" placeholder="Cari nomor order, nama toko..."
                                 color="light"></ion-searchbar>
 
-                            <div class="flex flex-row gap-3 justify-items-start items-center mb-3" id="button-group">
+                            <div class="flex flex-row gap-3 mb-3 justify-items-start items-start mx-2" id="button-group">
                                 <button id="open-modal"
                                     class="flex justify-items-center items-center gap-3 bg-gray-200 rounded-full px-3 py-1.5">
                                     <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor"
@@ -26,16 +27,34 @@
                                         Filter
                                     </span>
                                 </button>
-                                <button
-                                    class="flex justify-items-center items-center gap-3 bg-gray-200 rounded-full px-3 py-1.5"
-                                    id="sort-button" aria-expanded="true" aria-haspopup="true" type="button">
-                                    <span>Urutkan</span>
-                                    <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" fill="currentColor"
-                                        class="bi bi-chevron-down" viewBox="0 0 16 16">
-                                        <path fill-rule="evenodd"
-                                            d="M1.646 4.646a.5.5 0 0 1 .708 0L8 10.293l5.646-5.647a.5.5 0 0 1 .708.708l-6 6a.5.5 0 0 1-.708 0l-6-6a.5.5 0 0 1 0-.708" />
+                                <button id="sortOptionsDropdownBtn" data-dropdown-toggle="dropdown"
+                                    class="text-gray-900 bg-gray-200 font-medium rounded-full px-3 py-1.5 text-center inline-flex items-center"
+                                    type="button">Urutkan
+                                    <svg class="w-2.5 h-2.5 ms-3" aria-hidden="true" xmlns="http://www.w3.org/2000/svg"
+                                        fill="none" viewBox="0 0 10 6">
+                                        <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"
+                                            stroke-width="2" d="m1 1 4 4 4-4" />
                                     </svg>
                                 </button>
+
+                                <!-- Dropdown menu -->
+                                <div id="dropdown"
+                                    class="z-10 hidden bg-white divide-y divide-gray-100 rounded-lg shadow w-44">
+                                    <ul class="py-2 text-sm text-gray-700" aria-labelledby="sortOptionsDropdownBtn">
+                                        <li class="hover:bg-gray-100 ">
+                                            <button @click="fetchPurchaseOrdersData('latest')"
+                                                class="block px-4 py-2 text-gray-900">Order Terbaru</button>
+                                        </li>
+                                        <li class="hover:bg-gray-100 ">
+                                            <button @click="fetchPurchaseOrdersData('order-number-asc')"
+                                                class="block px-4 py-2 text-gray-900">Nomor Order ASC</button>
+                                        </li>
+                                        <li class="hover:bg-gray-100 ">
+                                            <button @click="fetchPurchaseOrdersData('order-number-desc')"
+                                                class="block px-4 py-2 text-gray-900">Nomor Order ASC</button>
+                                        </li>
+                                    </ul>
+                                </div>
                             </div>
                         </div>
 
@@ -175,43 +194,31 @@
                         </h2>
                     </div>
                     <div class="flex flex-wrap gap-x-3 gap-y-4">
-                        <button
-                            class="flex justify-items-center items-center gap-3 bg-gray-200 rounded-full px-3 py-1.5">
-                            <span>
-                                Nama Produk ASC
-                            </span>
-                        </button>
-                        <button
-                            class="flex justify-items-center items-center gap-3 bg-gray-200 rounded-full px-3 py-1.5">
-                            <span>
-                                Nama Produk DESC
-                            </span>
-                        </button>
-                        <button
+                        <button type="button" @click="fetchPurchaseOrdersData('latest')"
                             class="flex justify-items-center items-center gap-3 bg-gray-200 rounded-full px-3 py-1.5">
                             <span>
                                 Order Terbaru
                             </span>
                         </button>
-                        <button
+                        <button type="button" @click="fetchPurchaseOrdersData('store-name-asc')"
                             class="flex justify-items-center items-center gap-3 bg-gray-200 rounded-full px-3 py-1.5">
                             <span>
                                 Nama Toko ASC
                             </span>
                         </button>
-                        <button
+                        <button type="button" @click="fetchPurchaseOrdersData('store-name-desc')"
                             class="flex justify-items-center items-center gap-3 bg-gray-200 rounded-full px-3 py-1.5">
                             <span>
                                 Nama Toko DESC
                             </span>
                         </button>
-                        <button
+                        <button type="button" @click="fetchPurchaseOrdersData('order-number-asc')"
                             class="flex justify-items-center items-center gap-3 bg-gray-200 rounded-full px-3 py-1.5">
                             <span>
                                 Urutkan ASC
                             </span>
                         </button>
-                        <button
+                        <button type="button" @click="fetchPurchaseOrdersData('order-number-desc')"
                             class="flex justify-items-center items-center gap-3 bg-gray-200 rounded-full px-3 py-1.5">
                             <span>
                                 Urutkan DESC

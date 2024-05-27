@@ -88,6 +88,7 @@ import { presentLoading, stopLoading } from '@/services/loadingHandlers';
 import { catchToastError } from '@/services/toastHandlers';
 import axios from 'axios';
 import { API_URL } from '@/services/globalVariables';
+import { refreshAccessTokenHandler } from '@/services/auth';
 
 const routeLinkToProduct = (brandId) => {
     return `/brand/${brandId}/product`
@@ -148,6 +149,7 @@ async function fetchBrandsData(query = '') {
 
 onMounted(() => {
     presentLoading();
+    refreshAccessTokenHandler();
     fetchBrandsData();
     stopLoading();
 });

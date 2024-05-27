@@ -189,7 +189,7 @@ async function fetchProductsData(query = '') {
             }
         });
 
-        productsData.value = response.data.resource.data;
+        productsData.value = response.data.resource;
     } catch (error) {
         catchToastError("Failed to fetch product data", 3000);
 

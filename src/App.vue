@@ -8,6 +8,7 @@
 import { IonApp, IonRouterOutlet, useIonRouter } from '@ionic/vue';
 import { onBeforeMount, onMounted } from 'vue';
 import { App } from '@capacitor/app';
+import { initFlowbite } from 'flowbite';
 
 const ionRouter = useIonRouter();
 
@@ -22,6 +23,7 @@ const backBtnHandler = () => {
 };
 
 onMounted(() => {
+  initFlowbite();
   backBtnHandler();
 });
 
