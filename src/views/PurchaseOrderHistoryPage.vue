@@ -5,13 +5,39 @@
 
             <div class="flex min-h-full flex-col p-4">
                 <div class="relative overflow-x-auto">
-                    <div class="py-2 rounded-lg max-w-sm-full w-full">
+                    <div class="py-2 rounded-lg w-full">
                         <h2 class="text-2xl font-semibold text-center mb-4">List Purchase Order</h2>
                         <p class="text-gray-600 text-center mb-6">Daftar Purchase Order Terbaru.</p>
 
-                        <ion-searchbar v-if="visiblePurchaseOrders.length > 0" :debounce="300"
-                            @ionInput="searchStoreHandler($event)" placeholder="Cari nomor order, nama toko..."
-                            color="light"></ion-searchbar>
+                        <div class="flex flex-col md:flew-row gap-3 justify-items-center items-center">
+                            <ion-searchbar v-if="visiblePurchaseOrders.length > 0" :debounce="300"
+                                @ionInput="searchStoreHandler($event)" placeholder="Cari nomor order, nama toko..."
+                                color="light"></ion-searchbar>
+
+                            <div class="flex flex-row gap-3 justify-items-start items-center mb-3" id="button-group">
+                                <button id="open-modal"
+                                    class="flex justify-items-center items-center gap-3 bg-gray-200 rounded-full px-3 py-1.5">
+                                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor"
+                                        class="bi bi-sliders" viewBox="0 0 16 16">
+                                        <path fill-rule="evenodd"
+                                            d="M11.5 2a1.5 1.5 0 1 0 0 3 1.5 1.5 0 0 0 0-3M9.05 3a2.5 2.5 0 0 1 4.9 0H16v1h-2.05a2.5 2.5 0 0 1-4.9 0H0V3zM4.5 7a1.5 1.5 0 1 0 0 3 1.5 1.5 0 0 0 0-3M2.05 8a2.5 2.5 0 0 1 4.9 0H16v1H6.95a2.5 2.5 0 0 1-4.9 0H0V8zm9.45 4a1.5 1.5 0 1 0 0 3 1.5 1.5 0 0 0 0-3m-2.45 1a2.5 2.5 0 0 1 4.9 0H16v1h-2.05a2.5 2.5 0 0 1-4.9 0H0v-1z" />
+                                    </svg>
+                                    <span>
+                                        Filter
+                                    </span>
+                                </button>
+                                <button
+                                    class="flex justify-items-center items-center gap-3 bg-gray-200 rounded-full px-3 py-1.5"
+                                    id="sort-button" aria-expanded="true" aria-haspopup="true" type="button">
+                                    <span>Urutkan</span>
+                                    <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" fill="currentColor"
+                                        class="bi bi-chevron-down" viewBox="0 0 16 16">
+                                        <path fill-rule="evenodd"
+                                            d="M1.646 4.646a.5.5 0 0 1 .708 0L8 10.293l5.646-5.647a.5.5 0 0 1 .708.708l-6 6a.5.5 0 0 1-.708 0l-6-6a.5.5 0 0 1 0-.708" />
+                                    </svg>
+                                </button>
+                            </div>
+                        </div>
 
                         <div v-for="(order, index) in visiblePurchaseOrders" :key="index + 1"
                             class="relative overflow-x-auto">
@@ -140,6 +166,62 @@
                 </ion-content>
             </ion-modal>
 
+            <!-- Sheet Modal -->
+            <ion-modal ref="modal" trigger="open-modal" :initial-breakpoint="0.25" :breakpoints="[0, 0.25, 0.5, 0.75]">
+                <ion-content class="ion-padding">
+                    <div class="flex justify-start justify-items-start mx-auto mb-2">
+                        <h2 class="text-gray-900 text-lg">
+                            <span class="font-semibold">Urutkan</span>
+                        </h2>
+                    </div>
+                    <div class="flex flex-wrap gap-x-3 gap-y-4">
+                        <button
+                            class="flex justify-items-center items-center gap-3 bg-gray-200 rounded-full px-3 py-1.5">
+                            <span>
+                                Nama Produk ASC
+                            </span>
+                        </button>
+                        <button
+                            class="flex justify-items-center items-center gap-3 bg-gray-200 rounded-full px-3 py-1.5">
+                            <span>
+                                Nama Produk DESC
+                            </span>
+                        </button>
+                        <button
+                            class="flex justify-items-center items-center gap-3 bg-gray-200 rounded-full px-3 py-1.5">
+                            <span>
+                                Order Terbaru
+                            </span>
+                        </button>
+                        <button
+                            class="flex justify-items-center items-center gap-3 bg-gray-200 rounded-full px-3 py-1.5">
+                            <span>
+                                Nama Toko ASC
+                            </span>
+                        </button>
+                        <button
+                            class="flex justify-items-center items-center gap-3 bg-gray-200 rounded-full px-3 py-1.5">
+                            <span>
+                                Nama Toko DESC
+                            </span>
+                        </button>
+                        <button
+                            class="flex justify-items-center items-center gap-3 bg-gray-200 rounded-full px-3 py-1.5">
+                            <span>
+                                Urutkan ASC
+                            </span>
+                        </button>
+                        <button
+                            class="flex justify-items-center items-center gap-3 bg-gray-200 rounded-full px-3 py-1.5">
+                            <span>
+                                Urutkan DESC
+                            </span>
+                        </button>
+                    </div>
+                </ion-content>
+            </ion-modal>
+            <!-- End of Sheet Modal -->
+
         </ion-content>
     </ion-page>
 </template>
@@ -185,9 +267,9 @@ const ionInfinite = (event) => {
 }
 
 function searchStoreHandler(event) {
-  const query = event.target.value.toLowerCase();
+    const query = event.target.value.toLowerCase();
 
-  fetchPurchaseOrdersData(query);
+    fetchPurchaseOrdersData(query);
 }
 
 function detailBtnHandler(open, orderId, orderNumber) {
@@ -210,7 +292,7 @@ async function fetchPurchaserOrderDetailData(orderId) {
     }
 }
 
-async function fetchPurchaseOrdersData(query = '') {
+async function fetchPurchaseOrdersData(query = 'latest') {
     try {
         const response = await axios.get(`${API_URL.value}/api/sgs/purchase-orders`, {
             params: {
@@ -219,6 +301,8 @@ async function fetchPurchaseOrdersData(query = '') {
         });
 
         purchaseOrders.value = response.data.resource;
+
+        console.log(response);
     } catch (error) {
         catchToastError("Failed to fetch orders data.", 3000);
 

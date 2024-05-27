@@ -4,6 +4,7 @@
   "version": "0.0.1",
   "type": "module",
   "scripts": {
+    "serve": "ionic serve --no-open --port=5174",
     "dev": "vite",
     "build": "vue-tsc && vite build",
     "preview": "vite preview",
@@ -32,6 +33,7 @@
     "ionicons": "^7.0.0",
     "vee-validate": "^4.12.6",
     "vue": "^3.3.0",
+    "vue-json-excel3": "^1.0.20",
     "vue-router": "^4.2.0",
     "vuex": "^4.0.2"
   },

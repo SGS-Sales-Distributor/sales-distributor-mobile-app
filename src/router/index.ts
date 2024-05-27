@@ -13,7 +13,8 @@ import PurchaseOrderHistoryPage from "@/views/PurchaseOrderHistoryPage.vue";
 import PurchaseOrderPage from './../views/PurchaseOrderPage.vue'
 import PurchaseOrderStoreDetailPage from './../views/PurchaseOrderStoreDetailPage.vue'
 import PurchaseOrderStoreDetailOrderPage from './../views/PurchaseOrderStoreDetailOrderPage.vue'
-import ProductPage from './../views/ProductPage.vue'
+import BrandPage from './../views/BrandPage.vue';
+import BrandProductPage from './../views/BrandProductPage.vue'
 
 import { isAuthenticated } from "@/services/auth";
 import "maplibre-gl/dist/maplibre-gl.css";
@@ -91,9 +92,14 @@ const routes: Array<RouteRecordRaw> = [
         component: RegistrasiOwnerBaruPage,
       },
       {
-        path: "product",
-        name: "product",
-        component: ProductPage,
+        path: "brand",
+        name: "brand",
+        component: BrandPage,
+      },
+      {
+        path: "brand/:id/product",
+        name: "brandProduct",
+        component: BrandProductPage,
       },
       {
         path: "absensi",

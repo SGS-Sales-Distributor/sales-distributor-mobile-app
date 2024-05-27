@@ -14,7 +14,7 @@
       <ion-label class="text-sm font-semibold">Registrasi Toko</ion-label>
     </div>
     <div class="flex flex-col items-center justify-center space-y-2">
-      <ion-button id="katalog-produk-button" shape="round" href="/product">
+      <ion-button id="katalog-produk-button" shape="round" href="/brand">
         <ion-icon class="text-2xl text-gray-900" slot="icon-only" :icon="cube"></ion-icon>
       </ion-button>
       <ion-label class="text-sm font-semibold">Katalog Produk</ion-label>

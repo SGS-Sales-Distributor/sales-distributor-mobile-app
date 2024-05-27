@@ -45,6 +45,8 @@ import {
   IonBadge,
   IonInput,
 } from "@ionic/vue";
+import JsonExcel from 'vue-json-excel3';
+
 
 /* Core CSS required for Ionic components to work properly */
 import "@ionic/vue/css/core.css";
@@ -128,6 +130,8 @@ app.component("ion-badge", IonBadge);
 app.component("vee-form", Form);
 app.component("vee-field", Field);
 app.component("vee-error-message", ErrorMessage);
+
+app.component("download-excel", JsonExcel);
 
 defineCustomElements(window);
 

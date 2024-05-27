@@ -28,6 +28,22 @@ export function redirectToLoginPage() {
     }, 300);
 }
 
+export function redirectToBrandPage() {
+    setTimeout(() => {
+        router.push({
+            name: 'brand',
+        });
+    }, 300);
+}
+
+export function redirectToBrandProductPage(brandId) {
+    setTimeout(() => {
+        router.push({
+            name: "brandProduct", params: { id: brandId }
+        });
+    }, 300);
+}
+
 export function redirectToAbsensiPage() {
     setTimeout(() => {
         router.push({
