@@ -170,10 +170,17 @@
                         </button>
                     </div> -->
 
+                    <div class="flex items-center mb-4" v-if="objOrder.length">
+                        <input id="disabled-checkbox" type="checkbox" value="" :disabled="disabledCheckPromo"
+                            class="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600">
+                        <label for="disabled-checkbox"
+                            class="ms-2 text-sm font-medium text-gray-400 dark:text-gray-500">Disabled checkbox</label>
+                    </div>
+
                     <div class="flex justify-center items-center py-2" v-if="objOrder.length">
                         <button @click="setOpen(true)"
                             class="block w-full md:w-auto text-white bg-green-400 focus:ring-4 focus:outline-none font-medium rounded-lg text-sm px-5 py-2.5 text-center transition-all"
-                            type="button" :disabled="enableConfirmOTP">
+                            type="button" :disabled="disabledConfirmOtp">
                             Konfirmasi OTP
                         </button>
                     </div>
@@ -320,7 +327,8 @@ const storeId = ref(route.params.id);
 const metodePembayaran = ref("Tunai");
 
 const promoProgramsData = ref([]);
-const enableConfirmOTP = ref(true);
+const disabledConfirmOtp = ref(true);
+const disabledCheckPromo = ref(true);
 
 const lastIndex = ref(5);
 const visiblePromoPrograms = computed(() => {
@@ -355,9 +363,17 @@ function handleChange(event) {
 
 const showConfirmOTP = (qty) => {
     if (qty > 0) {
-        enableConfirmOTP.value = false;
+        disabledConfirmOtp.value = false;
     } else {
-        enableConfirmOTP.value = true;
+        disabledConfirmOtp.value = true;
+    }
+}
+
+const enabledCheckPromo = (qty) => {
+    if (qty > 0) {
+        disabledCheckPromo.value = false;
+    } else {
+        disabledCheckPromo.value = true;
     }
 }
 
@@ -366,6 +382,8 @@ function addMoreOrder(index, maks) {
         objOrder.value[index].qty++;
 
         showConfirmOTP(objOrder.value[index].qty);
+
+        enabledCheckPromo(objOrder.value[index].qty);
 
         checkProductsHasPromo(objOrder.value[index].qty);
     }

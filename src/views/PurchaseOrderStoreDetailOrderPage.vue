@@ -58,7 +58,7 @@
                             Filter
                         </span>
                     </button>
-                    <button id="sortOptionsDropdownBtn" data-dropdown-toggle="dropdown"
+                    <button id="dropdownOptionsBtn" data-dropdown-toggle="dropdownBtn"
                         class="text-gray-900 bg-gray-200 font-medium rounded-full px-3 py-1.5 text-center inline-flex items-center"
                         type="button">Urutkan
                         <svg class="w-2.5 h-2.5 ms-3" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none"
@@ -69,8 +69,8 @@
                     </button>
 
                     <!-- Dropdown menu -->
-                    <div id="dropdown" class="z-10 hidden bg-white divide-y divide-gray-100 rounded-lg shadow w-44">
-                        <ul class="py-2 text-sm text-gray-700" aria-labelledby="sortOptionsDropdownBtn">
+                    <div id="dropdownBtn" class="z-10 hidden bg-white divide-y divide-gray-100 rounded-lg shadow w-44">
+                        <ul class="py-2 text-sm text-gray-700" aria-labelledby="dropdownOptionsBtn">
                             <li class="hover:bg-gray-100 ">
                                 <button @click="fetchProductsData(selectedBrand, 'latest')"
                                     class="block px-4 py-2 text-gray-900">Produk Terbaru</button>
@@ -201,6 +201,7 @@ import axios from 'axios';
 import { catchToastError } from '@/services/toastHandlers';
 import { presentLoading, stopLoading } from '@/services/loadingHandlers';
 import { objOrder, API_URL, selectedProduct } from '@/services/globalVariables';
+import { initFlowbite } from 'flowbite';
 
 const route = useRoute();
 const storeId = ref(route.params.id);
@@ -325,6 +326,7 @@ async function fetchBrandsData(query = '') {
 
 onMounted(() => {
     presentLoading();
+    initFlowbite();
     refreshAccessTokenHandler();
     fetchBrandsData();
     stopLoading();
