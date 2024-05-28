@@ -231,6 +231,8 @@ async function saveOwnerData(storeId) {
     catchToastError("Gagal membuat data pemilik toko", 3000);
 
     console.error("Failed to save owner data", error);
+  } finally {
+    stopLoading();
   }
 }
 

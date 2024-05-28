@@ -151,7 +151,6 @@
 
 					<div class="fixed bottom-4 right-8">
                         <button @click="redirectToStorePurchaseOrderPage(storeId)"
-                            data-modal-target="large-modal" data-modal-toggle="large-modal"
                             class="w-12 h-12 rounded-full text-gray-900 bg-blue-400 hover:bg-blue-500 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium text-sm text-center transition-all flex items-center justify-center"
                             type="button">
                             <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="currentColor"
@@ -161,14 +160,6 @@
                             </svg>
                         </button>
                     </div>
-
-					<!-- <div class="flex justify-center items-center py-2" v-if="objOrder.length">
-						<button @click="checkProductsHasPromo"
-							class="block w-full md:w-auto text-white bg-green-400 hover:bg-green-500 focus:ring-4 focus:outline-none font-medium rounded-lg text-sm px-5 py-2.5 text-center transition-all"
-							type="button">
-							Cek Promo
-						</button>
-					</div> -->
 
 					<div class="flex justify-center items-center py-2" v-if="objOrder.length">
 						<button @click="setOpen(true)"
@@ -357,22 +348,6 @@ const showConfirmOTP = (qty) => {
 		enableConfirmOTP.value = true;
 	}
 }
-
-// const totalProductsPrice = (prodPrice, qty) => {
-// 	productsTotalPrice.value.push(calculateTotalPriceHandler(prodPrice, qty));
-
-// 	console.log(productsTotalPrice.value);
-// }
-
-// const sumTotalProductsPrice = () => {
-// 	let total = 0;
-
-// 	productsTotalPrice.value.forEach(price => {
-// 		total += price;
-// 	});
-
-// 	return total;
-// }
 
 function handleChange(event) {
 	metodePembayaran.value = event.detail.value;
@@ -694,6 +669,22 @@ async function fetchProductsData(query = '') {
 		console.error("Failed to fetch products data: ", error);
 	}
 }
+
+// const totalProductsPrice = (prodPrice, qty) => {
+// 	productsTotalPrice.value.push(calculateTotalPriceHandler(prodPrice, qty));
+
+// 	console.log(productsTotalPrice.value);
+// }
+
+// const sumTotalProductsPrice = () => {
+// 	let total = 0;
+
+// 	productsTotalPrice.value.forEach(price => {
+// 		total += price;
+// 	});
+
+// 	return total;
+// }
 
 onMounted(() => {
 	presentLoading();

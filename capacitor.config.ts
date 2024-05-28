@@ -2,7 +2,7 @@ import type { CapacitorConfig } from '@capacitor/cli';
 
 const config: CapacitorConfig = {
   appId: 'io.ionic.starter',
-  appName: 'sgs-sales-distributor-app',
+  appName: 'SGS Sales Distributor',
   webDir: 'dist',
   server: {
     // androidScheme: "https",

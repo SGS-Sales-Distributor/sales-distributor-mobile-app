@@ -47,7 +47,7 @@
                 </ion-searchbar>
 
                 <div class="flex flex-row gap-3 mb-3 justify-items-start items-start mx-2" id="button-group">
-                    <button id="open-modal"
+                    <button id="sheet-modal"
                         class="flex justify-items-center items-center gap-3 bg-gray-200 rounded-full px-3 py-1.5">
                         <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor"
                             class="bi bi-sliders" viewBox="0 0 16 16">
@@ -58,7 +58,7 @@
                             Filter
                         </span>
                     </button>
-                    <button id="dropdownOptionsBtn" data-dropdown-toggle="dropdownBtn"
+                    <button id="dropdownOptionsBtn" data-dropdown-toggle="dropdown"
                         class="text-gray-900 bg-gray-200 font-medium rounded-full px-3 py-1.5 text-center inline-flex items-center"
                         type="button">Urutkan
                         <svg class="w-2.5 h-2.5 ms-3" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none"
@@ -69,7 +69,7 @@
                     </button>
 
                     <!-- Dropdown menu -->
-                    <div id="dropdownBtn" class="z-10 hidden bg-white divide-y divide-gray-100 rounded-lg shadow w-44">
+                    <div id="dropdown" class="z-10 hidden bg-white divide-y divide-gray-100 rounded-lg shadow w-44">
                         <ul class="py-2 text-sm text-gray-700" aria-labelledby="dropdownOptionsBtn">
                             <li class="hover:bg-gray-100 ">
                                 <button @click="fetchProductsData(selectedBrand, 'latest')"
@@ -128,7 +128,7 @@
             </ion-infinite-scroll>
 
             <!-- Sheet Modal -->
-            <ion-modal ref="modal" trigger="open-modal" :initial-breakpoint="0.25" :breakpoints="[0, 0.25, 0.5, 0.75]">
+            <ion-modal ref="modal" trigger="sheet-modal" :initial-breakpoint="0.25" :breakpoints="[0, 0.25, 0.5, 0.75]">
                 <ion-content class="ion-padding">
                     <div class="flex justify-start justify-items-start mx-auto mb-2">
                         <h2 class="text-gray-900 text-lg">
@@ -291,8 +291,6 @@ async function fetchProductsData(query = '', sortQuery = '') {
         });
 
         productsData.value = response.data.resource;
-
-        console.log(productsData.value);
     } catch (error) {
         catchToastError("Failed to fetch product data", 3000);
 

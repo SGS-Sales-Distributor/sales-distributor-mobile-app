@@ -124,6 +124,66 @@
                                         }).format((calculateTotalPriceHandler(order.prodPrice,
                                             order.qty)).toFixed(3)) }}</p>
                                     </div>
+                                </div>
+                            </ion-card-header>
+                            <ion-card-content class="bg-gray-50">
+                                <div class="flex w-full justify-center items-center px-4 pb-2 space-x-4">
+                                    <ion-button color="danger" id="reset-order-btn"
+                                        @click="deleteRecentOrder(index, order.prodNumber)">Hapus</ion-button>
+                                    <!-- <ion-button color="success" v-if="order.qty > 0"
+										@click="totalProductsPrice(order.prodPrice, order.qty)">Konfirmasi</ion-button> -->
+                                </div>
+                            </ion-card-content>
+                        </ion-card>
+                    </div>
+                    <!-- End of Order List -->
+
+                    <h6 v-if="productDataAfterCheckPromo" class="text-center font-bold py-2">Produk Yang Dapat Promo
+                    </h6>
+
+                    <div v-if="productDataAfterCheckPromo" class="relative overflow-x-auto">
+                        <ion-card class="py-2 bg-gradient-to-r from-green-300 via-lime-400 to-lime-600">
+                            <ion-card-header class="bg-gray-50">
+                                <div class="flex flex-col w-full h-full space-y-2">
+                                    <div class="flex flex-row w-full h-full justify-between space-x-2">
+                                        <label for="nama-toko" class="flex-initial w-56 font-semibold">Kode
+                                            Produk</label>
+                                        <p class="flex-initial w-44 text-right">{{ productDataAfterCheckPromo.prodNumber
+                                            }}</p>
+                                    </div>
+                                    <div class="flex flex-row w-full h-full justify-between space-x-2">
+                                        <label for="nama-produk" class="flex-initial w-56 font-semibold">Nama
+                                            Produk</label>
+                                        <p class="flex-initial w-44 text-right">{{ productDataAfterCheckPromo.prodName
+                                            }}</p>
+                                    </div>
+                                    <div class="flex flex-row w-full h-full justify-between space-x-2">
+                                        <label for="stok" class="flex-initial w-56 font-semibold">Stok</label>
+                                        <p class="flex-initial w-44 text-right">{{ productDataAfterCheckPromo.stock }}
+                                        </p>
+                                    </div>
+                                    <div class="flex flex-row w-full h-full justify-between space-x-2">
+                                        <label for="harga-produk" class="flex-initial w-56 font-semibold">Harga
+                                            Produk</label>
+                                        <p class="flex-initial w-44 text-right">{{ new Intl.NumberFormat('id-ID', {
+                                            style: 'currency',
+                                            currency: 'IDR'
+                                        }).format(productDataAfterCheckPromo.prodPrice) }}</p>
+                                    </div>
+                                    <div class="flex flex-row w-full h-full justify-between space-x-2">
+                                        <label for="qty" class="flex-initial w-56 font-semibold">Quantity</label>
+                                        <p class="flex-initial w-44 text-right">{{ productDataAfterCheckPromo.qty }}
+                                        </p>
+                                    </div>
+                                    <div class="flex flex-row w-full h-full justify-between space-x-2">
+                                        <label for="total-harga" class="flex-initial w-56 font-semibold">Total
+                                            Harga</label>
+                                        <p class="flex-initial w-44 text-right">{{ new Intl.NumberFormat('id-ID', {
+                                            style: 'currency',
+                                            currency: 'IDR'
+                                        }).format((calculateTotalPriceHandler(productDataAfterCheckPromo.prodPrice,
+                                            productDataAfterCheckPromo.qty)).toFixed(3)) }}</p>
+                                    </div>
                                     <div class="flex flex-row w-full h-full justify-between space-x-2">
                                         <label for="promo" class="flex-initial w-56 font-semibold">Dapat Promo</label>
                                         <!-- <p v-for="(promo, index) in relatedPromosOfSelectedProduct" :key="index+1" class="flex-initial w-44 text-right">{{ promo }}</p> -->
@@ -140,7 +200,6 @@
                             </ion-card-content>
                         </ion-card>
                     </div>
-                    <!-- End of Order List -->
 
                     <ion-select v-if="objOrder.length > 0" @ionChange="handleChange($event)" label="Metode Pembayaran"
                         placeholder="Pilih" :value="metodePembayaran" class="mb-4">
@@ -150,7 +209,6 @@
 
                     <div class="fixed bottom-4 right-8">
                         <button @click="redirectToDirectPurchaseOrderStoreDetailOrderPage(storeId)"
-                            data-modal-target="large-modal" data-modal-toggle="large-modal"
                             class="w-12 h-12 rounded-full text-gray-900 bg-lime-400 hover:bg-lime-500 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium text-sm text-center transition-all flex items-center justify-center"
                             type="button">
                             <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="currentColor"
@@ -161,21 +219,13 @@
                         </button>
                     </div>
 
-
                     <!-- <div class="flex justify-center items-center py-2" v-if="objOrder.length">
                         <button @click="checkProductsHasPromo"
-                            class="block w-full md:w-auto text-white bg-green-400 hover:bg-green-500 focus:ring-4 focus:outline-none font-medium rounded-lg text-sm px-5 py-2.5 text-center transition-all"
-                            type="button">
+                            class="block w-full md:w-auto text-white bg-green-400 focus:ring-4 focus:outline-none font-medium rounded-lg text-sm px-5 py-2.5 text-center transition-all"
+                            type="button" :disabled="disabledCheckPromo">
                             Cek Promo
                         </button>
                     </div> -->
-
-                    <div class="flex items-center mb-4" v-if="objOrder.length">
-                        <input id="disabled-checkbox" type="checkbox" value="" :disabled="disabledCheckPromo"
-                            class="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600">
-                        <label for="disabled-checkbox"
-                            class="ms-2 text-sm font-medium text-gray-400 dark:text-gray-500">Disabled checkbox</label>
-                    </div>
 
                     <div class="flex justify-center items-center py-2" v-if="objOrder.length">
                         <button @click="setOpen(true)"
@@ -326,6 +376,7 @@ const storeData = ref(null);
 const storeId = ref(route.params.id);
 const metodePembayaran = ref("Tunai");
 
+const productDataAfterCheckPromo = ref(null);
 const promoProgramsData = ref([]);
 const disabledConfirmOtp = ref(true);
 const disabledCheckPromo = ref(true);
@@ -380,12 +431,8 @@ const enabledCheckPromo = (qty) => {
 function addMoreOrder(index, maks) {
     if (objOrder.value[index].qty < maks) {
         objOrder.value[index].qty++;
-
         showConfirmOTP(objOrder.value[index].qty);
-
         enabledCheckPromo(objOrder.value[index].qty);
-
-        checkProductsHasPromo(objOrder.value[index].qty);
     }
 
     if (objOrder.value[index].qty > maks) {
@@ -398,10 +445,8 @@ function addMoreOrder(index, maks) {
 function reduceOrder(index, min) {
     if (objOrder.value[index].qty > min) {
         objOrder.value[index].qty--;
-
         showConfirmOTP(objOrder.value[index].qty);
-
-        // checkProductsHasPromo();
+        enabledCheckPromo(objOrder.value[index].qty);
     }
 
     if (objOrder.value[index].qty < min) {
@@ -421,52 +466,43 @@ function deleteRecentOrder(index, prodNumber) {
     }
 }
 
-function checkProductsHasPromo(orderQty) {
-    if (orderQty === 3) {
-        const productMap = new Map();
+function checkProductsHasPromo() {
+    let promoDetailCondition;
 
-        for (const product of objOrder.value) {
-            productMap.set(product.prodNumber, product);
-        }
+    const productMap = new Map();
 
-        for (const promo of promoProgramsData.value) {
-            const eligibleProducts = promo.details.map(detail => {
-                const product = productMap.get(detail.product);
-
-                return product.qty >= detail.condition ? product : null;
-            }).filter(Boolean);
-
-            if (eligibleProducts.length > 0) {
-                const productWithLowestPrice = eligibleProducts.reduce((lowest, product) => {
-                    return product.prod_base_price < lowest.prod_base_price ? product : lowest;
-                });
-
-                console.log(productWithLowestPrice);
-            }
-        }
-
-        console.log(productMap);
-    } else {
-        console.log("Tidak dapat promo");
+    for (const product of objOrder.value) {
+        productMap.set(product.prodNumber, product);
     }
 
-    // console.log(productMap);
+    for (const promo of promoProgramsData.value) {
+        console.log(promo);
+        
+        const eligibleProducts = promo.details.map(detail => {
+            const product = productMap.get(detail.product);
 
-    // for (const promo of promoProgramsData.value) {
-    //     const eligibleProducts = promo.details.map(detail => {
-    //         const product = productMap.get(detail.product);
+            promoDetailCondition = detail.condition;
 
-    //         return product && product.qty >= detail.condition ? product : null;
-    //     }).filter(Boolean);
+            return product && product.qty >= detail.condition ? product : null;
+        }).filter(Boolean);
 
-    //     if (eligibleProducts.length > 0) {
-    //         const productWithLowestPrice = eligibleProducts.reduce((lowest, product) => {
-    //             return product.prod_base_price < lowest.prod_base_price ? product : lowest;
-    //         });
+        if (eligibleProducts.length > 0) {
+            const productWithLowestPrice = eligibleProducts.reduce((lowest, product) => {
+                return product.prod_base_price < lowest.prod_base_price ? product : lowest;
+            });
 
-    //         catchToastInfo(`${productWithLowestPrice.prodNumber} mendapatkan promo ${promo.name_program}`, 3000);
-    //     }
-    // }
+            productDataAfterCheckPromo.value = productWithLowestPrice;
+
+            console.log(productDataAfterCheckPromo.value);
+            // const total = Number(productWithLowestPrice.qty) + Number(promoDetailCondition);
+
+            // if (total > productWithLowestPrice.stock) {
+            //     console.log(`Melebihi stok dasar yaitu ${productWithLowestPrice.stock}`);
+            // } else {
+            //     console.log(total);
+            // }
+        }
+    }
 }
 
 async function confirmOTP() {
@@ -625,8 +661,6 @@ async function fetchStoreDetailDataWithoutCallPlan(id) {
         const response = await axios.get(`${API_URL.value}/api/v2/stores/${id}`, {
             headers: headers
         });
-
-        console.log(response);
 
         storeData.value = response.data.resource;
 
