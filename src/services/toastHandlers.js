@@ -1,7 +1,7 @@
 import { toastController } from '@ionic/vue';
 import { close } from 'ionicons/icons';
 
-export async function catchToast (responseMsg, duration) {
+export async function catchToast (responseMsg, duration = 3000) {
     const toast = await toastController.create({
         message: `${responseMsg}`,
         duration: duration,
@@ -25,7 +25,7 @@ export async function catchToast (responseMsg, duration) {
     return toast.present();
 }
 
-export async function catchToastInfo (responseMsg, duration) {
+export async function catchToastInfo (responseMsg, duration = 3000) {
     const toast = await toastController.create({
         message: `${responseMsg}`,
         duration: duration,
@@ -49,7 +49,7 @@ export async function catchToastInfo (responseMsg, duration) {
     return toast.present();
 }
 
-export async function catchToastError (errorMsg, duration) {
+export async function catchToastError (errorMsg, duration = 3000) {
     const toast = await toastController.create({
         message: errorMsg,
         duration: duration,
@@ -73,7 +73,7 @@ export async function catchToastError (errorMsg, duration) {
     return toast.present();
 }
 
-export async function catchToastWarn (warnMsg, duration) {
+export async function catchToastWarn (warnMsg, duration = 3000) {
     const toast = await toastController.create({
         message: warnMsg,
         duration: duration,
