@@ -204,6 +204,7 @@ import { presentLoading, stopLoading } from '@/services/loadingHandlers';
 import { redirectToStoreDetailPage } from '@/services/redirectHandlers';
 import { IonSearchbar, IonSelect, IonSelectOption } from '@ionic/vue';
 import { useRoute } from 'vue-router';
+import { initFlowbite } from 'flowbite';
 
 const route = useRoute();
 
@@ -325,6 +326,7 @@ async function fetchBrandsData(query = '') {
 
 onMounted(() => {
     presentLoading();
+    initFlowbite();
     refreshAccessTokenHandler();
     fetchBrandsData();
     stopLoading();

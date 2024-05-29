@@ -124,11 +124,10 @@
         </div>
 
         <!-- Swipe to right and left -->
-        <div class="py-4">
+        <!-- <div class="py-4">
           <h1 class="lg:px-20 md:px-10 lg:mx-40 md:mx-20 font-bold text-3xl text-gray-800">Promo Terkini</h1>
           <div class="flex overflow-x-scroll pb-4 hide-scroll-bar">
             <div class="flex flex-nowrap lg:ml-40 md:ml-20 space-x-4">
-              <!-- Repeat this div for each item in your list -->
               <div
                 class="w-80 h-48 max-w-xs overflow-hidden border rounded-lg shadow-md bg-white hover:shadow-xl transition-shadow duration-300 ease-in-out">
                 <img src="/public/8d2ia-banner website 1587x621.jpg" alt="promo-pertama"
@@ -144,7 +143,7 @@
               </div>
             </div>
           </div>
-        </div>
+        </div> -->
         <!-- End of swipe -->
 
       </div>
