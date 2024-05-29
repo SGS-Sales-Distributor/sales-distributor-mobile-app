@@ -98,7 +98,7 @@
                   </div>
 
                   <div class="flex gap-3 -mb-8 py-4 border-t border-gray-200">
-                    <a href="#"
+                    <router-link :to="{ name: 'absensi' }"
                       class="group rounded-xl disabled:border *:select-none [&>*:not(.sr-only)]:relative *:disabled:opacity-20 disabled:text-gray-950 disabled:border-gray-200 disabled:bg-gray-100 text-gray-950 bg-orange-300/50 hover:bg-orange-400/75 active:bg-gray-100 flex gap-1.5 items-center text-sm h-8 px-3.5 justify-center transition-all">
                       <span>Cek Detail</span>
                       <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" fill="currentColor"
@@ -106,8 +106,8 @@
                         <path fill-rule="evenodd"
                           d="M1 8a.5.5 0 0 1 .5-.5h11.793l-3.147-3.146a.5.5 0 0 1 .708-.708l4 4a.5.5 0 0 1 0 .708l-4 4a.5.5 0 0 1-.708-.708L13.293 8.5H1.5A.5.5 0 0 1 1 8" />
                       </svg>
-                    </a>
-                    <a href="#"
+                    </router-link>
+                    <router-link :to="{ name: 'absensi' }"
                       class="group flex items-center rounded-xl disabled:border *:select-none [&>*:not(.sr-only)]:relative *:disabled:opacity-20 disabled:text-gray-950 disabled:border-gray-200 disabled:bg-gray-100 text-gray-950 bg-gray-100 hover:bg-gray-200/75 active:bg-gray-100 size-8 justify-center">
                       <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor"
                         class="bi bi-camera2" viewBox="0 0 16 16">
@@ -115,7 +115,7 @@
                         <path
                           d="M12.318 3h2.015C15.253 3 16 3.746 16 4.667v6.666c0 .92-.746 1.667-1.667 1.667h-2.015A5.97 5.97 0 0 1 9 14a5.97 5.97 0 0 1-3.318-1H1.667C.747 13 0 12.254 0 11.333V4.667C0 3.747.746 3 1.667 3H2a1 1 0 0 1 1-1h1a1 1 0 0 1 1 1h.682A5.97 5.97 0 0 1 9 2c1.227 0 2.367.368 3.318 1M2 4.5a.5.5 0 1 0-1 0 .5.5 0 0 0 1 0M14 8A5 5 0 1 0 4 8a5 5 0 0 0 10 0" />
                       </svg>
-                    </a>
+                    </router-link>
                   </div>
                 </div>
               </div>
