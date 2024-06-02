@@ -172,6 +172,7 @@ import { refreshAccessTokenHandler } from '@/services/auth';
 import { redirectToDirectPurchaseOrderStoreDetailPage } from '@/services/redirectHandlers';
 import { IonSearchbar } from '@ionic/vue';
 import { presentLoading, stopLoading } from '@/services/loadingHandlers';
+import { initFlowbite } from 'flowbite';
 
 const storesData = ref([]);
 const lastIndex = ref(5);
@@ -228,6 +229,7 @@ async function fetchStoresData(query = '') {
 
 onMounted(() => {
     presentLoading();
+    initFlowbite();
     refreshAccessTokenHandler();
     fetchStoresData();
     stopLoading();

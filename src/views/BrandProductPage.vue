@@ -247,8 +247,6 @@ async function fetchBrandProductsData(brandId, query = "") {
             },
         });
 
-        console.log(response);
-
         brandProductsData.value = response.data.resource;
     } catch (error) {
         console.error(`Gagal memuat data produk dari brand ${brandId}: `, error);

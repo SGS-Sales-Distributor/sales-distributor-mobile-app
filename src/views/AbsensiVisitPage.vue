@@ -8,7 +8,7 @@
       <LocationNotAllowed v-if="!statusGPS" />
 
       <!-- Card -->
-      <div v-if="statusGPS" class="flex min-h-full flex-col px-4 py-4">
+      <div v-else class="flex min-h-full flex-col px-4 py-4">
         <AddressInfoSection />
 
         <!-- Card Content -->

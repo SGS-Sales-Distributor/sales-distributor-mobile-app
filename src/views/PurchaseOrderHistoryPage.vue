@@ -11,11 +11,11 @@
 
                         <div class="flex flex-col md:flew-row gap-3">
                             <ion-searchbar v-if="visiblePurchaseOrders.length > 0" :debounce="300"
-                                class="justify-items-center items-center"
-                                @ionInput="searchStoreHandler($event)" placeholder="Cari nomor order, nama toko..."
-                                color="light"></ion-searchbar>
+                                class="justify-items-center items-center" @ionInput="searchStoreHandler($event)"
+                                placeholder="Cari nomor order, nama toko..." color="light"></ion-searchbar>
 
-                            <div class="flex flex-row gap-3 mb-3 justify-items-start items-start mx-2" id="button-group">
+                            <div class="flex flex-row gap-3 mb-3 justify-items-start items-start mx-2"
+                                id="button-group">
                                 <button id="open-modal"
                                     class="flex justify-items-center items-center gap-3 bg-gray-200 rounded-full px-3 py-1.5">
                                     <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor"
@@ -289,9 +289,18 @@ async function fetchPurchaserOrderDetailData(orderId) {
     setOpen(true);
 
     try {
-        const response = await axios.get(`${API_URL.value}/api/sgs/order_customer_sales_detail/${orderId}`);
+        const tokens = localStorage.getItem("tokens") ? JSON.parse(localStorage.getItem("tokens")) : null;
 
-        purchaseOrderDetails.value = response.data.data;
+        const headers = {
+            'Content-Type': 'application/json',
+            'Authorization': `Bearer ${tokens.access_token}`
+        };
+
+        const response = await axios.get(`${API_URL.value}/api/v2/orders/${orderId}/details`, {
+            headers: headers
+        });
+
+        purchaseOrderDetails.value = response.data.resource;
     } catch (error) {
         catchToastError("Failed to fetch order details data.", 3000);
 
@@ -301,15 +310,21 @@ async function fetchPurchaserOrderDetailData(orderId) {
 
 async function fetchPurchaseOrdersData(query = 'latest') {
     try {
-        const response = await axios.get(`${API_URL.value}/api/sgs/purchase-orders`, {
+        const tokens = localStorage.getItem("tokens") ? JSON.parse(localStorage.getItem("tokens")) : null;
+
+        const headers = {
+            'Content-Type': 'application/json',
+            'Authorization': `Bearer ${tokens.access_token}`
+        };
+
+        const response = await axios.get(`${API_URL.value}/api/v2/orders`, {
+            headers: headers,
             params: {
                 q: query,
             }
         });
 
         purchaseOrders.value = response.data.resource;
-
-        console.log(response);
     } catch (error) {
         catchToastError("Failed to fetch orders data.", 3000);
 

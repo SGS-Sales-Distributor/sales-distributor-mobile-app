@@ -12,10 +12,9 @@
             </button>
           </div>
           <div class="flex items-center justify-center">
-            <h2 v-if="store.store_name" class="text-center">
+            <h2 v-if="store.store_name !== null" class="text-center">
               Form Daftar Owner Toko {{ store.store_name }}
             </h2>
-
             <h2 v-else class="text-center">
               Form Daftar Owner Toko -
             </h2>
@@ -38,7 +37,7 @@
               }}</h2>
             <h2 v-else class="text-2xl font-semibold text-center mb-4">Form Pendaftaran Owner Dari Outlet - </h2>
             <p class="text-gray-600 text-center mb-6">Masukkan data yang diperlukan.</p>
-            <Form method="post" novalidate :validation-schema="validation">
+            <Form method="post" novalidate :validation-schema="validation" enctype=”multipart/form-data”>
               <div class="mb-4">
                 <label for="owner" class="block text-gray-700 text-sm font-semibold mb-2">Nama Owner
                   *</label>
@@ -66,17 +65,39 @@
               <div class="mb-4">
                 <label for="ktp_image" class="block text-gray-700 text-sm font-semibold mb-2">Gambar KTP Owner
                   *</label>
-                <Field v-model="formData.ktp_owner" name="ktp_image" :type="fieldTypes.file" id="ktp_image"
-                  class="form-input w-full px-4 py-2 border rounded-lg text-gray-700 focus:ring-blue-500"
-                  placeholder="Masukkan gambar KTP owner" aria-label="ktp_image" aria-describedby="ktp_image">
-                </Field>
+                <div class="flex justify-around">
+                  <button @click="takeKtpPicture" type="button"
+                    class="text-white bg-gradient-to-r from-sky-400 via-blue-500 to-blue-700 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center inline-flex items-center me-2 dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" fill="currentColor"
+                      class="bi bi-camera-fill me-2" viewBox="0 0 16 16">
+                      <path d="M10.5 8.5a2.5 2.5 0 1 1-5 0 2.5 2.5 0 0 1 5 0" />
+                      <path
+                        d="M2 4a2 2 0 0 0-2 2v6a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V6a2 2 0 0 0-2-2h-1.172a2 2 0 0 1-1.414-.586l-.828-.828A2 2 0 0 0 9.172 2H6.828a2 2 0 0 0-1.414.586l-.828.828A2 2 0 0 1 3.172 4zm.5 2a.5.5 0 1 1 0-1 .5.5 0 0 1 0 1m9 2.5a3.5 3.5 0 1 1-7 0 3.5 3.5 0 0 1 7 0" />
+                    </svg>
+                    Ambil Foto
+                  </button>
+                  <button @click="clearImage" v-if="showSaveAndCancelBtn" type="button"
+                    class="text-white bg-gradient-to-r from-red-400 via-rose-500 to-rose-600 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center inline-flex items-center me-2 dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor"
+                      class="bi bi-x-octagon-fill me-2" viewBox="0 0 16 16">
+                      <path
+                        d="M11.46.146A.5.5 0 0 0 11.107 0H4.893a.5.5 0 0 0-.353.146L.146 4.54A.5.5 0 0 0 0 4.893v6.214a.5.5 0 0 0 .146.353l4.394 4.394a.5.5 0 0 0 .353.146h6.214a.5.5 0 0 0 .353-.146l4.394-4.394a.5.5 0 0 0 .146-.353V4.893a.5.5 0 0 0-.146-.353zm-6.106 4.5L8 7.293l2.646-2.647a.5.5 0 0 1 .708.708L8.707 8l2.647 2.646a.5.5 0 0 1-.708.708L8 8.707l-2.646 2.647a.5.5 0 0 1-.708-.708L7.293 8 4.646 5.354a.5.5 0 1 1 .708-.708" />
+                    </svg>
+                    Hapus Foto
+                  </button>
+                </div>
+
+                <div v-if="ktpImageUrl" class="flex w-full items-center justify-center py-3">
+                  <img :src="ktpImageUrl" id="preview-photo" alt="Captured Photo" style="width: 100%; height: 200px;" />
+                </div>
+
               </div>
               <div class="mb-4">
                 <label for="photo_other" class="block text-gray-700 text-sm font-semibold mb-2">Gambar Lainnya</label>
-                <Field v-model="formData.photo_other" name="photo_other" :type="fieldTypes.file" id="photo_other"
-                  class="form-input w-full px-4 py-2 border rounded-lg text-gray-700 focus:ring-blue-500"
-                  placeholder="Masukkan gambar lainnya" aria-label="photo_other" aria-describedby="photo_other">
-                </Field>
+                <Field v-model="formData.photo_other" name="photo_other"
+                  class="block w-full mb-5 text-sm text-gray-900 border border-gray-300 rounded-lg cursor-pointer bg-gray-50 focus:outline-none"
+                  id="default_size" aria-label="photo_other" aria-describedby="photo_other" :type="fieldTypes.file"
+                  multiple />
               </div>
               <button type="button" @click="storeDataAlert"
                 class="w-full bg-gradient-to-r from-sky-400 via-blue-500 to-blue-700 text-white px-4 py-2 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-opacity-50">Daftarkan
@@ -105,17 +126,20 @@ import { API_URL } from '@/services/globalVariables';
 import { catchToast, catchToastError } from '@/services/toastHandlers';
 import { fieldTypes } from '@/services/globalVariables';
 import { alertController } from '@ionic/vue';
-import { Camera, CameraSource } from '@capacitor/camera';
+import { Camera, CameraResultType, CameraSource } from '@capacitor/camera';
 
 const store = ref(localStorage.getItem("store") ? JSON.parse(localStorage.getItem("store")) : null);
+
 const ktpImageUrl = shallowRef("");
+const ktpImageLocation = ref(null);
+
+const photoOther = ref("");
+const showSaveAndCancelBtn = ref(false);
 
 const formData = ref({
   owner: null,
   nik_owner: null,
   email_owner: null,
-  ktp_owner: null,
-  photo_other: null,
 });
 
 const validation = Yup.object().shape({
@@ -129,10 +153,6 @@ const validation = Yup.object().shape({
     .required('Email tidak boleh kosong!')
     .max(100, 'Email tidak boleh lebih dari 100 karakter')
     .email(),
-  ktp_owner: Yup.mixed()
-    .nullable(),
-  photo_other: Yup.mixed()
-    .nullable(),
 });
 
 function convertBlobToBase64(blob) {
@@ -148,7 +168,13 @@ function convertBlobToBase64(blob) {
   });
 }
 
-async function takeCheckInPicture() {
+function clearImage() {
+  ktpImageUrl.value = null;
+
+  showSaveAndCancelBtn.value = false;
+}
+
+async function takeKtpPicture() {
   try {
     const ktpImage = await Camera.getPhoto({
       quality: 10,
@@ -158,6 +184,7 @@ async function takeCheckInPicture() {
     });
 
     if (ktpImage && ktpImage.webPath) {
+      showSaveAndCancelBtn.value = true;
       ktpImageUrl.value = ktpImage.webPath.toString();
 
       ktpImageLocation.value = await fetch(ktpImage.webPath).then((r) => r.blob());
@@ -169,6 +196,64 @@ async function takeCheckInPicture() {
   } catch (error) {
     console.error('Error when capturing photo: ', error);
   }
+}
+
+async function uploadKtpPicture(storeId) {
+  try {
+    refreshAccessTokenHandler();
+
+    const tokens = localStorage.getItem("tokens") ? JSON.parse(localStorage.getItem("tokens")) : null;
+
+    let data = new FormData();
+    data.append("owner", formData.value.owner);
+    data.append("nik_owner", formData.value.nik_owner);
+    data.append("email_owner", formData.value.email_owner);
+    data.append("ktp_owner", ktpImageLocation.value);
+    data.append("photo_other", photoOther.value);
+
+    const headers = {
+      'Authorization': `Bearer ${tokens.access_token}`,
+      'Content-Type': 'multipart/form-data',
+    }
+
+    presentLoading();
+
+    await axios.post(`${API_URL.value}/api/v2/stores/${storeId}/owners`, data, {
+      headers: headers
+    });
+
+    stopLoading();
+
+    ktpImageUrl.value = null;
+
+    catchToast("Sukses upload gambar KTP", 3000);
+  } catch (error) {
+    catchToastError('Gagal upload gambar KTP', 3000);
+
+    console.error('Gagal upload gambar KTP', error);
+  } finally {
+    stopLoading();
+  }
+}
+
+async function saveKtpPicture() {
+  const response = await fetch(ktpImageUrl.value);
+  const blob = await response.blob();
+  const base64Data = await convertBlobToBase64(blob);
+
+  console.log("url", base64Data);
+
+  ktpImageUrl.value = base64Data;
+
+  await uploadKtpPicture(store.value.store_id);
+
+  if (showSaveAndCancelBtn.value) {
+    showSaveAndCancelBtn.value = false;
+  }
+
+  // if (disabledCheckOut.value) {
+  //   disabledCheckOut.value = false;
+  // }
 }
 
 async function storeDataAlert() {
@@ -190,12 +275,12 @@ async function storeDataAlert() {
           try {
             console.log("Pembuatan data owner berhasil");
 
-            await saveOwnerData(store.value.store_id);
+            await saveKtpPicture(store.value.store_id);
 
             redirectToPurchaseOrderPage();
           } catch (error) {
             console.log("Gagal membuat data pemilik toko", error);
-            
+
             redirectToOwnerFormPage();
           }
         },
@@ -204,36 +289,6 @@ async function storeDataAlert() {
   });
 
   return alert.present();
-}
-
-async function saveOwnerData(storeId) {
-  try {
-    refreshAccessTokenHandler();
-
-    const tokens = localStorage.getItem("tokens") ? JSON.parse(localStorage.getItem("tokens")) : null;
-
-    const headers = {
-      'Authorization': `Bearer ${tokens.access_token}`,
-    }
-
-    presentLoading();
-
-    const response = await axios.post(`${API_URL.value}/api/v2/stores/${storeId}/owners`, formData.value, {
-      headers: headers,
-    });
-
-    console.log(response);
-
-    stopLoading();
-
-    catchToast(response.data.message, 3000);
-  } catch (error) {
-    catchToastError("Gagal membuat data pemilik toko", 3000);
-
-    console.error("Failed to save owner data", error);
-  } finally {
-    stopLoading();
-  }
 }
 
 onMounted(() => {

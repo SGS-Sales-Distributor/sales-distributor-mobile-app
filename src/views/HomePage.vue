@@ -122,30 +122,6 @@
             </div>
           </div>
         </div>
-
-        <!-- Swipe to right and left -->
-        <!-- <div class="py-4">
-          <h1 class="lg:px-20 md:px-10 lg:mx-40 md:mx-20 font-bold text-3xl text-gray-800">Promo Terkini</h1>
-          <div class="flex overflow-x-scroll pb-4 hide-scroll-bar">
-            <div class="flex flex-nowrap lg:ml-40 md:ml-20 space-x-4">
-              <div
-                class="w-80 h-48 max-w-xs overflow-hidden border rounded-lg shadow-md bg-white hover:shadow-xl transition-shadow duration-300 ease-in-out">
-                <img src="/public/8d2ia-banner website 1587x621.jpg" alt="promo-pertama"
-                  class="w-full h-full object-cover">
-              </div>
-              <div
-                class="w-80 h-48 max-w-xs overflow-hidden border rounded-lg shadow-md bg-white hover:shadow-xl transition-shadow duration-300 ease-in-out">
-                <img src="/public/08e2b-banner-website-SA.png" alt="promo-pertama" class="w-full h-full object-cover">
-              </div>
-              <div
-                class="w-80 h-48 max-w-xs overflow-hidden border rounded-lg shadow-md bg-white hover:shadow-xl transition-shadow duration-300 ease-in-out">
-                <img src="/public/33jh8-blemish 1587x621.jpg" alt="promo-pertama" class="w-full h-full object-cover">
-              </div>
-            </div>
-          </div>
-        </div> -->
-        <!-- End of swipe -->
-
       </div>
     </ion-content>
   </ion-page>
@@ -188,7 +164,7 @@ async function fetchStoresData(query = '') {
   }
 }
 
-async function fetchTotalVisitsData(userNumber) {
+async function fetchTotalVisitsData(query = "", userNumber) {
   try {
     const tokens = localStorage.getItem("tokens") ? JSON.parse(localStorage.getItem("tokens")) : null;
 
@@ -197,8 +173,11 @@ async function fetchTotalVisitsData(userNumber) {
       'Authorization': `Bearer ${tokens.access_token}`
     };
 
-    const response = await axios.get(`${API_URL.value}/api/v2/salesmen/${userNumber}/visits/count`, {
-      headers: headers
+    const response = await axios.get(`${API_URL.value}/api/v2/salesmen/${userNumber}/visits`, {
+      headers: headers,
+      params: {
+        q: query
+      }
     });
 
     countTotalVisits.value = response.data.resource;
@@ -207,7 +186,7 @@ async function fetchTotalVisitsData(userNumber) {
   }
 }
 
-async function fetchTotalVisitBasedOnCallPlansData(userNumber) {
+async function fetchTotalVisitBasedOnCallPlansData(query = "", userNumber) {
   try {
     const tokens = localStorage.getItem("tokens") ? JSON.parse(localStorage.getItem("tokens")) : null;
 
@@ -216,8 +195,11 @@ async function fetchTotalVisitBasedOnCallPlansData(userNumber) {
       'Authorization': `Bearer ${tokens.access_token}`
     };
 
-    const response = await axios.get(`${API_URL.value}/api/v2/salesmen/${userNumber}/call-plans/visits/count`, {
-      headers: headers
+    const response = await axios.get(`${API_URL.value}/api/v2/salesmen/${userNumber}/call-plans`, {
+      headers: headers,
+      params: {
+        q: query,
+      }
     });
 
     countTotalVisitsBasedOnCallPlan.value = response.data.resource;
@@ -230,8 +212,8 @@ onMounted(() => {
   presentLoading();
   refreshAccessTokenHandler();
   fetchStoresData();
-  fetchTotalVisitsData(user.value.number);
-  fetchTotalVisitBasedOnCallPlansData(user.value.number);
+  fetchTotalVisitsData("count", user.value.number);
+  fetchTotalVisitBasedOnCallPlansData("count-visits", user.value.number);
   stopLoading();
 });
 </script>

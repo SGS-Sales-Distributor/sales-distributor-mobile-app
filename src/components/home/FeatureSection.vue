@@ -37,6 +37,12 @@
       </ion-button>
       <ion-label class="text-sm font-semibold">Direct PO</ion-label>
     </div>
+    <div class="flex flex-col items-center justify-center space-y-2">
+      <ion-button id="dashboard-button" shape="round" href="/dashboard">
+        <ion-icon class="text-2xl text-gray-900" slot="icon-only" :icon="statsChart"></ion-icon>
+      </ion-button>
+      <ion-label class="text-sm font-semibold text-nowrap">Dashboard</ion-label>
+    </div>
   </div>
   <!-- End main feature -->
 </template>
@@ -49,6 +55,7 @@ import {
   cube,
   card,
   listCircle,
+  statsChart,
 } from 'ionicons/icons';
 import { IonButton } from '@ionic/vue';
 </script>
@@ -114,6 +121,17 @@ import { IonButton } from '@ionic/vue';
   --background-hover: #FEFF86;
   --background-activated: #FEFF86;
   --background-focused: #FEFF86;
+  --color: #202020;
+  --box-shadow: 0 2px 6px 0 rgb(0, 0, 0, 0.25);
+  --padding-top: 10px;
+  --padding-bottom: 10px;
+}
+
+#dashboard-button {
+  --background: #E1AFD1;
+  --background-hover: #E1AFD1;
+  --background-activated: #E1AFD1;
+  --background-focused: #E1AFD1;
   --color: #202020;
   --box-shadow: 0 2px 6px 0 rgb(0, 0, 0, 0.25);
   --padding-top: 10px;

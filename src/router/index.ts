@@ -15,6 +15,7 @@ import PurchaseOrderStoreDetailPage from './../views/PurchaseOrderStoreDetailPag
 import PurchaseOrderStoreDetailOrderPage from './../views/PurchaseOrderStoreDetailOrderPage.vue'
 import BrandPage from './../views/BrandPage.vue';
 import BrandProductPage from './../views/BrandProductPage.vue'
+import DashboardPage from './../views/DashboardPage.vue';
 
 import { isAuthenticated } from "@/services/auth";
 import "maplibre-gl/dist/maplibre-gl.css";
@@ -50,6 +51,11 @@ const routes: Array<RouteRecordRaw> = [
         path: "home",
         name: "home",
         component: HomePage,
+      },
+      {
+        path: "/dashboard",
+        name: "dashboard",
+        component: DashboardPage,
       },
       {
         path: "/direct-order",

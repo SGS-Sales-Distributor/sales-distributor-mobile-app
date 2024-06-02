@@ -48,35 +48,6 @@
                     </div>
                 </div>
             </div>
-
-            <ion-modal :is-open="isOpen">
-                <ion-header>
-                    <ion-toolbar>
-                        <ion-title>Daftar Produk --Nama Brand--</ion-title>
-                        <ion-buttons slot="end">
-                            <ion-button @click="setOpen(false)">Close</ion-button>
-                        </ion-buttons>
-                    </ion-toolbar>
-                </ion-header>
-                <ion-content>
-                    <div class="relative flex min-h-screen flex-col justify-center overflow-hidden">
-                        <div class="relative bg-white px-6 mx-auto w-full max-w-lg rounded-2xl">
-                            <div class="mx-auto flex w-full max-w-md flex-col space-y-16">
-                                <div class="flex flex-col items-center justify-center text-center space-y-2">
-                                    <img src="/public/3d-mobile-phone-with-security-code-padlock.jpg" alt="OTP Images">
-                                    <div class="font-semibold text-3xl">
-                                        <p>Kirim OTP Whatsapp</p>
-                                    </div>
-                                    <div class="flex flex-row text-sm font-medium text-gray-400">
-                                        <p>Kami akan mengirimkan kode OTP ke nomor <br />{{ nomorWhatsappOTP }}
-                                        </p>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </ion-content>
-            </ion-modal>
         </ion-content>
     </ion-page>
 </template>
@@ -95,9 +66,6 @@ const routeLinkToProduct = (brandId) => {
 }
 
 const brandsData = ref([]);
-
-const isOpen = ref(false);
-const setOpen = (open) => (isOpen.value = open, flagOTP.value = true);
 
 const lastIndex = ref(5);
 const visibleBrands = computed(() => {
@@ -138,8 +106,6 @@ async function fetchBrandsData(query = '') {
         });
 
         brandsData.value = response.data.resource.data;
-
-        console.log(brandsData.value);
     } catch (error) {
         catchToastError("Failed to fetch brand data", 3000);
 

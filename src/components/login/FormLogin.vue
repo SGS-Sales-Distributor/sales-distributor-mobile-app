@@ -26,7 +26,7 @@
                 transition-all  
                 sm:text-md 
                 sm:leading-6" />
-        <ErrorMessage as="div" name="email" class="mt-1.5 text-rose-500" />
+        <ErrorMessage id="emailError" as="div" name="email" class="mt-1.5 text-rose-500" />
       </div>
     </div>
 
@@ -101,6 +101,7 @@ import { Form, Field, ErrorMessage } from 'vee-validate';
 
 const passwordFieldType = ref('password');
 const emailFieldType = ref('email');
+const hasError = ref(false);
 
 const formData = ref({
   email: null,
@@ -121,7 +122,6 @@ const formLoginValidate = Yup.object().shape({
 function togglePasswordVisibility() {
   passwordFieldType.value = passwordFieldType.value === 'password' ? 'text' : 'password';
 }
-
 
 async function login() {
   try {
@@ -154,12 +154,16 @@ async function login() {
 
     redirectToHomePage();
   } catch (error) {
+    hasError.value = true;
+
     catchToastError("Gagal Login, email atau password salah!", 3000);
 
-    console.error('Failed to logged in: ', error);
-  } finally {
+    console.error('Gagal melakukan login: ', error);
+
     stopLoading();
   }
 }
 
 </script>
+
+<style scoped></style>

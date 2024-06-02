@@ -15,9 +15,9 @@ export async function printCurrentPosition() {
 
 export async function checkLocationAccess() {
     try {
-        if (Capacitor.isNativePlatform) {
-            const hasPermission = await Geolocation.checkPermissions();
+        const hasPermission = await Geolocation.checkPermissions();
 
+        if (Capacitor.isNativePlatform) {
             if (hasPermission.location === 'granted') {
                 catchToast("Akses Lokasi Diterima!", 3000);
             
@@ -32,6 +32,9 @@ export async function checkLocationAccess() {
                 statusGPS.value = false;
             }
         } else {
+            if (hasPermission.location === 'granted') {
+                catchToast()
+            }
             console.warn('Geolocation not supported on web platform.');
 
             catchToastWarn('Geolocation not supported on web platform.', 3000);
