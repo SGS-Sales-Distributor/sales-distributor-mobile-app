@@ -56,7 +56,7 @@
 					<!-- End of Detail Store Card -->
 
 					<!-- Start of Program List -->
-					<div class="relative overflow-x-auto mb-4">
+					<div v-if="visiblePromoPrograms.length > 0" class="relative overflow-x-auto mb-4">
 						<ion-card class="py-2 bg-gradient-to-r from-sky-400 via-blue-500 to-blue-700">
 							<ion-card-header class="bg-gray-50">
 								<h6 class="font-bold text-left p-2.5">Daftar Program Terkini</h6>

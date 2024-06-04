@@ -35,7 +35,7 @@ export async function refreshAccessTokenHandler() {
   if (!refreshToken) {
     console.error("Refresh token not found in local storage.");
     
-    catchToastError("Akses token ");
+    catchToastError("Akses token tidak ditemukan");
 
     redirectToLoginPage();
   }

@@ -6,15 +6,22 @@
             <div class="flex min-h-full flex-col p-4">
                 <div class="relative overflow-x-auto">
                     <div class="py-2 rounded-lg w-full">
-                        <h2 class="text-2xl font-semibold text-center mb-4">List Purchase Order</h2>
-                        <p class="text-gray-600 text-center mb-6">Daftar Purchase Order Terbaru.</p>
+                        <h2 v-if="visiblePurchaseOrders.length > 0" class="text-2xl font-semibold text-center mb-4">List Purchase Order</h2>
+                        <h2 v-else class="text-2xl font-semibold text-center mb-4">Oops... data tidak ditemukan.</h2>
+                        <p v-if="visiblePurchaseOrders.length > 0" class="text-gray-600 text-center mb-6">Daftar Purchase Order Terbaru.</p>
+                        <p v-else class="text-gray-600 text-center mb-6">Mohon tunggu sebentar untuk melihat daftar data.</p>
 
                         <div class="flex flex-col md:flew-row gap-3">
                             <ion-searchbar v-if="visiblePurchaseOrders.length > 0" :debounce="300"
                                 class="justify-items-center items-center" @ionInput="searchStoreHandler($event)"
                                 placeholder="Cari nomor order, nama toko..." color="light"></ion-searchbar>
 
-                            <div class="flex flex-row gap-3 mb-3 justify-items-start items-start mx-2"
+                            <div v-if="visiblePurchaseOrders.length < 1" class="flex flex-row gap-3 mb-3 justify-items-center items-center">
+                                <img src="/public/not_found_image.jpg"
+                                    alt="Not Found Images" class="w-full">                                
+                            </div>
+
+                            <div v-if="visiblePurchaseOrders.length > 0" class="flex flex-row gap-3 mb-3 justify-items-start items-start mx-2"
                                 id="button-group">
                                 <button id="open-modal"
                                     class="flex justify-items-center items-center gap-3 bg-gray-200 rounded-full px-3 py-1.5">
@@ -325,6 +332,8 @@ async function fetchPurchaseOrdersData(query = 'latest') {
         });
 
         purchaseOrders.value = response.data.resource;
+
+        console.log(response);
     } catch (error) {
         catchToastError("Failed to fetch orders data.", 3000);
 
