@@ -49,9 +49,9 @@ export async function catchToastInfo (responseMsg, duration = 3000) {
     return toast.present();
 }
 
-export async function catchToastError (errorMsg, duration = 3000) {
+export async function catchToastError (responseMsg, duration = 3000) {
     const toast = await toastController.create({
-        message: errorMsg,
+        message: responseMsg,
         duration: duration,
         position: "top",
         color: "danger",
@@ -73,9 +73,9 @@ export async function catchToastError (errorMsg, duration = 3000) {
     return toast.present();
 }
 
-export async function catchToastWarn (warnMsg, duration = 3000) {
+export async function catchToastWarn (responseMsg, duration = 3000) {
     const toast = await toastController.create({
-        message: warnMsg,
+        message: responseMsg,
         duration: duration,
         position: "top",
         color: "warning",
