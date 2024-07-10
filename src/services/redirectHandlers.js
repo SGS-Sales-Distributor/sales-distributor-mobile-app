@@ -46,7 +46,7 @@ export function redirectToStoreDetailPage(storeId) {
 
 export function  redirectToPurchaseOrderPage() {
     setTimeout(() => {
-        router.push({
+        router.replace({
             name: 'purchaseOrder',
         });
     }, 300);
@@ -63,6 +63,14 @@ export function redirectToStorePurchaseOrderPage(storeId) {
 export function redirectToOwnerFormPage() {
     setTimeout(() => {
         router.push({
+            name: 'registerOwnerStore'
+        });
+    }, 300);
+}
+
+export function replaceToOwnerFormPage() {
+    setTimeout(() => {
+        router.replace({
             name: 'registerOwnerStore'
         });
     }, 300);

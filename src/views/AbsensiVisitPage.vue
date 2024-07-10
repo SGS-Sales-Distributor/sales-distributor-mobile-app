@@ -219,12 +219,12 @@
                   Absen
                 </ion-button>
 
-                <router-link :to="{ name: 'storeDetail', params: { id: store.store_id } }">
-                  <ion-button :disabled="store.enablePurchaseOrderBtn" size="small">
+                <!-- <router-link :to="{ name: 'storeDetail', params: { id: store.store_id } }"> -->
+                  <ion-button :disabled="store.enablePurchaseOrderBtn" @click="goToPurchase(store.store_id)" size="small">
                     <ion-icon slot="start" :icon="documentAttach"></ion-icon>
                     <span class="text-nowrap">Purchase Order</span>
                   </ion-button>
-                </router-link>
+                <!-- </router-link> -->
               </div>
             </ion-card-content>
           </ion-card>
@@ -251,6 +251,7 @@ import HeaderSection from '@/components/HeaderSection.vue';
 import AddressInfoSection from '@/components/absensi/AddressInfoSection.vue';
 import LocationNotAllowed from './../components/absensi/LocationNotAllowed.vue'
 import MapContentSection from '@/components/absensi/MapContentSection.vue';
+import router from '@/router';
 
 import { Camera, CameraResultType, CameraSource } from '@capacitor/camera';
 import { computed, nextTick, onMounted, ref, shallowRef } from 'vue';
@@ -336,6 +337,10 @@ function clearImage() {
   if (!disabledCheckIn.value) {
     disabledCheckIn.value = true;
   }
+}
+
+function goToPurchase(store_id){
+  this.router.replace({name:'storeDetail', params: { id: store_id }},'forward');
 }
 
 function convertBlobToBase64(blob) {
@@ -424,20 +429,26 @@ async function fetchStoresData(query = '') {
       },
     });
 
-    storeInfoDistri.value = response.data.resource;
+    storeInfoDistri.value = response.data.resource.data;
 
     let canAbsenVisit = true;
 
     Object.keys(storeInfoDistri.value).forEach(key => {
       const value = storeInfoDistri.value[key];
-      if (canAbsenVisit && (value.waktu_keluar == null || value.waktu_masuk == null)) {
+     
+      if ((value.waktu_keluar == null || value.waktu_masuk == null)) {
         value.enableAbsenBtn = false;
         canAbsenVisit = false
       } else {
         value.enableAbsenBtn = true;
       }
+      
+      if(value.waktu_keluar !== null && value.waktu_masuk !== null){
+        value.enableAbsenBtn = true;
+      }
 
-      if (value.waktu_masuk != null) {
+      // console.log(value.waktu_masuk);
+      if (value.waktu_masuk !== null) {
         value.enablePurchaseOrderBtn = false;
       } else {
         value.enablePurchaseOrderBtn = true;

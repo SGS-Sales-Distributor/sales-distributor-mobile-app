@@ -111,6 +111,7 @@ import { API_URL } from '@/services/globalVariables';
 import { redirectToHomePage } from '@/services/redirectHandlers';
 import { presentLoading, stopLoading } from '@/services/loadingHandlers';
 import { Form, Field, ErrorMessage } from 'vee-validate';
+import { elevation } from '@maptiler/sdk';
 
 const passwordFieldType = ref('password');
 const emailFieldType = ref('email');
@@ -152,9 +153,11 @@ async function login() {
 
     redirectToHomePage();
   } catch (error) {
-    catchToastError("Gagal Login, email atau password salah!", 3000);
-    
-    console.error('Failed to logged in: ', error);
+    if(error.response && error.response.data.status==401){
+      catchToastError(error.response.data.message, 3000);
+    }else{
+      catchToastError('Terjadi Kesalahan Server! Silahkan Coba Beberapa Saat Lagi', 3000);
+    }
   } finally {
     stopLoading();
   }
