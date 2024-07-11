@@ -3,7 +3,7 @@
     <div class="flex justify-between">
       <router-link :to="{ name: 'home' }" class="flex items-center space-x-3 rtl:space-x-reverse">
         <img src="/public/1630597076257.jpeg" class="h-12 rounded-full" alt="Sinergi Global Service" />
-        <span class="self-center text-sm font-semibold whitespace-nowrap text-gray-50">PT. Sinergi Global Service</span>
+        <span class="self-center text-sm font-semibold whitespace-nowrap text-gray-50">PT. Sinergi Global Servis</span>
       </router-link>
       <div class="relative inline-flex items-center p-2">
         <ion-button>

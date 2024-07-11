@@ -2,27 +2,20 @@
     <ion-page>
         <ion-content :fullscreen="true">
             <HeaderSection />
-
             <div class="container mx-auto">
                 <div class="flex items-center justify-center min-h-screen">
                     <div class="p-8 rounded-lg max-w-sm w-full">
                         <h2 class="text-2xl font-semibold text-center mb-4">Daftar Outlet Baru</h2>
                         <p class="text-gray-600 text-center mb-6">Masukkan data yang diperlukan.</p>
-                        <Form
-                        method="post"
-                        novalidate 
-                        :validation-schema="validation"
-                        >
+                        <Form @submit="storeDataAlert" method="post" novalidate :validation-schema="validation">
                             <div class="mb-4">
                                 <label for="store_name" class="block text-gray-700 text-sm font-semibold mb-2">Nama Toko
                                     *</label>
                                 <Field v-model="formData.store_name" :type="fieldTypes.text" id="store_name"
                                     name="store_name"
                                     class="form-input w-full px-4 py-2 border rounded-lg text-gray-700 focus:ring-blue-500"
-                                    placeholder="Masukkan nama toko" 
-                                    aria-label="store_name"
-                                    aria-describedby="store_name"
-                                    />
+                                    placeholder="Masukkan nama toko" aria-label="store_name"
+                                    aria-describedby="store_name" />
                                 <ErrorMessage name="store_name" class="text-rose-500" />
                             </div>
                             <div class="mb-4">
@@ -31,10 +24,8 @@
                                 <Field v-model="formData.store_alias" :type="fieldTypes.text" id="store_alias"
                                     name="store_alias"
                                     class="form-input w-full px-4 py-2 border rounded-lg text-gray-700 focus:ring-blue-500"
-                                    placeholder="Masukkan nama alias toko" 
-                                    aria-label="store_alias"
-                                    aria-describedby="store_alias"
-                                    />
+                                    placeholder="Masukkan nama alias toko" aria-label="store_alias"
+                                    aria-describedby="store_alias" />
                                 <ErrorMessage name="store_alias" class="text-rose-500" />
                             </div>
                             <div class="mb-4">
@@ -44,8 +35,7 @@
                                 <Field v-model="formData.store_address" name="store_address" as="textarea"
                                     id="store_address"
                                     class="form-input w-full px-4 py-2 border rounded-lg text-gray-700 focus:ring-blue-500"
-                                    placeholder="Masukkan alamat toko" cols="20" rows="10"
-                                    aria-label="store_address"
+                                    placeholder="Masukkan alamat toko" cols="20" rows="10" aria-label="store_address"
                                     aria-describedby="store_address">
                                 </Field>
                                 <ErrorMessage name="store_address" class="text-rose-500" />
@@ -56,22 +46,17 @@
                                 <Field v-model="formData.store_phone" :type="fieldTypes.phone" id="store_phone"
                                     name="store_phone"
                                     class="form-input w-full px-4 py-2 border rounded-lg text-gray-700 focus:ring-blue-500"
-                                    placeholder="+6285677445566" 
-                                    aria-label="store_phone"
-                                    aria-describedby="store_phone"
-                                    />
+                                    placeholder="Masukkan Nomer Telepon Toko" aria-label="store_phone"
+                                    aria-describedby="store_phone" />
                                 <ErrorMessage name="store_phone" class="text-rose-500" />
                             </div>
                             <div class="mb-4">
                                 <label for="store_fax" class="block text-gray-700 text-sm font-semibold mb-2">Nomor Fax
-                                    Toko *</label>
+                                    Toko</label>
                                 <Field v-model="formData.store_fax" :type="fieldTypes.phone" id="store_fax"
                                     name="store_fax"
                                     class="form-input w-full px-4 py-2 border rounded-lg text-gray-700 focus:ring-blue-500"
-                                    placeholder="1234-5678-9012" 
-                                    aria-label="store_fax"
-                                    aria-describedby="store_fax"
-                                    />
+                                    placeholder="Masukkan Nomer Fax Toko" aria-label="store_fax" aria-describedby="store_fax" />
                                 <ErrorMessage name="store_fax" class="text-rose-500" />
                             </div>
                             <div class="mb-4">
@@ -99,7 +84,7 @@
                                 </Field>
                                 <ErrorMessage name="subcabang_id" class="text-rose-500" />
                             </div>
-                            <button type="button" @click="storeDataAlert"
+                            <button type="submit"
                                 class="w-full bg-blue-500 text-white px-4 py-2 rounded-lg hover:bg-blue-600 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-opacity-50">Daftarkan
                             </button>
                             <p class="text-gray-600 text-xs text-center mt-4">
@@ -129,6 +114,7 @@ import { Form, Field, ErrorMessage } from 'vee-validate';
 const storeTypes = ref([]);
 const storeCabangs = ref([]);
 
+
 const formData = ref({
     store_name: null,
     store_alias: null,
@@ -149,12 +135,18 @@ const validation = Yup.object().shape({
     store_address: Yup.string()
         .required("Alamat toko tidak boleh kosong!"),
     store_phone: Yup.string()
-        .required('Nomor handphone toko tidak boleh kosong!')
-        .max(20, 'Nomor handphone toko tidak boleh lebih dari 20 karakter')
-        .matches(/^(?:\+62|62|0)8[1-9][0-9]{6,9}$/), // /^(?:\+62|62|0)8[1-9][0-9]{6,9}$/ 
+        .required('Nomor Telepon toko tidak boleh kosong!')
+        .min(11, 'Nomor Telepon toko tidak boleh kurang dari 11 digit')
+        .matches(/^[0-9]{11,12}$/, 'Nomor telepon harus terdiri dari 11-12 digit angka'), 
     store_fax: Yup.string()
         .required('Nomor fax toko tidak boleh kosong!')
-        .max(20, 'Nomor fax toko tidak boleh lebih dari 20 karakter'),
+        .max(10, 'Nomor fax toko tidak boleh lebih dari 10-11 Digit')
+        .matches(/^[0-9]{1,12}$/, 'Nomor Fax harus terdiri dari 1-12 digit angka'),
+    store_type: Yup.string()
+        .required('Mohon Pilih Tipe Terlebih Dahulu!'),
+    subcabang_id: Yup.string()
+        .required('Mohon Pilih Cabang Terlebih Dahulu!'),
+
 });
 
 async function storeDataAlert() {
@@ -174,7 +166,7 @@ async function storeDataAlert() {
                 cssClass: "alert-button-confirm",
                 handler: () => {
                     console.log("Pembuatan outlet berhasil");
-
+                    
                     saveStoreData();
 
                     redirectToOwnerFormPage();
@@ -204,17 +196,28 @@ async function saveStoreData() {
 
         stopLoading();
 
-        savedStoreData.value = response.data.resource;
+        savedStoreData.value = response.data.resource.store_id;
 
-        console.log(response.data.resource);
+        console.log(savedStoreData.value);
+        localStorage.setItem('store',savedStoreData.value);
 
-        catchToast(response.data.message);
+
+        catchToast(response.data.message, 3000);
     } catch (error) {
-        catchToastError("Gagal membuat data toko baru", 3000);
+        if (error.response && error.response.data.status == 401) {
+            catchToastError(error.response.data.message, 3000);
+            //catchToastError("Gagal membuat data toko baru", 3000);
+            redirectToRegisterStorePage();
+        } else if(error.response.data.status == 422){   
+            catchToastError(error.response.data.message, 3000);
+            redirectToRegisterStorePage();
+        } else {
+            // catchToastError('Terjadi Kesalahan Server! Silahkan Coba Beberapa Saat Lagi', 3000);
+            catchToastError("Gagal Menyimpan data toko baru", 3000);
+            redirectToRegisterStorePage();
+            //console.error("Failed to save store data", error);
 
-        redirectToRegisterStorePage();
-
-        console.error("Failed to save store data", error);
+        }
     } finally {
         stopLoading();
     }
@@ -270,13 +273,14 @@ async function fetchStoreCabangs(query = '') {
     }
 }
 
+
 onMounted(() => {
     presentLoading();
 
     refreshAccessTokenHandler();
     fetchStoreTypes();
     fetchStoreCabangs();
-    
+
     stopLoading();
 });
 </script>

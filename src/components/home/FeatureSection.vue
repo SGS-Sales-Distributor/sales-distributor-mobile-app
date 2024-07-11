@@ -8,29 +8,30 @@
       <ion-label class="text-sm font-semibold">Absensi Visit</ion-label>
     </div>
     <div class="flex flex-col items-center justify-center space-y-2">
-      <ion-button id="registrasi-toko-button" shape="round" href="/store/register">
+      <!-- <ion-button id="registrasi-toko-button" shape="round" href="/store/register" > -->
+      <ion-button id="registrasi-toko-button" shape="round" @click="registrerClik">
         <ion-icon class="text-2xl" slot="icon-only"  :icon="storefront"></ion-icon>
       </ion-button>
       <ion-label class="text-sm font-semibold">Registrasi Toko</ion-label>
     </div>
-    <div class="flex flex-col items-center justify-center space-y-2">
+    <!-- <div class="flex flex-col items-center justify-center space-y-2">
       <ion-button id="katalog-produk-button" shape="round">
         <ion-icon class="text-2xl" slot="icon-only" :icon="cube"></ion-icon>
       </ion-button>
       <ion-label class="text-sm font-semibold">Katalog Produk</ion-label>
-    </div>
+    </div> -->
     <div class="flex flex-col items-center justify-center space-y-2">
       <ion-button id="purchase-order-button" shape="round" href="/order">
         <ion-icon class="text-2xl" slot="icon-only"  :icon="card"></ion-icon>
       </ion-button>
       <ion-label class="text-sm font-semibold">Purchase Order</ion-label>
     </div>
-    <div class="flex flex-col items-center justify-center space-y-2">
+    <!-- <div class="flex flex-col items-center justify-center space-y-2">
       <ion-button id="achievement-button" shape="round">
         <ion-icon class="text-2xl" slot="icon-only"  :icon="trophy"></ion-icon>
       </ion-button>
       <ion-label class="text-sm font-semibold">Reward</ion-label>
-    </div>
+    </div> -->
   </div>
   <!-- End main feature -->
 </template>
@@ -44,6 +45,23 @@ import {
   card,
 } from 'ionicons/icons';
 import { IonButton } from '@ionic/vue';
+import { redirectToOwnerFormPage, redirectToRegisterStorePage } from '@/services/redirectHandlers';
+import { presentLoading, stopLoading } from '@/services/loadingHandlers';
+import { catchToast, catchToastError } from '@/services/toastHandlers';
+import { alertController } from '@ionic/vue';
+import { Form, Field, ErrorMessage } from 'vee-validate';
+
+const store =localStorage.getItem("store_id") ? JSON.parse(localStorage.getItem("store_id")) : null;
+
+async function registrerClik(){
+  if(store == null || store == ""){
+    redirectToRegisterStorePage();
+  }else{
+    redirectToOwnerFormPage();
+  }
+
+}
+
 </script>
 
 <style scoped>
