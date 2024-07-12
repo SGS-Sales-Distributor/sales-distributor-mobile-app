@@ -148,7 +148,7 @@ const reachedEnd = computed(() => {
     return Array.isArray(productsData.value) && lastIndex.value >= productsData.value.length;
 });
 
-const storeData = localStorage.getItem("store");
+const storeData = localStorage.getItem("store_id");
 
 const ionInfinite = (event) => {
     if (!reachedEnd.value) {

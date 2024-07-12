@@ -1,9 +1,25 @@
 <template>
   <ion-page>
     <ion-content :fullscreen="true">
-      <HeaderSection />
-      <div class="container mx-auto">
-        <div class="flex items-center justify-center min-h-screen">
+      <header class="bg-transparent p-4 rounded-b-3xl">
+				<div class="flex justify-between">
+          <div>
+            <button type="button"
+            class="relative inline-flex items-center p-2 text-sm font-medium text-center text-white bg-transparent rounded-lg focus:ring-4 focus:outline-none focus:ring-blue-300"
+            @click="NotBack">
+            <ion-icon class="text-2xl" :icon="chevronBackOutline" color="dark"></ion-icon>
+          </button>
+        </div>
+        <div class="flex items-center justify-center">
+          <h2 class="text-center" v-if="storeData">
+            Toko <span class="font-semibold">{{ storeData.nama_toko }}</span>
+          </h2>
+        </div>
+				
+      </div>
+    </header>
+    <div class="container mx-auto">
+        <div class="flex justify-center min-h-screen">
           <div class="p-8 rounded-lg max-w-sm w-full">
             <h2 class="text-2xl font-semibold text-center mb-4">Form Pendaftaran Owner Dari Outlet {{ store.store_name
               }}</h2>
@@ -51,6 +67,7 @@
               </Field> -->
                 <p style="color: red;">Diupload Oleh Admin Dari Web</p>
               </div>
+              <br>
               <button type="submit"
                 class="w-full bg-blue-500 text-white px-4 py-2 rounded-lg hover:bg-blue-600 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-opacity-50">Selesai Registrasi
               </button>
@@ -115,7 +132,7 @@ const validation = Yup.object().shape({
 
 async function storeDataAlert() {
   const alert = await alertController.create({
-    header: "Konfirmasi pembuatan data owner baru",
+    header: "Konfirmasi Registrasi Toko Baru",
     message: "Apakah kamu yakin?",
     buttons: [
       {
@@ -182,35 +199,6 @@ async function saveOwnerData(storeId) {
   }
 }
 
-async function showDataStoreInfoDist(store){
-  try {
-    refreshAccessTokenHandler();
-
-    const tokens = localStorage.getItem("tokens") ? JSON.parse(localStorage.getItem("tokens")) : null;
-
-    const headers = {
-      'Content-Type': 'application/json',
-      'Authorization': `Bearer ${tokens.access_token}`
-    };
-
-    const response = await axios.get(`${API_URL.value}/api/v2/storesInfo/${store}`, {
-      headers: headers
-    });
-
-    showDataStoreInfoDistVal.value = response.data.resource;
-
-
-  } catch (error) {
-    if (error.response && error.response.data.status == 401) {
-      catchToastError(error.response.data.message, 3000);
-    } else if (error.response.data.status == 500) {
-      catchToastError(error.response.data.message, 3000);
-    } else {
-      catchToastError('Terjadi Kesalahan Server! Silahkan Coba Beberapa Saat Lagi', 3000);
-    }
-  }
-}
-
 async function NotBack() {
   catchToastError('Mohon Selesaikan Register Toko Ini !', 3000)
   redirectToOwnerFormPage();
@@ -219,6 +207,5 @@ async function NotBack() {
 onMounted(() => {
   refreshAccessTokenHandler();
   stopLoading();
-  showDataStoreInfoDist(store);
 })
 </script>

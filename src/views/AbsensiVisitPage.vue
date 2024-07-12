@@ -244,7 +244,8 @@ import { IonSearchbar } from '@ionic/vue';
 
 import {
   documentAttach,
-  camera
+  camera,
+  constructOutline
 } from 'ionicons/icons';
 
 import HeaderSection from '@/components/HeaderSection.vue';
