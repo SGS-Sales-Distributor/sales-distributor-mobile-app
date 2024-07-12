@@ -10,9 +10,9 @@
           <ion-icon class="text-2xl" :icon="notificationsOutline"></ion-icon>
         </ion-button>
         <span class="sr-only">Notifications</span>
-        <div
+        <!-- <div
           class="absolute inline-flex items-center justify-center w-6 h-6 text-xs font-bold text-white bg-red-500 border-0 border-white rounded-full -top-2 -end-2">
-          20</div>
+          20</div> -->
       </div>
     </div>
   </header>

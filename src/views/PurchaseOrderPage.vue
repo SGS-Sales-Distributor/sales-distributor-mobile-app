@@ -54,7 +54,7 @@
                                 <ion-card-content class="bg-gray-50">
                                     <div class="flex w-full justify-center items-center px-4 pb-2 space-x-4">
                                         <ion-button shape="round" color="success"
-                                            @click="redirectToStoreDetailPage(store.store_id)">Pilih</ion-button>
+                                            @click="redirectToStoreDetailPage(store.owners[0].store_id)">Pilih</ion-button>
                                     </div>
                                 </ion-card-content>
                             </ion-card>

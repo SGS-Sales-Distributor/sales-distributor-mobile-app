@@ -299,7 +299,8 @@
 											</ion-button>
 											<input id="orderInput" :value="order.qty" type="number" pattern="[0-9]"
 												min="0" :max="order.stock" readonly class="text-right" />
-											<ion-button size="small" @click="addMoreOrder(index, order.stock)" color="success">
+											<ion-button size="small" @click="addMoreOrder(index, order.stock)"
+												color="success">
 												<ion-icon slot="icon-only" :icon="addOutline"></ion-icon>
 											</ion-button>
 										</div>
@@ -393,13 +394,13 @@
 						<ion-select-option value="Transfer">Transfer</ion-select-option>
 					</ion-select>
 
-					<div class="flex justify-between items-center py-2" v-if="objOrder.length">
+					<!-- <div class="flex justify-between items-center py-2" v-if="objOrder.length">
 						<button @click="checkProductsHasPromo"
 							class="block w-full md:w-auto text-white bg-green-400 hover:bg-green-500 focus:ring-4 focus:outline-none font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800"
 							type="button">
 							Cek Promo
 						</button>
-					</div>
+					</div> -->
 
 					<div class="flex justify-between items-center py-2" v-if="objOrder.length">
 						<button @click="setOpen(true)"
@@ -449,8 +450,7 @@
 							</div>
 							<div v-if="!flagOTP"
 								class="relative flex min-h-screen flex-col justify-center overflow-hidden bg-gray-50 py-12">
-								<div
-									class="relative bg-white px-6 py-8 mx-auto w-full max-w-lg rounded-2xl">
+								<div class="relative bg-white px-6 py-8 mx-auto w-full max-w-lg rounded-2xl">
 									<div class="mx-auto flex w-full max-w-md flex-col space-y-16">
 										<div class="flex flex-col items-center justify-center text-center space-y-2">
 											<div class="font-semibold text-3xl">
@@ -663,6 +663,9 @@ async function confirmOTP() {
 		objOrder.value = [];
 
 		isOpen.value = false;
+		
+		redirectToAbsensiPage();
+
 	} catch (error) {
 		catchToastError("Kode OTP salah", 3000);
 
@@ -749,6 +752,7 @@ async function sendOTP(nomorWhatsappOTP) {
 		refreshAccessTokenHandler();
 
 		const tokens = localStorage.getItem("tokens") ? JSON.parse(localStorage.getItem("tokens")) : null;
+		const user = localStorage.getItem("user") ? JSON.parse(localStorage.getItem("user")) : null;
 
 		const headers = {
 			'Authorization': `Bearer ${tokens.access_token}`,
@@ -759,6 +763,7 @@ async function sendOTP(nomorWhatsappOTP) {
 			"objOrder": objOrder.value,
 			"idToko": idToko.value,
 			"metodePembayaran": metodePembayaran.value,
+			"userNumber" : user.number,
 		}, {
 			headers: headers
 		});
@@ -892,11 +897,17 @@ async function fetchStoreDetailData(id) {
 
 		idToko.value = storeData.value.store_id;
 
-		localStorage.setItem("store", storeData.value);
+		localStorage.setItem("store_id", storeData.value.store_id);
 	} catch (error) {
-		catchToastError(`Failed to fetch store ${id}`, 3000);
-
-		console.error(`Failed to fetch store ${id}: `, error);
+		if (error.response && error.response.data.status == 401) {
+			catchToastError(error.response.data.message, 3000);
+		} else if (error.response.data.status == 500) {
+			catchToastError(error.response.data.message, 3000);
+		} else {
+			// catchToastError('Terjadi Kesalahan Server! Silahkan Coba Beberapa Saat Lagi', 3000);
+			catchToastError(`Failed to fetch store ${id}`, 3000);
+		}
+		// console.error(`Failed to fetch store ${id}: `, error);
 	}
 }
 
