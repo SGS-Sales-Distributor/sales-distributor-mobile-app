@@ -901,11 +901,14 @@ async function fetchStoreDetailData(id) {
 	} catch (error) {
 		if (error.response && error.response.data.status == 401) {
 			catchToastError(error.response.data.message, 3000);
-		} else if (error.response.data.status == 500) {
-			catchToastError(error.response.data.message, 3000);
-		} else {
+		} 
+		// else if (error.response.data.status == 500) {
+		// 	catchToastError(error.response.data.message, 3000);
+		// } 
+		else {
 			// catchToastError('Terjadi Kesalahan Server! Silahkan Coba Beberapa Saat Lagi', 3000);
-			catchToastError(`Failed to fetch store ${id}`, 3000);
+			// catchToastError(`Failed to fetch store ${id}`, 3000);
+			console.log(error, 3000);
 		}
 		// console.error(`Failed to fetch store ${id}: `, error);
 	}
