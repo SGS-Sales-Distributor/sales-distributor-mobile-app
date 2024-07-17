@@ -184,6 +184,7 @@ async function saveStoreData() {
         refreshAccessTokenHandler();
 
         const tokens = localStorage.getItem("tokens") ? JSON.parse(localStorage.getItem("tokens")) : null;
+        const user = localStorage.getItem("user") ? JSON.parse(localStorage.getItem("user")) : null;
 
         const headers = {
             'Authorization': `Bearer ${tokens.access_token}`,
@@ -192,7 +193,8 @@ async function saveStoreData() {
         presentLoading();
 
         const response = await axios.post(`${API_URL.value}/api/v2/stores`, formData.value, {
-            headers: headers
+            headers: headers,
+            "userNumber" : user.number,
         });
 
         stopLoading();
@@ -209,10 +211,12 @@ async function saveStoreData() {
             catchToastError(error.response.data.message, 3000);
             //catchToastError("Gagal membuat data toko baru", 3000);
             redirectToRegisterStorePage();
-        } else if(error.response.data.status == 422){   
-            catchToastError(error.response.data.message, 3000);
-            redirectToRegisterStorePage();
-        } else {
+        } 
+        // else if(error.response.data.status == 422){   
+        //     catchToastError(error.response.data.message, 3000);
+        //     redirectToRegisterStorePage();
+        // } 
+        else {
             // catchToastError('Terjadi Kesalahan Server! Silahkan Coba Beberapa Saat Lagi', 3000);
             catchToastError("Gagal Menyimpan data toko baru", 3000);
             redirectToRegisterStorePage();
