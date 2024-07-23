@@ -220,7 +220,7 @@
                 </ion-button>
 
                 <!-- <router-link :to="{ name: 'storeDetail', params: { id: store.store_id } }"> -->
-                  <ion-button :disabled="store.enablePurchaseOrderBtn" @click="goToPurchase(store.store_id)" size="small">
+                  <ion-button :disabled="store.enablePurchaseOrderBtn" @click="redirectToStoreDetailPage(store.store_id)" size="small">
                     <ion-icon slot="start" :icon="documentAttach"></ion-icon>
                     <span class="text-nowrap">Purchase Order</span>
                   </ion-button>
@@ -263,6 +263,7 @@ import { statusGPS, API_URL, latitude, longitude, currentRoute } from '@/service
 import { catchToast, catchToastError } from '@/services/toastHandlers';
 import { refreshAccessTokenHandler } from '@/services/auth.js';
 import { presentLoading, stopLoading } from '@/services/loadingHandlers';
+import { redirectToStoreDetailPage } from '@/services/redirectHandlers';
 
 const user = ref(JSON.parse(localStorage.getItem("user")));
 const isStoreDetailCardVisible = ref(false);
