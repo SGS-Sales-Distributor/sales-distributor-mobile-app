@@ -6,6 +6,7 @@ import HomePage from "@/views/HomePage.vue";
 import AbsensiVisitPage from "@/views/AbsensiVisitPage.vue";
 import ProfilePage from "@/views/ProfilePage.vue";
 import StoreDetailPage from "@/views/StoreDetailPage.vue";
+import StoreDetailPageFromPO from "@/views/StoreDetailPageFromPO.vue";
 import OrderBarangPage from "@/views/OrderBarangPage.vue";
 import RegistrasiTokoBaruPage from './../views/RegistrasiTokoBaruPage.vue'
 import RegistrasiOwnerBaruPage from './../views/RegistrasiOwnerBaruPage.vue'
@@ -81,6 +82,11 @@ const routes: Array<RouteRecordRaw> = [
         name: "profile",
         component: ProfilePage
       },
+      { 
+        path: "/storeInfo/:id",
+        name: "storeDetailFromPO",
+        component: StoreDetailPageFromPO,
+      }
     ],
   },
 ];

@@ -97,9 +97,9 @@
                     <dt class="text-md font-bold text-gray-900">
                       Nama Pemilik Toko
                     </dt>
-                    <dd v-if="detailStoreInfoDistri.nama_pemilik_toko"
+                    <dd v-if="detailStoreInfoDistri.nama_pemilik"
                       class="mt-1 text-sm text-gray-900 sm:mt-0 sm:col-span-2">
-                      {{ detailStoreInfoDistri.nama_pemilik_toko }}
+                      {{ detailStoreInfoDistri.nama_pemilik }}
                     </dd>
                     <dd v-else class="mt-1 text-sm text-gray-900 sm:mt-0 sm:col-span-2">
                       <ion-badge color="danger">Tidak Ada</ion-badge>
@@ -109,9 +109,9 @@
                     <dt class="text-md font-bold text-gray-900">
                       Email Pemilik Toko
                     </dt>
-                    <dd v-if="detailStoreInfoDistri.email_pemilik_toko"
+                    <dd v-if="detailStoreInfoDistri.email_pemilik"
                       class="mt-1 text-sm text-gray-900 sm:mt-0 sm:col-span-2">
-                      {{ detailStoreInfoDistri.email_pemilik_toko }}
+                      {{ detailStoreInfoDistri.email_pemilik }}
                     </dd>
                     <dd v-else class="mt-1 text-sm text-gray-900 sm:mt-0 sm:col-span-2">
                       <ion-badge color="danger">Tidak Ada</ion-badge>
@@ -216,7 +216,7 @@
               <div class="flex w-full justify-center items-center px-4 pb-2 space-x-4">
                 <ion-button :disabled="store.enableAbsenBtn" @click="fetchOneStoreData(store.store_id)" size="small">
                   <ion-icon slot="start" :icon="camera"></ion-icon>
-                  Absen
+                  Visit
                 </ion-button>
 
                 <!-- <router-link :to="{ name: 'storeDetail', params: { id: store.store_id } }"> -->
@@ -341,7 +341,12 @@ function clearImage() {
 }
 
 function goToPurchase(store_id){
-  this.router.replace({name:'storeDetail', params: { id: store_id }},'forward');
+  try {
+    this.router.replace({name:'storeDetail', params: { id: store_id }},'forward');
+    catchToastError(store_id, 3000);
+  }catch(error){
+    catchToastError(error.response, 3000);
+  }
 }
 
 function convertBlobToBase64(blob) {

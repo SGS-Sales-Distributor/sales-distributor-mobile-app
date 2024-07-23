@@ -165,12 +165,8 @@ async function storeDataAlert() {
             {
                 text: "Lanjutkan",
                 cssClass: "alert-button-confirm",
-                handler: () => {
-                    console.log("Pembuatan outlet berhasil");
-                    
-                    saveStoreData();
-
-                    redirectToOwnerFormPage();
+                handler: async () => {
+                    await saveStoreData();
                 },
             },
         ],
@@ -202,10 +198,12 @@ async function saveStoreData() {
         savedStoreData.value = response.data.resource.store_id;
 
         console.log(savedStoreData.value);
-        localStorage.setItem('store',savedStoreData.value);
+        // localStorage.setItem('store',savedStoreData.value);
+        localStorage.setItem('store_id',savedStoreData.value);
 
 
         catchToast(response.data.message, 3000);
+        redirectToOwnerFormPage();
     } catch (error) {
         if (error.response && error.response.data.status == 401) {
             catchToastError(error.response.data.message, 3000);
