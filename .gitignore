@@ -20,13 +20,13 @@ package-lock.json
 .env_old
 .env
 
-/android
+android/*
 /.idea
 /.ionic
 /.sass-cache
 /.sourcemaps
 /.versions
-/.vscode/*
+.vscode/*
 !/.vscode/extensions.json
 /coverage
 /dist
