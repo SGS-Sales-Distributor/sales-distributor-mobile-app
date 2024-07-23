@@ -83,3 +83,11 @@ export function redirectToRegisterStorePage() {
         });
     }, 300);
 }
+
+export function redirectToStoreDetailPageFormPO(storeId) {
+    setTimeout(() => {
+        router.push({
+            name: 'storeDetailFromPO', params: { id: storeId }
+        });
+    }, 300);
+}

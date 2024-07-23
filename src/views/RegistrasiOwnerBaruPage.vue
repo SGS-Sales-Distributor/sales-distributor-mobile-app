@@ -99,8 +99,10 @@ import { alertController } from '@ionic/vue';
 const showDataStoreInfoDistVal = ref(null);
 
 // const storeId = ref(JSON.parse(resource.store_id));
-const store = JSON.parse(localStorage.getItem("store"));
-// const store =localStorage.getItem("store_id") ? JSON.parse(localStorage.getItem("store_id")) : null;
+
+// const store = JSON.parse(localStorage.getItem("store_id"));
+// const getstoreId = JSON.parse(localStorage.getItem("store_id"));
+const store =localStorage.getItem("store_id") ? JSON.parse(localStorage.getItem("store_id")) : null;
 
 const formData = ref({
   owner: null,
@@ -145,12 +147,8 @@ async function storeDataAlert() {
       {
         text: "Lanjutkan",
         cssClass: "alert-button-confirm",
-        handler: () => {
-          saveOwnerData(store);
-
-          console.log("Pembuatan data owner berhasil");
-
-          redirectToPurchaseOrderPage();
+        handler: async () => {
+          await saveOwnerData(store);
         },
       },
     ],
@@ -180,6 +178,7 @@ async function saveOwnerData(storeId) {
     stopLoading();
 
     catchToast(response.data.message, 3000);
+    redirectToPurchaseOrderPage();
   } catch (error) {
     if (error.response && error.response.data.status == 401) {
       catchToastError(error.response.data.message, 3000);
@@ -199,7 +198,7 @@ async function saveOwnerData(storeId) {
   }
 }
 
-async function NotBack() {
+function NotBack() {
   catchToastError('Mohon Selesaikan Register Toko Ini !', 3000)
   redirectToOwnerFormPage();
 }

@@ -8,6 +8,13 @@ const config: CapacitorConfig = {
     // androidScheme: "https",
     androidScheme: "http",
   }
-};
+,
+    android: {
+       buildOptions: {
+          keystorePath: 'd:\SGS\Tri\Document\Tri Murdani\x2024\keyStore sidia\sidia.keystore',
+          keystoreAlias: 'sidiaapp',
+       }
+    }
+  };
 
 export default config;

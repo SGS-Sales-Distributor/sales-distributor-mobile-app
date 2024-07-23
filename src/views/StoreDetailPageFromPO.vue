@@ -111,9 +111,9 @@
 											<dt class="text-md font-bold text-gray-900">
 												Nama Pemilik Toko
 											</dt>
-											<dd v-if="storeData.nama_pemilik"
+											<dd v-if="storeData.owner"
 												class="mt-1 text-sm text-gray-900 sm:mt-0 sm:col-span-2">
-												{{ storeData.nama_pemilik }}
+												{{ storeData.owner }}
 											</dd>
 											<dd v-else class="mt-1 text-sm text-gray-900 sm:mt-0 sm:col-span-2">
 												<ion-badge color="danger">Tidak Ada</ion-badge>
@@ -186,9 +186,9 @@
 											<dt class="text-md font-bold text-gray-900">
 												Nama Pemilik Toko
 											</dt>
-											<dd v-if="storeData.nama_pemilik"
+											<dd v-if="storeData.owner"
 												class="mt-1 text-sm text-gray-900 sm:mt-0 sm:col-span-2">
-												{{ storeData.nama_pemilik }}
+												{{ storeData.owner }}
 											</dd>
 											<dd v-else class="mt-1 text-sm text-gray-900 sm:mt-0 sm:col-span-2">
 												<ion-badge color="danger">Tidak Ada</ion-badge>
@@ -198,9 +198,9 @@
 											<dt class="text-md font-bold text-gray-900">
 												Email Pemilik Toko
 											</dt>
-											<dd v-if="storeData.email_pemilik"
+											<dd v-if="storeData.emailOwner"
 												class="mt-1 text-sm text-gray-900 sm:mt-0 sm:col-span-2">
-												{{ storeData.email_pemilik }}
+												{{ storeData.emailOwner }}
 											</dd>
 											<dd v-else class="mt-1 text-sm text-gray-900 sm:mt-0 sm:col-span-2">
 												<ion-badge color="danger">Tidak Ada</ion-badge>
@@ -887,7 +887,7 @@ async function fetchStoreDetailData(id) {
 			'Authorization': `Bearer ${tokens.access_token}`
 		};
 
-		const response = await axios.get(`${API_URL.value}/api/v2/stores/${id}`, {
+		const response = await axios.get(`${API_URL.value}/api/v2/storesInfo/${id}`, {
 			headers: headers
 		});
 
