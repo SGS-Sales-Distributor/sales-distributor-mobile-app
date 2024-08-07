@@ -419,20 +419,23 @@ async function passCheckOutAlert() {
 
 // rest api (backend server)
 async function fetchStoresData(query = '') {
+
   try {
     refreshAccessTokenHandler();
-
+    
     const tokens = localStorage.getItem("tokens") ? JSON.parse(localStorage.getItem("tokens")) : null;
-
+    const userId = localStorage.getItem("user") ? JSON.parse(localStorage.getItem("user")) : "" ;
+    
     const headers = {
       'Content-Type': 'application/json',
       'Authorization': `Bearer ${tokens.access_token}`
     };
-
+    
     const response = await axios.get(`${API_URL.value}/api/v2/stores/call-plans`, {
       headers: headers,
       params: {
         q: query,
+        "userId" : userId.user_id,
       },
     });
 
@@ -690,15 +693,13 @@ async function takeCheckOutPicture() {
 
 onMounted(() => {
   currentRoute.value = null;
-  
   presentLoading();
-
+  
   refreshAccessTokenHandler();
-
-  fetchStoresData();
   printCurrentPosition();
+  fetchStoresData();
   checkLocationAccess();
-
+  
   stopLoading();
 });
 </script>
