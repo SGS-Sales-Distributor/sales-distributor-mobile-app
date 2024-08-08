@@ -11,9 +11,9 @@ import OrderBarangPage from "@/views/OrderBarangPage.vue";
 import RegistrasiTokoBaruPage from './../views/RegistrasiTokoBaruPage.vue'
 import RegistrasiOwnerBaruPage from './../views/RegistrasiOwnerBaruPage.vue'
 import PurchaseOrderPage from './../views/PurchaseOrderPage.vue'
-
 import { isAuthenticated } from "@/services/auth";
 import "maplibre-gl/dist/maplibre-gl.css";
+import RegistrasiPage from "@/views/RegistrasiPage.vue";
 
 const routes: Array<RouteRecordRaw> = [
   {
@@ -31,6 +31,16 @@ const routes: Array<RouteRecordRaw> = [
       title: "Login",
     },
   },
+  {
+    path : "/registerAkun",
+    name : "registerAkun",
+    component : RegistrasiPage
+  },
+  // {
+  //   path: "registerAkun",
+  //   name: "registerAkun",
+  //   component: RegistrasiPage,
+  // },
   {
     path: "/",
     component: TabsPage,

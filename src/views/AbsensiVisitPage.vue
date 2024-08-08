@@ -697,7 +697,9 @@ onMounted(() => {
   
   refreshAccessTokenHandler();
   printCurrentPosition();
-  fetchStoresData();
+  if(user != null || user !="" ) {
+    fetchStoresData();
+  }
   checkLocationAccess();
   
   stopLoading();
