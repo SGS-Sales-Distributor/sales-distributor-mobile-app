@@ -14,7 +14,7 @@ export function redirectOneStep() {
 
 export function redirectToHomePage() {
     setTimeout(() => {
-        router.push({
+        router.replace({
             name: 'home',
         });
     }, 300);
@@ -88,6 +88,14 @@ export function redirectToStoreDetailPageFormPO(storeId) {
     setTimeout(() => {
         router.push({
             name: 'storeDetailFromPO', params: { id: storeId }
+        });
+    }, 300);
+}
+
+export function redirectToRegisterAkun() {
+    setTimeout(() => {
+        router.push({
+            name: 'registerAkun'
         });
     }, 300);
 }
