@@ -86,7 +86,7 @@
         ?</label>
     </center>
     <button type="button"
-      class="flex w-full justify-center rounded-md bg-red-600 px-3 py-1.5 text-sm font-semibold leading-6 text-white shadow-sm hover:bg-blue-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-blue-600 transition-all"
+      class="flex w-full justify-center rounded-md bg-red-600 px-3 py-1.5 text-sm font-semibold leading-6 text-white shadow-sm hover:bg-red-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-red-600 transition-all"
       @click="registerAkun"><span>Register Now</span></button>
   </div>
 </template>
@@ -145,7 +145,8 @@ async function login() {
     if (error.response && error.response.data.status == 401) {
       catchToastError(error.response.data.message, 3000);
     } else {
-      catchToastError('Terjadi Kesalahan Server! Silahkan Coba Beberapa Saat Lagi', 3000);
+      // catchToastError('Terjadi Kesalahan Server! Silahkan Coba Beberapa Saat Lagi', 3000);
+      console.log(error.response, 3000);
     }
   } finally {
     stopLoading();

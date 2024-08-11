@@ -28,6 +28,7 @@ export function redirectToLoginPage() {
     }, 300);
 }
 
+
 export function redirectToAbsensiPage() {
     setTimeout(() => {
         router.push({
@@ -96,6 +97,14 @@ export function redirectToRegisterAkun() {
     setTimeout(() => {
         router.push({
             name: 'registerAkun'
+        });
+    }, 300);
+}
+
+export function ReplaceLoginPage() {
+    setTimeout(() => {
+        router.replace({
+            name: 'login',
         });
     }, 300);
 }

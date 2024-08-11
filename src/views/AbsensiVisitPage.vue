@@ -442,36 +442,37 @@ async function fetchStoresData(query = '') {
     storeInfoDistri.value = response.data.resource.data;
 
     let canAbsenVisit = true;
-
-    Object.keys(storeInfoDistri.value).forEach(key => {
-      const value = storeInfoDistri.value[key];
-     
-      if ((value.waktu_keluar == null || value.waktu_masuk == null)) {
-        value.enableAbsenBtn = false;
-        canAbsenVisit = false
-      } else {
-        value.enableAbsenBtn = true;
-      }
-      
-      if(value.waktu_keluar !== null && value.waktu_masuk !== null){
-        value.enableAbsenBtn = true;
-      }
-
-      // console.log(value.waktu_masuk);
-      if (value.waktu_masuk !== null) {
-        value.enablePurchaseOrderBtn = false;
-      } else {
-        value.enablePurchaseOrderBtn = true;
-      }
-
-
-      if (!statusGPS.value) {
-        value.enablePurchaseOrderBtn = true;
-        value.enableAbsenBtn = true;
-      }
-    });
+      Object.keys(storeInfoDistri.value).forEach(key => {
+        const value = storeInfoDistri.value[key];
+       
+        if ((value.waktu_keluar == null || value.waktu_masuk == null)) {
+          value.enableAbsenBtn = false;
+          canAbsenVisit = false
+        } else {
+          value.enableAbsenBtn = true;
+        }
+        
+        if(value.waktu_keluar !== null && value.waktu_masuk !== null){
+          value.enableAbsenBtn = true;
+        }
+  
+        // console.log(value.waktu_masuk);
+        if (value.waktu_masuk !== null) {
+          value.enablePurchaseOrderBtn = false;
+        } else {
+          value.enablePurchaseOrderBtn = true;
+        }
+  
+  
+        if (!statusGPS.value) {
+          value.enablePurchaseOrderBtn = true;
+          value.enableAbsenBtn = true;
+        }
+      });
+      catchToast('Call Plan Berhasil Ditemukan',3000);
   } catch (error) {
-    catchToastError('Failed to fetch store data', 3000);
+    // catchToastError('Failed to fetch store data', 3000);
+    catchToastError('Belum Ada Call Plan Hari Ini!', 3000);
 
     console.error('Failed to fetch store data: ', error);
   }
@@ -482,6 +483,7 @@ async function fetchOneStoreData(id) {
     refreshAccessTokenHandler();
 
     const tokens = localStorage.getItem("tokens") ? JSON.parse(localStorage.getItem("tokens")) : null;
+    const userId = localStorage.getItem("user") ? JSON.parse(localStorage.getItem("user")) : "" ;
 
     const headers = {
       'Content-Type': 'application/json',
@@ -489,7 +491,10 @@ async function fetchOneStoreData(id) {
     };
 
     const response = await axios.get(`${API_URL.value}/api/v2/stores/${id}`, {
-      headers: headers
+      headers: headers,
+      params: {
+        "userId" : userId.user_id,
+      },
     });
 
     detailStoreInfoDistri.value = response.data.resource;
@@ -685,7 +690,7 @@ async function takeCheckOutPicture() {
       console.error('Failed to capture photo or image path is missing');
     }
   } catch (error) {
-    catchToastError("Error when capturing photo");
+    catchToastError("Error when capturing photo",3000);
 
     console.error('Error when capturing photo: ', error);
   }
