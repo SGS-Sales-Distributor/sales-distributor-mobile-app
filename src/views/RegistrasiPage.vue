@@ -3,13 +3,48 @@
         <ion-content>
             <div class="flex min-h-full flex-col justify-center px-6 py-12 lg:px-8">
                 <div class="sm:mx-auto sm:w-lg sm:max-w-sm">
-                    <h2 class="text-2xl font-semibold text-center mb-4">REGISTRASI AKUN</h2>
+                    <h2 class="text-2xl font-semibold text-center mb-4">FORM REGISTRASI</h2>
                 </div>
                 <div class="mt-4 sm:mx-auto sm:w-full sm:max-w-sm">
                     <vee-form novalidate class="space-y-4" method="post" @submit="register"
                         :validation-schema="formValidate">
-                        <!-- NIK Input -->
+                        <!-- choose area -->
                         <div>
+                            <label for="area" class="block text-sm font-medium leading-6 text-grey-900">Pilih
+                                Area</label>
+                        </div>
+                        <div class="mt-2">
+                            <vee-field v-model="formData.kode_lokasi" as="select" name="kode_lokasi" id="kode_lokasi" class="block 
+                                w-full 
+                                bg-transparent
+                                rounded-md 
+                                ring-1
+                                ring-inset
+                                ring-white-300
+                                py-2.5
+                                px-2.5 
+                                text-white-900
+                                shadow-sm
+                                focus:ring-2
+                                focus:ring-inset
+                                focus:ring-blue-500
+                                focus:outline-0
+                                disabled:border-0
+                                placeholder:text-white-400
+                                transition-all  
+                                sm:text-md 
+                                sm:leading-6">
+                                <option disabled selected value="">Pilih Area</option>
+                                <!-- <option value="1">Bandung</option>
+                                <option value="2">Bogor</option> -->
+                                <option v-for="area in Lokasi" :key="area.id" :value="area.kode_lokasi">
+                                    {{ area.nama_cabang }}
+                                </option>
+                            </vee-field>
+                            <vee-error-message name="kode_lokasi" class="mt-4 text-rose-500" />
+                        </div>
+                        <!-- NIK Input -->
+                        <!-- <div>
                             <label for="nik" class="block text-sm font-medium leading-6 text-gray-900">Nomor Induk
                                 Kependudukan</label>
                             <div class="mt-2">
@@ -37,7 +72,7 @@
                                 sm:leading-6" />
                                 <vee-error-message name="email" class="mt-4 text-rose-500" />
                             </div>
-                        </div>
+                        </div> -->
 
                         <!-- Fullname Input -->
                         <div>
@@ -228,14 +263,14 @@
                                 <vee-error-message name="password" class="mt-4 text-rose-500" />
                             </div>
                         </div>
-
+                        <br>
                         <!-- Submit button -->
                         <div class="flex flex-col space-y-6">
                             <button type="submit"
                                 class="flex w-full justify-center rounded-md bg-blue-600 px-3 py-1.5 text-sm font-semibold leading-6 text-white shadow-sm hover:bg-blue-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-blue-600 transition-all">
                                 <span>Registrasi Akun</span>
                             </button>
-                            <p class="text-center font-bold">Atau</p>
+                            <!-- <p class="text-center font-bold">Atau</p>
                             <button
                                 class="flex w-full justify-center bg-gray-800 border-2 rounded-md shadow-md px-6 py-2 text-sm font-bold text-gray-50 hover:bg-gray-900 hover:text-gray-50 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-blue-600 transition-all">
                                 <svg class="h-6 w-6 mr-2" xmlns="http://www.w3.org/2000/svg"
@@ -264,10 +299,10 @@
                                     </g>
                                 </svg>
                                 <span>Continue with Google</span>
-                            </button>
+                            </button> -->
                         </div>
                     </vee-form>
-                    <p class="mt-10 text-center text-xs font-normal text-gray-900">© PT. Sinergi Global Service 2024.
+                    <p class="mt-10 text-center text-xs font-normal text-gray-900">© PT. Sinergi Global Servis 2024.
                         All rights reserved.</p>
                 </div>
             </div>
@@ -275,94 +310,109 @@
     </ion-page>
 </template>
 
-<script>
+<script setup>
 
+
+import { chevronBackCircleOutline, chevronBackOutline } from 'ionicons/icons'
 import * as Yup from 'yup';
 import axios from 'axios';
 import { API_URL } from '@/services/globalVariables';
-import { ref } from 'vue';
-import { redirectToLoginPage } from '@/services/redirectHandlers';
-import { catchToast } from '@/services/toastHandlers';
+import { onMounted, ref } from 'vue';
+import { ReplaceLoginPage } from '@/services/redirectHandlers';
+import { catchToast, catchToastError } from '@/services/toastHandlers';
+import { IonBackButton } from '@ionic/vue';
+import { refreshAccessTokenHandler } from '@/services/auth';
+import { presentLoading, stopLoading } from '@/services/loadingHandlers';
 
-// const formData = ref({
-//     nik: null,
-//     fullname: null,
-//     phone: null,
-//     email: null,
-//     username: null,
-//     password: null,
-//     password_confirmation: null,
-// });
 
-export default {
-    data() {
-        const formValidate = Yup.object().shape({
-            nik: Yup.string()
-                .required('NIK diperlukan, tidak dapat kosong!')
-                .max(20, 'NIK tidak boleh lebih dari 20 karakter'),
-            fullname: Yup.string()
-                .required('Nama Lengkap diperlukan, tidak dapat kosong!')
-                .max(200, 'Nama Lengkap tidak boleh lebih dari 200 karakter'),
-            phone: Yup.string()
-                .required('Nomor Telepon diperlukan, tidak dapat kosong!')
-                .max(20, 'Nomor Telepon tidak boleh lebih dari 20 karakter'),
-            email: Yup.string()
-                .required('Email diperlukan, tidak dapat kosong!')
-                .max(255, 'Email tidak boleh lebih dari 255 karakter')
-                .email('Email tidak valid, gunakan format email yang resmi!'),
-            username: Yup.string()
-                .required('Username diperlukan, tidak dapat kosong!')
-                .max(50, 'Username tidak boleh lebih dari 50 karaketer'),
-            password: Yup.string()
-                .required('Password diperlukan, tidak dapat kosong!')
-                .max(100, 'Password tidak boleh lebih dari 100 karakter')
-                .min(8, 'Password harus minimal memiliki 8 karakter'),
-            // .matches(/^(?=.*\d)(?=.*[a-z])(?=.*[A-Z])(?=.*[a-zA-Z]).{8,}$/),
-            password_confirmation: Yup.string()
-                .required('Password Confirmation is required')
-                .min(8, 'Student Unique ID Number should have 8 characters in minimum')
-                .oneOf([Yup.ref('password')], 'Password is not same.'),
+const Lokasi = ref([]);
+// const saveUserData = ref([]);
+
+const formData = ref({
+    // nik: null,
+    kode_lokasi: null,
+    fullname: null,
+    phone: null,
+    email: null,
+    username: null,
+    password: null,
+    password_confirmation: null,
+    // name: 'Hengky',
+});
+
+const formValidate = Yup.object().shape({
+    // nik: Yup.string()
+    //     .required('NIK diperlukan, tidak dapat kosong!')
+    //     .max(20, 'NIK tidak boleh lebih dari 20 karakter'),
+    kode_lokasi: Yup.string()
+        .required('Mohon Pilih Salah Satu Area !'),
+    fullname: Yup.string()
+        .required('Nama Lengkap diperlukan, tidak dapat kosong!')
+        .max(200, 'Nama Lengkap tidak boleh lebih dari 200 karakter'),
+    phone: Yup.string()
+        .required('Nomor Telepon diperlukan, tidak dapat kosong!')
+        .max(20, 'Nomor Telepon tidak boleh lebih dari 20 karakter'),
+    email: Yup.string()
+        .required('Email diperlukan, tidak dapat kosong!')
+        .max(255, 'Email tidak boleh lebih dari 255 karakter')
+        .email('Email tidak valid, gunakan format email yang resmi!'),
+    username: Yup.string()
+        .required('Username diperlukan, tidak dapat kosong!')
+        .max(50, 'Username tidak boleh lebih dari 50 karaketer'),
+    password: Yup.string()
+        .required('Password diperlukan, tidak dapat kosong!')
+        .max(100, 'Password tidak boleh lebih dari 100 karakter')
+        .min(8, 'Password harus minimal memiliki 8 karakter'),
+    // .matches(/^(?=.*\d)(?=.*[a-z])(?=.*[A-Z])(?=.*[a-zA-Z]).{8,}$/),
+    password_confirmation: Yup.string()
+        .required('Password Confirmation is required')
+        .min(8, 'Student Unique ID Number should have 8 characters in minimum')
+        .oneOf([Yup.ref('password')], 'Password is not same.'),
+});
+
+async function kodeLokasi() {
+    try {
+        const response = await axios.get(`${API_URL.value}/api/v2/area`, {
+           // },
         });
-        return {
-            formValidate,
-            formData: {
-                nik: null,
-                fullname: null,
-                phone: null,
-                email: null,
-                username: null,
-                password: null,
-                password_confirmation: null,
-                name : 'Chersma Beb',
-            },
-        }
-    },
-    methods: {
-        // redirectToHome() {
-        //     setTimeout(() => {
-        //         this.$router.push({
-        //             path: '/tabs/home',
-        //         })
-        //     }, 500);
-        // },
-        async register() {
-            try {
-                await axios.post(`${API_URL.value}/api/v2/auth/register`, this.formData)
-                .then((response) => {
-                    // this.redirectToHome();
-                    
-                    console.log('Successfully register new account!', response);
-                    catchToast(response,3000);
-                    redirectToLoginPage();
-                })
-            } catch (error) {
-                console.log('Failed to register!', error.message);
-                throw new Error('Failed to register!', error.message);
-            }
-          
-        }
+
+        Lokasi.value = response.data.resource;
+        console.log(response.data.resource);
+
+    } catch (error) {
+        catchToastError("Failed to fetch Area", 3000);
+        console.log(error.message, error);
     }
 }
-</script>
 
-<style></style>
+async function register() {
+    try {
+
+        presentLoading();
+
+        const response = await axios.post(`${API_URL.value}/api/v2/auth/register`, formData.value, {
+        });
+
+        stopLoading();
+        
+
+        catchToast(response.data.message, 3000);
+        // catchToast(response.data.resource.message, 3000);
+        ReplaceLoginPage();
+            
+    } catch (error) {
+        // catchToastError("Failed Register Data", 3000);
+        catchToastError(error.message,3000);
+        console.log(error.message);
+        stopLoading();
+    }
+
+}
+
+onMounted(() => {
+    presentLoading();
+    kodeLokasi();
+    stopLoading();
+});
+</script>
+<style scoped></style>

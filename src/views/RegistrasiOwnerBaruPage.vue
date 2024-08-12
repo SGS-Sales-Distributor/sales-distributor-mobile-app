@@ -2,23 +2,23 @@
   <ion-page>
     <ion-content :fullscreen="true">
       <header class="bg-transparent p-4 rounded-b-3xl">
-				<div class="flex justify-between">
+        <div class="flex justify-between">
           <div>
             <button type="button"
-            class="relative inline-flex items-center p-2 text-sm font-medium text-center text-white bg-transparent rounded-lg focus:ring-4 focus:outline-none focus:ring-blue-300"
-            @click="NotBack">
-            <ion-icon class="text-2xl" :icon="chevronBackOutline" color="dark"></ion-icon>
-          </button>
+              class="relative inline-flex items-center p-2 text-sm font-medium text-center text-white bg-transparent rounded-lg focus:ring-4 focus:outline-none focus:ring-blue-300"
+              @click="NotBack">
+              <ion-icon class="text-2xl" :icon="chevronBackOutline" color="dark"></ion-icon>
+            </button>
+          </div>
+          <div class="flex items-center justify-center">
+            <h2 class="text-center" v-if="storeData">
+              Toko <span class="font-semibold">{{ storeData.nama_toko }}</span>
+            </h2>
+          </div>
+
         </div>
-        <div class="flex items-center justify-center">
-          <h2 class="text-center" v-if="storeData">
-            Toko <span class="font-semibold">{{ storeData.nama_toko }}</span>
-          </h2>
-        </div>
-				
-      </div>
-    </header>
-    <div class="container mx-auto">
+      </header>
+      <div class="container mx-auto">
         <div class="flex justify-center min-h-screen">
           <div class="p-8 rounded-lg max-w-sm w-full">
             <h2 class="text-2xl font-semibold text-center mb-4">Form Pendaftaran Owner Dari Outlet {{ store.store_name
@@ -69,7 +69,8 @@
               </div>
               <br>
               <button type="submit"
-                class="w-full bg-blue-500 text-white px-4 py-2 rounded-lg hover:bg-blue-600 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-opacity-50">Selesai Registrasi
+                class="w-full bg-blue-500 text-white px-4 py-2 rounded-lg hover:bg-blue-600 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-opacity-50">Selesai
+                Registrasi
               </button>
               <p class="text-gray-600 text-xs text-center mt-4">
                 Dengan menekan tombol Daftarkan, maka toko bisa melakukan purchase order.
@@ -102,7 +103,7 @@ const showDataStoreInfoDistVal = ref(null);
 
 // const store = JSON.parse(localStorage.getItem("store_id"));
 // const getstoreId = JSON.parse(localStorage.getItem("store_id"));
-const store =localStorage.getItem("store_id") ? JSON.parse(localStorage.getItem("store_id")) : null;
+const store = localStorage.getItem("store_id") ? JSON.parse(localStorage.getItem("store_id")) : null;
 
 const formData = ref({
   owner: null,
