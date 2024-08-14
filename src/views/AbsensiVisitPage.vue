@@ -445,7 +445,7 @@ async function fetchStoresData(query = '') {
       Object.keys(storeInfoDistri.value).forEach(key => {
         const value = storeInfoDistri.value[key];
        
-        if ((value.waktu_keluar == null || value.waktu_masuk == null)) {
+        if (value.waktu_keluar == null || value.waktu_masuk == null ) {
           value.enableAbsenBtn = false;
           canAbsenVisit = false
         } else {
@@ -463,13 +463,12 @@ async function fetchStoresData(query = '') {
           value.enablePurchaseOrderBtn = true;
         }
   
-  
+        // catchToastError(statusGPS.value);
         if (!statusGPS.value) {
           value.enablePurchaseOrderBtn = true;
           value.enableAbsenBtn = true;
         }
       });
-      catchToast('Call Plan Berhasil Ditemukan',3000);
   } catch (error) {
     // catchToastError('Failed to fetch store data', 3000);
     catchToastError('Belum Ada Call Plan Hari Ini!', 3000);

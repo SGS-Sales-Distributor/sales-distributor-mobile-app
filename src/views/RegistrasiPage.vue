@@ -6,7 +6,7 @@
                     <h2 class="text-2xl font-semibold text-center mb-4">FORM REGISTRASI</h2>
                 </div>
                 <div class="mt-4 sm:mx-auto sm:w-full sm:max-w-sm">
-                    <vee-form novalidate class="space-y-4" method="post" @submit="register"
+                    <vee-form novalidate class="space-y-4" method="post" @submit="AlertRegister"
                         :validation-schema="formValidate">
                         <!-- choose area -->
                         <div>
@@ -260,7 +260,7 @@
                                 transition-all  
                                 sm:text-md 
                                 sm:leading-6" />
-                                <vee-error-message name="password" class="mt-4 text-rose-500" />
+                                <vee-error-message name="password_confirmation" class="mt-4 text-rose-500" />
                             </div>
                         </div>
                         <br>
@@ -323,6 +323,7 @@ import { catchToast, catchToastError } from '@/services/toastHandlers';
 import { IonBackButton } from '@ionic/vue';
 import { refreshAccessTokenHandler } from '@/services/auth';
 import { presentLoading, stopLoading } from '@/services/loadingHandlers';
+import { alertController } from '@ionic/vue';
 
 
 const Lokasi = ref([]);
@@ -349,9 +350,11 @@ const formValidate = Yup.object().shape({
     fullname: Yup.string()
         .required('Nama Lengkap diperlukan, tidak dapat kosong!')
         .max(200, 'Nama Lengkap tidak boleh lebih dari 200 karakter'),
-    phone: Yup.string()
+    phone: Yup.number('Nomer Telepon Harus Berupa Angka !')
         .required('Nomor Telepon diperlukan, tidak dapat kosong!')
-        .max(20, 'Nomor Telepon tidak boleh lebih dari 20 karakter'),
+        // .max(15, 'Nomor Telepon Maximal 15 Digit Angka')
+        .min(11,'Nomer Telepon Minimal 11 Digit Angka'),
+        // .integer(),
     email: Yup.string()
         .required('Email diperlukan, tidak dapat kosong!')
         .max(255, 'Email tidak boleh lebih dari 255 karakter')
@@ -362,12 +365,12 @@ const formValidate = Yup.object().shape({
     password: Yup.string()
         .required('Password diperlukan, tidak dapat kosong!')
         .max(100, 'Password tidak boleh lebih dari 100 karakter')
-        .min(8, 'Password harus minimal memiliki 8 karakter'),
-    // .matches(/^(?=.*\d)(?=.*[a-z])(?=.*[A-Z])(?=.*[a-zA-Z]).{8,}$/),
+        .min(8, 'Password harus minimal memiliki 8 karakter')
+        .matches(/^(?=.*\d)(?=.*[a-z])(?=.*[A-Z])(?=.*[a-zA-Z]).{8,}$/),
     password_confirmation: Yup.string()
-        .required('Password Confirmation is required')
+        .required('Konfirmasi Password diperlukan, tidak dapat kosong!')
         .min(8, 'Student Unique ID Number should have 8 characters in minimum')
-        .oneOf([Yup.ref('password')], 'Password is not same.'),
+        .oneOf([Yup.ref('password')], 'Konfirmasi Password Tidak Sama.'),
 });
 
 async function kodeLokasi() {
@@ -383,6 +386,31 @@ async function kodeLokasi() {
         catchToastError("Failed to fetch Area", 3000);
         console.log(error.message, error);
     }
+}
+
+async function AlertRegister() {
+  const alert = await alertController.create({
+    header: "Yakin Simpan Data ?",
+    message: "Setelah Registrasi Anda Bisa Langsung Login",
+    buttons: [
+        {
+        text: "Ya, Simpan",
+        cssClass: "alert-button-confirm",
+        handler: async () => {
+            register();
+        },
+    },
+    {
+      text: "Tidak",
+      cssClass: "alert-button-cancel",
+      handler: () => {
+        console.log("Pembatalan Registrasi");
+      },
+    },
+    ],
+  });
+
+  return alert.present();
 }
 
 async function register() {
@@ -402,7 +430,7 @@ async function register() {
             
     } catch (error) {
         // catchToastError("Failed Register Data", 3000);
-        catchToastError(error.message,3000);
+        catchToastError(error.response.data.message,3000);
         console.log(error.message);
         stopLoading();
     }
