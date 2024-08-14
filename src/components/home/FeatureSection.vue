@@ -2,15 +2,15 @@
   <!-- Main feature -->
   <div class="grid grid-cols-4 gap-6 text-center">
     <div class="flex flex-col items-center justify-center space-y-2">
-      <ion-button id="absensi-button" shape="round" href="/absensi">
-        <ion-icon class="text-2xl" slot="icon-only"  :icon="camera"></ion-icon>
+      <ion-button id="absensi-button" shape="default" href="/absensi">
+        <ion-icon class="text-4xl" slot="icon-only"  :icon="camera"></ion-icon>
       </ion-button>
       <ion-label class="text-sm font-semibold">Absensi Visit</ion-label>
     </div>
     <div class="flex flex-col items-center justify-center space-y-2">
-      <!-- <ion-button id="registrasi-toko-button" shape="round" href="/store/register" > -->
-      <ion-button id="registrasi-toko-button" shape="round" @click="registrerClik">
-        <ion-icon class="text-2xl" slot="icon-only"  :icon="storefront"></ion-icon>
+      <!-- <ion-button id="registrasi-toko-button" shape="default" href="/store/register" > -->
+      <ion-button id="registrasi-toko-button" shape="default" @click="registrerClik">
+        <ion-icon class="text-4xl" slot="icon-only"  :icon="storefront"></ion-icon>
       </ion-button>
       <ion-label class="text-sm font-semibold">Registrasi Toko</ion-label>
     </div>
@@ -21,8 +21,8 @@
       <ion-label class="text-sm font-semibold">Katalog Produk</ion-label>
     </div> -->
     <div class="flex flex-col items-center justify-center space-y-2">
-      <ion-button id="purchase-order-button" shape="round" href="/order">
-        <ion-icon class="text-2xl" slot="icon-only"  :icon="card"></ion-icon>
+      <ion-button id="purchase-order-button" shape="default" href="/order">
+        <ion-icon class="text-4xl" slot="icon-only"  :icon="card"></ion-icon>
       </ion-button>
       <ion-label class="text-sm font-semibold">Purchase Order</ion-label>
     </div>

@@ -5,8 +5,9 @@
       <HeaderSection />
       <!-- End of header -->
 
-      <div class="flex min-h-full flex-col justify-start px-4 py-8 bg-white">
+      <div class="flex min-h-full flex-col justify-start px-4 py-1 bg-white">
         <!-- Feature Section -->
+        <welcomeSection />
         <FeatureSection />
         <!-- End of Feature Section -->
 
@@ -41,6 +42,7 @@
 <script setup>
 import FeatureSection from './../components/home/FeatureSection.vue'
 import HeaderSection from '../components/HeaderSection.vue';
+import welcomeSection from '@/components/home/welcomeSection.vue';
 import { onMounted } from 'vue';
 import { refreshAccessTokenHandler } from '@/services/auth';
 
