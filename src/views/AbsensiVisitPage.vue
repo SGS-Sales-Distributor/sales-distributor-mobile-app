@@ -137,6 +137,15 @@
         <div class="flex w-full items-center justify-center px-4 pb-2">
           <img v-if="imageUrl" :src="imageUrl" id="preview-photo" alt="Captured Photo"
             style="max-width: 100%; height: 400px;" />
+
+        </div>
+        <div v-if="imageUrl">
+          <label for="catatan_visit">Catatan Visit</label>
+          <Field v-model="keterangan" name="keterangan"
+            as="textarea" id="keterangan"
+            class="form-input w-full px-4 py-2 border rounded-lg text-gray-700 focus:ring-blue-500"
+            placeholder="Catatan Visit Toko" cols="20" rows="10" aria-label="catatan_visit"
+            aria-describedby="catatan_visit" v-bind:value="detailStoreInfoDistri.keterangan"></Field>
         </div>
 
         <ion-grid v-if="statusGPS" :fixed="true">
@@ -220,10 +229,11 @@
                 </ion-button>
 
                 <!-- <router-link :to="{ name: 'storeDetail', params: { id: store.store_id } }"> -->
-                  <ion-button :disabled="store.enablePurchaseOrderBtn" @click="redirectToStoreDetailPage(store.store_id)" size="small">
-                    <ion-icon slot="start" :icon="documentAttach"></ion-icon>
-                    <span class="text-nowrap">Purchase Order</span>
-                  </ion-button>
+                <ion-button :disabled="store.enablePurchaseOrderBtn" @click="redirectToStoreDetailPage(store.store_id)"
+                  size="small">
+                  <ion-icon slot="start" :icon="documentAttach"></ion-icon>
+                  <span class="text-nowrap">Purchase Order</span>
+                </ion-button>
                 <!-- </router-link> -->
               </div>
             </ion-card-content>
@@ -264,6 +274,7 @@ import { catchToast, catchToastError } from '@/services/toastHandlers';
 import { refreshAccessTokenHandler } from '@/services/auth.js';
 import { presentLoading, stopLoading } from '@/services/loadingHandlers';
 import { redirectToStoreDetailPage } from '@/services/redirectHandlers';
+import { Field } from 'vee-validate';
 
 const user = ref(JSON.parse(localStorage.getItem("user")));
 const isStoreDetailCardVisible = ref(false);
@@ -341,11 +352,11 @@ function clearImage() {
   }
 }
 
-function goToPurchase(store_id){
+function goToPurchase(store_id) {
   try {
-    this.router.replace({name:'storeDetail', params: { id: store_id }},'forward');
+    this.router.replace({ name: 'storeDetail', params: { id: store_id } }, 'forward');
     catchToastError(store_id, 3000);
-  }catch(error){
+  } catch (error) {
     catchToastError(error.response, 3000);
   }
 }
@@ -380,9 +391,9 @@ async function passCheckInAlert() {
           text: "Yes",
           cssClass: "alert-button-confirm",
           handler: () => {
-            console.log("Berhasil melakukan absensi check-in");
-
             saveCheckInImage();
+
+            console.log("Berhasil melakukan absensi check-in");
           },
         },
       ],
@@ -421,59 +432,63 @@ async function passCheckOutAlert() {
 async function fetchStoresData(query = '') {
 
   try {
+    presentLoading();
     refreshAccessTokenHandler();
-    
+
     const tokens = localStorage.getItem("tokens") ? JSON.parse(localStorage.getItem("tokens")) : null;
-    const userId = localStorage.getItem("user") ? JSON.parse(localStorage.getItem("user")) : "" ;
-    
+    const userId = localStorage.getItem("user") ? JSON.parse(localStorage.getItem("user")) : "";
+
     const headers = {
       'Content-Type': 'application/json',
       'Authorization': `Bearer ${tokens.access_token}`
     };
-    
+
     const response = await axios.get(`${API_URL.value}/api/v2/stores/call-plans`, {
       headers: headers,
       params: {
         q: query,
-        "userId" : userId.user_id,
+        "userId": userId.user_id,
       },
     });
 
     storeInfoDistri.value = response.data.resource.data;
 
     let canAbsenVisit = true;
-      Object.keys(storeInfoDistri.value).forEach(key => {
-        const value = storeInfoDistri.value[key];
-       
-        if (value.waktu_keluar == null || value.waktu_masuk == null ) {
-          value.enableAbsenBtn = false;
-          canAbsenVisit = false
-        } else {
-          value.enableAbsenBtn = true;
-        }
-        
-        if(value.waktu_keluar !== null && value.waktu_masuk !== null){
-          value.enableAbsenBtn = true;
-        }
-  
-        // console.log(value.waktu_masuk);
-        if (value.waktu_masuk !== null) {
-          value.enablePurchaseOrderBtn = false;
-        } else {
-          value.enablePurchaseOrderBtn = true;
-        }
-  
-        // catchToastError(statusGPS.value);
-        if (!statusGPS.value) {
-          value.enablePurchaseOrderBtn = true;
-          value.enableAbsenBtn = true;
-        }
-      });
+    Object.keys(storeInfoDistri.value).forEach(key => {
+      const value = storeInfoDistri.value[key];
+
+      if (value.waktu_keluar == null || value.waktu_masuk == null) {
+        value.enableAbsenBtn = false;
+        canAbsenVisit = false
+      } else {
+        value.enableAbsenBtn = true;
+      }
+
+      if (value.waktu_keluar !== null && value.waktu_masuk !== null) {
+        value.enableAbsenBtn = true;
+      }
+
+      // console.log(value.waktu_masuk);
+      if (value.waktu_masuk !== null) {
+        value.enablePurchaseOrderBtn = false;
+      } else {
+        value.enablePurchaseOrderBtn = true;
+      }
+
+      // catchToastError(statusGPS.value);
+      // if (!statusGPS.value) {
+      //   value.enablePurchaseOrderBtn = true;
+      //   value.enableAbsenBtn = true;
+      // }
+    });
   } catch (error) {
     // catchToastError('Failed to fetch store data', 3000);
     catchToastError('Belum Ada Call Plan Hari Ini!', 3000);
 
     console.error('Failed to fetch store data: ', error);
+  }
+  finally{
+    stopLoading();
   }
 }
 
@@ -482,7 +497,7 @@ async function fetchOneStoreData(id) {
     refreshAccessTokenHandler();
 
     const tokens = localStorage.getItem("tokens") ? JSON.parse(localStorage.getItem("tokens")) : null;
-    const userId = localStorage.getItem("user") ? JSON.parse(localStorage.getItem("user")) : "" ;
+    const userId = localStorage.getItem("user") ? JSON.parse(localStorage.getItem("user")) : "";
 
     const headers = {
       'Content-Type': 'application/json',
@@ -492,7 +507,7 @@ async function fetchOneStoreData(id) {
     const response = await axios.get(`${API_URL.value}/api/v2/stores/${id}`, {
       headers: headers,
       params: {
-        "userId" : userId.user_id,
+        "userId": userId.user_id,
       },
     });
 
@@ -524,6 +539,7 @@ async function uploadCheckInImage(userNumber) {
     formData.append("store_id", detailStoreInfoDistri.value.store_id);
     formData.append("lat_in", latitude.value);
     formData.append("long_in", longitude.value);
+    formData.append("keterangan", keterangan.value);
 
     const headers = {
       'Authorization': `Bearer ${tokens.access_token}`,
@@ -550,7 +566,8 @@ async function uploadCheckInImage(userNumber) {
   } catch (error) {
     catchToastError('Gagal upload gambar untuk absensi check-in', 3000);
 
-    console.error('Gagal upload gambar untuk absensi check-in', error);
+    // console.error('Gagal upload gambar untuk absensi check-in', error);
+    console.log(error.data.message);
   } finally {
     stopLoading();
   }
@@ -566,6 +583,7 @@ async function uploadCheckOutImage(userNumber) {
     formData.append("image", imageLocation.value);
     formData.append("lat_out", latitude.value);
     formData.append("long_out", longitude.value);
+    formData.append("keterangan", keterangan.value);
 
     const headers = {
       'Authorization': `Bearer ${tokens.access_token}`,
@@ -689,7 +707,7 @@ async function takeCheckOutPicture() {
       console.error('Failed to capture photo or image path is missing');
     }
   } catch (error) {
-    catchToastError("Error when capturing photo",3000);
+    catchToastError("Error when capturing photo", 3000);
 
     console.error('Error when capturing photo: ', error);
   }
@@ -698,14 +716,14 @@ async function takeCheckOutPicture() {
 onMounted(() => {
   currentRoute.value = null;
   presentLoading();
-  
+
   refreshAccessTokenHandler();
   printCurrentPosition();
-  if(user != null || user !="" ) {
+  if (user != null || user != "") {
     fetchStoresData();
   }
   checkLocationAccess();
-  
+
   stopLoading();
 });
 </script>

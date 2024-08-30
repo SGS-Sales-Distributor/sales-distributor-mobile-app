@@ -218,7 +218,7 @@ async function saveStoreData() {
             // catchToastError('Terjadi Kesalahan Server! Silahkan Coba Beberapa Saat Lagi', 3000);
             catchToastError("Gagal Menyimpan data toko baru", 3000);
             redirectToRegisterStorePage();
-            //console.error("Failed to save store data", error);
+            console.error(error.response);
 
         }
     } finally {
