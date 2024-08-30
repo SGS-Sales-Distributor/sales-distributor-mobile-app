@@ -8,6 +8,12 @@
       <ion-label class="text-sm font-semibold">Absensi Visit</ion-label>
     </div>
     <div class="flex flex-col items-center justify-center space-y-2">
+      <ion-button id="history-visit-button" shape="default" @click="RedirectVisitPage(user.user_id)">
+          <ion-icon class="text-4xl" slot="icon-only" :icon="albums"></ion-icon>
+      </ion-button>
+      <ion-label class="text-sm font-semibold">History Visit</ion-label>
+    </div>
+    <div class="flex flex-col items-center justify-center space-y-2">
       <!-- <ion-button id="registrasi-toko-button" shape="default" href="/store/register" > -->
       <ion-button id="registrasi-toko-button" shape="default" @click="registrerClik">
         <ion-icon class="text-4xl" slot="icon-only"  :icon="storefront"></ion-icon>
@@ -43,15 +49,18 @@ import {
   trophy,
   cube,
   card,
+  albums,
 } from 'ionicons/icons';
 import { IonButton } from '@ionic/vue';
-import { redirectToOwnerFormPage, redirectToRegisterStorePage } from '@/services/redirectHandlers';
+import { redirectToOwnerFormPage, redirectToRegisterStorePage ,RedirectVisitPage} from '@/services/redirectHandlers';
 import { presentLoading, stopLoading } from '@/services/loadingHandlers';
 import { catchToast, catchToastError } from '@/services/toastHandlers';
 import { alertController } from '@ionic/vue';
 import { Form, Field, ErrorMessage } from 'vee-validate';
+import { data } from '@maptiler/sdk';
 
 const store =localStorage.getItem("store_id") ? JSON.parse(localStorage.getItem("store_id")) : null;
+const user =localStorage.getItem("user") ? JSON.parse(localStorage.getItem("user")) : null;
 
 async function registrerClik(){
   if(store == null || store == ""){
@@ -62,9 +71,21 @@ async function registrerClik(){
 
 }
 
+
 </script>
 
 <style scoped>
+#history-visit-button {
+  --background: #f49883;
+  --background-hover: #9ce0be;
+  --background-activated: #A0DEFF;
+  --background-focused: #A0DEFF;
+  --color: #202020;
+  --box-shadow: 0 2px 6px 0 rgb(0, 0, 0, 0.25);
+  --padding-top: 10px;
+  --padding-bottom: 10px;
+}
+
 #absensi-button {
   --background: #A0DEFF;
   --background-hover: #9ce0be;

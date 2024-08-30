@@ -129,7 +129,7 @@ async function fetchStoresData(query = '') {
             headers: headers,
             params: {
                 q: query
-            },
+            },z
         });
 
         storesData.value = response.data.resource.data;

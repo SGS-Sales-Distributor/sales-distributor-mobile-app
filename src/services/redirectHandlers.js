@@ -108,3 +108,11 @@ export function ReplaceLoginPage() {
         });
     }, 300);
 }
+
+export function RedirectVisitPage(userId){
+    setTimeout(() => {
+        router.replace({
+            name: 'historyVisit', params: { id: userId }
+        });
+    }, 300);
+}
