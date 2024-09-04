@@ -270,7 +270,7 @@ import { alertController } from '@ionic/vue';
 
 import { printCurrentPosition, checkLocationAccess } from '@/services/locationHandlers';
 import { statusGPS, API_URL, latitude, longitude, currentRoute } from '@/services/globalVariables';
-import { catchToast, catchToastError } from '@/services/toastHandlers';
+import { catchToast, catchToastError, catchToastWarn } from '@/services/toastHandlers';
 import { refreshAccessTokenHandler } from '@/services/auth.js';
 import { presentLoading, stopLoading } from '@/services/loadingHandlers';
 import { redirectToStoreDetailPage } from '@/services/redirectHandlers';
@@ -483,7 +483,7 @@ async function fetchStoresData(query = '') {
     });
   } catch (error) {
     // catchToastError('Failed to fetch store data', 3000);
-    catchToastError('Belum Ada Call Plan Hari Ini!', 3000);
+    catchToastWarn('Belum Ada Call Plan Hari Ini!', 3000);
 
     console.error('Failed to fetch store data: ', error);
   }

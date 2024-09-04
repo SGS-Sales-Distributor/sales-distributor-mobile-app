@@ -19,7 +19,7 @@ import historyVisit from "./../views/HistoryVisitPage.vue";
 const routes: Array<RouteRecordRaw> = [
   {
     path: "/",
-    redirect: "/login",
+    redirect: "/home",
     meta: {
       title: "Login",
     },
