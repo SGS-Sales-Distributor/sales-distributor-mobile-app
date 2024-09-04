@@ -136,6 +136,19 @@ async function login() {
 
     localStorage.setItem("tokens", JSON.stringify(tokens));
 
+    const headers = {
+      "Content-Type": "application/json",
+      Authorization: `Bearer ${tokens.access_token}`,
+    };
+
+    const response2 = await axios.get(`${API_URL.value}/api/v2/auth/me`, {
+      headers: headers,
+    });
+
+    const authUserData = response2.data.resource.data;
+
+    localStorage.setItem("user", JSON.stringify(authUserData));
+
     stopLoading();
 
     catchToast(response.data.message, 3000);

@@ -3,7 +3,27 @@
         <ion-content>
             <HeaderSection />
             <div>
-                <!-- <ion-card-subtitle class="text-md text-gray-900 font-bold pb-2 text-center">History Visit Anda : </ion-card-subtitle> -->
+                <ion-card-header class="text-md text-gray-900 font-bold pb-2 text-center">
+                    <h1>History Visit </h1>
+                </ion-card-header>
+            </div>
+            <div>
+                <ion-card color="">
+                    <ion-card-content>
+                        <label for="dari">Dari Tanggal : </label>
+                        <ionInput type="date" v-model="formData.dariTanggal" name="dariTanggal" id="dariTanggal"
+                            class="form-input w-full px-4 py-2 border rounded-lg text-gray-700 focus:ring-red-500">
+                        </ionInput>
+                        <label for="sampai">Sampai Tanggal : </label>
+                        <ionInput type="date" v-model="formData.sampaiTanggal" name="sampaiTanggal" id="sampaiTanggal"
+                            class="form-input w-full px-4 py-2 border rounded-lg text-gray-700 focus:ring-red-500" >
+                        </ionInput>
+                        <br>
+                        <button type="button"
+                            class="w-full bg-blue-500 text-white px-4 py-2 rounded-lg hover:bg-blue-600 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-opacity-50"
+                            @click="getDataVisit">Lihat</button>
+                    </ion-card-content>
+                </ion-card>
             </div>
             <div v-for="(visit, index) in storeInfoDistri" :key="index + 1" class="relative overflow-x-auto">
                 <ion-card class="py-2 odd:bg-blue-500 even:bg-sky-400">
@@ -97,17 +117,19 @@
 <script setup>
 import { refreshAccessTokenHandler } from '@/services/auth';
 import HeaderSection from '@/components/HeaderSection.vue';
-import { IonSearchbar } from '@ionic/vue';
+import { IonInput, IonSearchbar } from '@ionic/vue';
 import { onMounted, ref, computed } from 'vue';
-import { catchToastError } from '@/services/toastHandlers';
+import { catchToastError, catchToastWarn, catchToastInfo } from '@/services/toastHandlers';
 import axios from 'axios';
 import { API_URL } from '@/services/globalVariables';
 import { useRoute } from 'vue-router';
 import { presentLoading, stopLoading } from '@/services/loadingHandlers';
+import { IonDatetime, IonDatetimeButton, IonModal } from '@ionic/vue';
 
 const route = useRoute();
 const currentPageRouteName = computed(() => route.name);
 const storeInfoDistri = ref([]);
+const visitData = ref([]);
 const lastIndex = ref(5);
 const visiter = computed(() => {
     return storeInfoDistri.value && storeInfoDistri.value.length > 0
@@ -137,6 +159,13 @@ const ionInfinite = (event) => {
     }
 }
 
+const formData = ref({
+    dariTanggal: null,
+    sampaiTanggal: null,
+});
+
+
+
 async function fetchStoresData() {
 
     try {
@@ -158,10 +187,10 @@ async function fetchStoresData() {
         });
 
         storeInfoDistri.value = response.data.resource;
-
+        
     } catch (error) {
         // catchToastError('Failed to fetch store data', 3000);
-        catchToastError('Anda Belum Ada History Visit 1', 3000);
+        catchToastWarn('Anda Belum Ada History Visit', 3000);
         // console.log(error.message);
         console.error('Failed to fetch Visit data: ', error);
     }
@@ -170,14 +199,38 @@ async function fetchStoresData() {
     }
 }
 
-// function searchStoreHandler(event) {
-//     const query = event.target.value.toLowerCase();
+async function getDataVisit() {
+    try {
+        presentLoading();
+        const tokens = localStorage.getItem("tokens") ? JSON.parse(localStorage.getItem("tokens")) : null;
+        const userId = localStorage.getItem("user") ? JSON.parse(localStorage.getItem("user")) : "";
 
-//     fetchStoresData(query);
-// }
+        const headers = {
+            'Content-Type': 'application/json',
+            'Authorization': `Bearer ${tokens.access_token}`
+        };
+
+
+        const response = await axios.post(`${API_URL.value}/api/sgs/profil_visit/user/${userId.user_id}/filter`, formData.value, {
+            headers: headers,
+            "userId": userId.user_id,
+            params: {
+            },
+        });
+
+        storeInfoDistri.value = response.data.resource;
+
+    } catch (error) {
+        console.log(error.message);
+    }
+    finally {
+        stopLoading();
+    }
+}
 
 onMounted(() => {
-    fetchStoresData();
+    // fetchStoresData();
+    // getDataVisit();
     // searchStoreHandler();
 
 })
