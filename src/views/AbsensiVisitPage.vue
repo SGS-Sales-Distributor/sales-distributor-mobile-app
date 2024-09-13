@@ -215,8 +215,8 @@
                     <ion-badge color="success">Disetujui</ion-badge>
                   </div>
                   <div v-else class="flex justify-center items-center">
-                    <div class="h-2.5 w-2.5 rounded-full bg-rose-600 me-2"></div>
-                    <ion-badge color="danger">Belum Disetujui</ion-badge>
+                    <div class="h-2.5 w-2.5 rounded-full bg-yellow-500 me-2"></div>
+                    <ion-badge color="warning">Belum Disetujui</ion-badge>
                   </div>
                 </div>
               </div>

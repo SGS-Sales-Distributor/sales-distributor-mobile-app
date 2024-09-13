@@ -12,7 +12,6 @@ import { catchToastError } from './services/toastHandlers';
 import axios from 'axios';
 import { API_URL } from './services/globalVariables';
 
-
 async function authUser() {
   try {
     const tokens = localStorage.getItem("tokens") ? JSON.parse(localStorage.getItem("tokens")) : null;

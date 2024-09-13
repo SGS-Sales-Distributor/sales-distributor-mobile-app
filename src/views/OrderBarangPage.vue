@@ -120,6 +120,7 @@ import axios from 'axios';
 
 import {
     chevronBackOutline,
+    constructOutline,
     ellipsisVerticalOutline
 } from 'ionicons/icons'
 
@@ -240,14 +241,14 @@ async function fetchBrandsData(query = '') {
         const response = await axios.get(`${API_URL.value}/api/v2/brands`, {
             headers: headers,
             params: {
-                q: query
+                // q: query,
             }
         });
 
         brandsData.value = response.data.resource.data;
     } catch (error) {
         catchToastError("Failed to fetch product data", 3000);
-
+        console.log(error.message);
         console.error("Failed to fetch product data: ", error);
     }
 }
