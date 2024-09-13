@@ -11,12 +11,12 @@
                 <ion-card color="">
                     <ion-card-content>
                         <label for="dari">Dari Tanggal : </label>
-                        <ionInput type="date" v-model="formData.dariTanggal" name="dariTanggal" id="dariTanggal"
+                        <ionInput type="date" v-model="dariTanggal" name="dariTanggal" id="dariTanggal"
                             class="form-input w-full px-4 py-2 border rounded-lg text-gray-700 focus:ring-red-500">
                         </ionInput>
                         <label for="sampai">Sampai Tanggal : </label>
-                        <ionInput type="date" v-model="formData.sampaiTanggal" name="sampaiTanggal" id="sampaiTanggal"
-                            class="form-input w-full px-4 py-2 border rounded-lg text-gray-700 focus:ring-red-500" >
+                        <ionInput type="date" v-model="sampaiTanggal" name="sampaiTanggal" id="sampaiTanggal"
+                            class="form-input w-full px-4 py-2 border rounded-lg text-gray-700 focus:ring-red-500">
                         </ionInput>
                         <br>
                         <button type="button"
@@ -84,7 +84,7 @@
                                 <label for="nama-toko" class="flex-initial w-56 font-semibold">Catatan Visit</label>
                                 <ion-badge v-if="formatedDate > visit.tanggal_plan && visit.keterangan === null"
                                     color="danger">Tidak
-                                    Terpenuhi</ion-badge>
+                                    Ada Catatan</ion-badge>
                                 <p v-else-if="visit.keterangan !== null" class="flex-initial w-44 text-right">{{
                                     visit.keterangan }}</p>
                                 <ion-badge v-else color="warning">Belum Visit</ion-badge>
@@ -96,11 +96,11 @@
                                     <ion-badge color="success">Disetujui</ion-badge>
                                 </div>
                                 <div v-else class="flex justify-center items-center">
-                                    <ion-badge v-if="formatedDate > visit.tanggal_plan" color="danger">Tidak
-                                        Terpenuhi</ion-badge>
-                                    <ion-badge v-else color="warning">{{ visit.waktu_masuk !== null &&
-                                        visit.waktu_keluar
-                                        !== null ? 'Menunggu Disetujui' : 'Belum Disetujui' }}</ion-badge>
+                                    <ion-badge v-if="formatedDate > visit.tanggal_plan && visit.approval === 0"
+                                        color="warning">Belum Disetujui</ion-badge>
+                                    <ion-badge v-else-if="formatedDate <= visit.tanggal_plan && visit.waktu_masuk === null && visit.waktu_keluar === null" color="warning">Belum Visit</ion-badge>
+                                    <ion-badge v-else-if="formatedDate <= visit.tanggal_plan && visit.waktu_masuk !== null || visit.waktu_keluar !== null" color="warning">Belum Disetujui</ion-badge>
+                                    <ion-badge v-else color="danger">Tidak Terpenuhi</ion-badge>
                                 </div>
                             </div>
                         </div>
@@ -187,7 +187,7 @@ async function fetchStoresData() {
         });
 
         storeInfoDistri.value = response.data.resource;
-        
+
     } catch (error) {
         // catchToastError('Failed to fetch store data', 3000);
         catchToastWarn('Anda Belum Ada History Visit', 3000);
@@ -204,6 +204,8 @@ async function getDataVisit() {
         presentLoading();
         const tokens = localStorage.getItem("tokens") ? JSON.parse(localStorage.getItem("tokens")) : null;
         const userId = localStorage.getItem("user") ? JSON.parse(localStorage.getItem("user")) : "";
+        const mulai = dariTanggal.value;
+        const sampai = sampaiTanggal.value;
 
         const headers = {
             'Content-Type': 'application/json',
@@ -211,10 +213,13 @@ async function getDataVisit() {
         };
 
 
-        const response = await axios.post(`${API_URL.value}/api/sgs/profil_visit/user/${userId.user_id}/filter`, formData.value, {
+        const response = await axios.get(`${API_URL.value}/api/sgs/profil_visit/user/${userId.user_id}/filter`, {
             headers: headers,
             "userId": userId.user_id,
             params: {
+                dariTanggal: mulai,
+                sampaiTanggal: sampai,
+
             },
         });
 

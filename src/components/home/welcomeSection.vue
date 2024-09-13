@@ -2,7 +2,9 @@
     <ion-card color="light">
         <ion-card-header>
             <ion-card-title>
-                <div class="text-right"><p>{{ formatedDate }}</p></div>
+                <div class="text-right">
+                    <p>{{ formatedDate }}</p>
+                </div>
                 <table>
                     <tr>
                         <td><img src="/public/hand-thumbnail.png" class="h-12 default" alt="hand"></td>
@@ -28,6 +30,11 @@
 
 <script setup>
 import { onMounted, ref } from 'vue';
+import axios from 'axios';
+import { API_URL } from '@/services/globalVariables';
+
+// const isOpen = ref(false);
+// const setOpen = (open) => (isOpen.value = open);
 
 const user = ref(JSON.parse(localStorage.getItem("user")) ? JSON.parse(localStorage.getItem("user")) : "");
 const days = ['Minggu', 'Senin', 'Selasa', 'Rabu', 'Kamis', 'Jumat', 'Sabtu'];
@@ -36,10 +43,11 @@ const tday = new Date((new Date).toLocaleString("en-US", {
     timeZone: "Asia/Jakarta"
 }));
 const m = String(tday.getMonth() + 1).padStart(2, '0');
-const d = String(tday.getDate()).padStart(2, '0');
+const d = String(tday.getDate() - 3).padStart(2, '0');
 const y = String(tday.getFullYear());
 
 const formatedDate = days[tday.getDay()] + ', ' + ('0' + (tday.getDate())).slice(-2) + ' ' + bulan[tday.getMonth()] + ' ' + tday.getFullYear();;
+
 
 onMounted(() => {
 });

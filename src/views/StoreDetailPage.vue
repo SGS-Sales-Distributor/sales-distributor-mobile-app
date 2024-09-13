@@ -881,6 +881,7 @@ async function fetchStoreDetailData(id) {
 		refreshAccessTokenHandler();
 
 		const tokens = localStorage.getItem("tokens") ? JSON.parse(localStorage.getItem("tokens")) : null;
+		const setuser = localStorage.getItem("user") ? JSON.parse(localStorage.getItem("user")) : null ;
 
 		const headers = {
 			'Content-Type': 'application/json',
@@ -888,7 +889,10 @@ async function fetchStoreDetailData(id) {
 		};
 
 		const response = await axios.get(`${API_URL.value}/api/v2/stores/${id}`, {
-			headers: headers
+			headers: headers,
+			params : {
+				'userId' : setuser.user_id,
+			}
 		});
 
 		console.log(response.data);
@@ -900,6 +904,7 @@ async function fetchStoreDetailData(id) {
 		idToko.value = storeData.value.store_id;
 
 		localStorage.setItem("store_id", storeData.value.store_id);
+		// catchToastInfo(response.data,3000);
 	} catch (error) {
 		if (error.response && error.response.data.status == 401) {
 			catchToastError(error.response.data.message, 3000);
@@ -947,7 +952,6 @@ onMounted(() => {
 	fetchStoreDetailData(storeId.value);
 	fetchPromoProgram();
 	fetchProductsData();
-	fetchBrandsData();
 });
 </script>
 
