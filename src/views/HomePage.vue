@@ -53,7 +53,7 @@
           <div v-if="!selectedPlans">
             <ion-item v-for="(plans, index) in planStore" :key="index + 1">
               <ion-avatar slot="start">
-                <ion-img src="/public/flat-store-icons.png"></ion-img>
+                <img src="/public/flat-store-icons.png" >
               </ion-avatar>
               <ion-label>
                 <h2>{{ plans.nama_toko }}</h2>
@@ -69,7 +69,7 @@
             <div>
               <ion-item>
                 <ion-avatar slot="start">
-                  <ion-img src="/public/flat-store-icons.png"></ion-img>
+                  <img src="/public/flat-store-icons.png">
                 </ion-avatar>
                 <ion-label>
                   <h2>{{ selectedPlans.nama_toko }}</h2>
@@ -129,16 +129,17 @@ const tday = new Date((new Date).toLocaleString("en-US", {
   timeZone: "Asia/Jakarta"
 }));
 const m = String(tday.getMonth() + 1).padStart(2, '0');
-const d = String(tday.getDate() - 1).padStart(2, '0');
+const d = String(tday.getDate()-1).padStart(2, '0');
 const y = String(tday.getFullYear());
 
 const formData = ref({
   ket_not_vst: null,
 });
 
-const formatedDate = days[tday.getDay() - 1] + ', ' + ('0' + (tday.getDate() - 1)).slice(-2) + ' ' + bulan[tday.getMonth()] + ' ' + tday.getFullYear();;
+const formatedDate = days[tday.getDay()-1] + ', ' + ('0' + (tday.getDate()-1)).slice(-2) + ' ' + bulan[tday.getMonth()] + ' ' + tday.getFullYear();
 
 const nowDate = y + '-' + m + '-' + d;
+// const nowDate = '2024-08-31';
 
 const formNotedVisit = Yup.object().shape({
   ket_not_vst: Yup.string()
