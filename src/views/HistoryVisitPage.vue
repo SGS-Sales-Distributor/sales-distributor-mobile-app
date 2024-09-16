@@ -98,10 +98,18 @@
                                 <div v-else class="flex justify-center items-center">
                                     <ion-badge v-if="formatedDate > visit.tanggal_plan && visit.approval === 0"
                                         color="warning">Belum Disetujui</ion-badge>
-                                    <ion-badge v-else-if="formatedDate <= visit.tanggal_plan && visit.waktu_masuk === null && visit.waktu_keluar === null" color="warning">Belum Visit</ion-badge>
-                                    <ion-badge v-else-if="formatedDate <= visit.tanggal_plan && visit.waktu_masuk !== null || visit.waktu_keluar !== null" color="warning">Belum Disetujui</ion-badge>
+                                    <ion-badge
+                                        v-else-if="formatedDate <= visit.tanggal_plan && visit.waktu_masuk === null && visit.waktu_keluar === null"
+                                        color="warning">Belum Visit</ion-badge>
+                                    <ion-badge
+                                        v-else-if="formatedDate <= visit.tanggal_plan && visit.waktu_masuk !== null || visit.waktu_keluar !== null"
+                                        color="warning">Belum Disetujui</ion-badge>
                                     <ion-badge v-else color="danger">Tidak Terpenuhi</ion-badge>
                                 </div>
+                            </div>
+                            <div v-if="visit.idNotVisit !== null" class="flex flex-row w-full justify-between space-x-2">
+                                <label for="nama-toko" class="flex-initial w-56 font-semibold">Keterangan</label>
+                                <p>{{ visit.ketNotVisit }}</p>
                             </div>
                         </div>
                     </ion-card-header>
