@@ -1,16 +1,17 @@
 <template>
   <ion-app>
-    <ion-router-outlet />
+    <ion-router-outlet />    
   </ion-app>
 </template>
 
 <script setup>
 import { IonApp, IonRouterOutlet } from '@ionic/vue';
-import { onMounted } from 'vue';
+import { onMounted,ref } from 'vue';
 import { redirectToLoginPage } from './services/redirectHandlers';
 import { catchToastError } from './services/toastHandlers';
 import axios from 'axios';
 import { API_URL } from './services/globalVariables';
+const isOpen = ref(true);
 
 async function authUser() {
   try {
@@ -40,6 +41,7 @@ async function authUser() {
 
     if (error) {
       redirectToLoginPage();
+      isOpen.value = false;
     }
 
     console.error(`Failed to fetch auth user: ${error.message}`);

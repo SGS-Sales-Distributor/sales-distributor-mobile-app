@@ -1,13 +1,13 @@
 <template>
   <ion-page>
     <ion-content :fullscreen="true">
-      <!-- Header -->
       <HeaderSection />
-      <!-- End of header -->
-
       <div class="flex min-h-full flex-col justify-start px-4 py-1 bg-white">
-        <!-- Feature Section -->
+        <!-- Header -->
+        <!-- End of header -->
+
         <welcomeSection />
+        <!-- Feature Section -->
         <FeatureSection />
         <!-- End of Feature Section -->
 
@@ -40,7 +40,7 @@
       <ion-modal ref="modal" :is-open="isOpen">
         <!-- <ion-modal id="example-modal" ref="modal" trigger="open-custom-dialog"> -->
         <ion-toolbar>
-          <ion-title style="color:red">Visit Tidak Terpenuhi <br>
+          <ion-title>Visit Tidak Terpenuhi <br>
           </ion-title>
           <p>
             <center>{{ formatedDate }}</center>
@@ -53,7 +53,7 @@
           <div v-if="!selectedPlans">
             <ion-item v-for="(plans, index) in planStore" :key="index + 1">
               <ion-avatar slot="start">
-                <img src="/public/flat-store-icons.png" >
+                <img src="/public/flat-store-icons.png">
               </ion-avatar>
               <ion-label>
                 <h2>{{ plans.nama_toko }}</h2>
@@ -129,17 +129,18 @@ const tday = new Date((new Date).toLocaleString("en-US", {
   timeZone: "Asia/Jakarta"
 }));
 const m = String(tday.getMonth() + 1).padStart(2, '0');
-const d = String(tday.getDate()-1).padStart(2, '0');
+const d = days[tday.getDay()] === 'Senin' ? String(tday.getDate() - 2) : String(tday.getDate() - 1).padStart(2, '0');
 const y = String(tday.getFullYear());
 
 const formData = ref({
   ket_not_vst: null,
 });
 
-const formatedDate = days[tday.getDay()-1] + ', ' + ('0' + (tday.getDate()-1)).slice(-2) + ' ' + bulan[tday.getMonth()] + ' ' + tday.getFullYear();
+const tokenset = localStorage.getItem("tokens") ? JSON.parse(localStorage.getItem("tokens")) : null;
+
+const formatedDate = ((days[tday.getDay()] === 'Senin') ? days[tday.getDay() + 5] : days[tday.getDay() - 1]) + ', ' + ('0' + (((days[tday.getDay()] === 'Senin') ? tday.getDate() - 2 : tday.getDate() - 1))).slice(-2) + ' ' + bulan[tday.getMonth()] + ' ' + tday.getFullYear();
 
 const nowDate = y + '-' + m + '-' + d;
-// const nowDate = '2024-08-31';
 
 const formNotedVisit = Yup.object().shape({
   ket_not_vst: Yup.string()
@@ -166,12 +167,14 @@ async function getNotVisited() {
       }
     });
 
-    planStore.value = response.data.resource;
-    isOpen.value = true;
+    if (userId.user_id !== null) {
+      planStore.value = response.data.resource;
+      isOpen.value = true;
+    }
 
   } catch (error) {
     console.log(error.message);
-  } 
+  }
   finally {
     stopLoading();
   }
@@ -205,14 +208,16 @@ async function formKet() {
     ket_not_vst.value = null;
   } catch (error) {
     console.log(error.message);
-  } 
+  }
   finally {
     stopLoading();
   }
 }
 
 onMounted(() => {
-  getNotVisited();
+  if (tokenset != null) {
+    getNotVisited();
+  }
   refreshAccessTokenHandler();
 })
 </script>

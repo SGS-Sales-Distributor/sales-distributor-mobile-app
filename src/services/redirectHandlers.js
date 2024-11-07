@@ -116,3 +116,11 @@ export function RedirectVisitPage(userId){
         });
     }, 300);
 }
+
+export function RedirectInputVisitPage(){
+    setTimeout(() => {
+        router.replace({
+            name: 'Plans'
+        });
+    }, 300);
+}

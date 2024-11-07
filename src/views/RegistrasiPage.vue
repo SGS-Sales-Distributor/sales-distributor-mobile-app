@@ -14,7 +14,8 @@
                                 Area</label>
                         </div>
                         <div class="mt-2">
-                            <vee-field v-model="formData.kode_lokasi" as="select" name="kode_lokasi" id="kode_lokasi" class="block 
+                            <vee-field v-model="formData.kode_lokasi" as="select" name="kode_lokasi" id="kode_lokasi"
+                                class="block 
                                 w-full 
                                 bg-transparent
                                 rounded-md 
@@ -238,8 +239,8 @@
                                 class="block text-sm font-medium leading-6 text-gray-900">Konfirmasi Password</label>
                             <div class="mt-2">
                                 <vee-field v-model="formData.password_confirmation" id="password_confirmation"
-                                    name="password_confirmation" type="password" placeholder="******"
-                                    aria-label="password" aria-describedby="password" class="
+                                    name="password_confirmation" type="password_confirm" placeholder="******"
+                                    aria-label="password_confirm" aria-describedby="password_confirm" class="
                                 block 
                                 w-full 
                                 bg-transparent
@@ -341,6 +342,7 @@ const formData = ref({
     // name: 'Hengky',
 });
 
+
 const formValidate = Yup.object().shape({
     // nik: Yup.string()
     //     .required('NIK diperlukan, tidak dapat kosong!')
@@ -353,8 +355,8 @@ const formValidate = Yup.object().shape({
     phone: Yup.number('Nomer Telepon Harus Berupa Angka !')
         .required('Nomor Telepon diperlukan, tidak dapat kosong!')
         // .max(15, 'Nomor Telepon Maximal 15 Digit Angka')
-        .min(11,'Nomer Telepon Minimal 11 Digit Angka'),
-        // .integer(),
+        .min(11, 'Nomer Telepon Minimal 11 Digit Angka'),
+    // .integer(),
     email: Yup.string()
         .required('Email diperlukan, tidak dapat kosong!')
         .max(255, 'Email tidak boleh lebih dari 255 karakter')
@@ -376,7 +378,7 @@ const formValidate = Yup.object().shape({
 async function kodeLokasi() {
     try {
         const response = await axios.get(`${API_URL.value}/api/v2/area`, {
-           // },
+            // },
         });
 
         Lokasi.value = response.data.resource;
@@ -389,28 +391,28 @@ async function kodeLokasi() {
 }
 
 async function AlertRegister() {
-  const alert = await alertController.create({
-    header: "Yakin Simpan Data ?",
-    message: "Setelah Registrasi Anda Bisa Langsung Login",
-    buttons: [
-        {
-        text: "Ya, Simpan",
-        cssClass: "alert-button-confirm",
-        handler: async () => {
-            register();
-        },
-    },
-    {
-      text: "Tidak",
-      cssClass: "alert-button-cancel",
-      handler: () => {
-        console.log("Pembatalan Registrasi");
-      },
-    },
-    ],
-  });
+    const alert = await alertController.create({
+        header: "Yakin Simpan Data ?",
+        message: "Setelah Registrasi Anda Bisa Langsung Login",
+        buttons: [
+            {
+                text: "Ya, Simpan",
+                cssClass: "alert-button-confirm",
+                handler: async () => {
+                    register();
+                },
+            },
+            {
+                text: "Tidak",
+                cssClass: "alert-button-cancel",
+                handler: () => {
+                    console.log("Pembatalan Registrasi");
+                },
+            },
+        ],
+    });
 
-  return alert.present();
+    return alert.present();
 }
 
 async function register() {
@@ -422,15 +424,15 @@ async function register() {
         });
 
         stopLoading();
-        
+
 
         catchToast(response.data.message, 3000);
         // catchToast(response.data.resource.message, 3000);
         ReplaceLoginPage();
-            
+
     } catch (error) {
         // catchToastError("Failed Register Data", 3000);
-        catchToastError(error.response.data.message,3000);
+        catchToastError(error.response.data.message, 3000);
         console.log(error.message);
         stopLoading();
     }
