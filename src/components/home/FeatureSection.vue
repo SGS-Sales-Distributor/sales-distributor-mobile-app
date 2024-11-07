@@ -32,6 +32,19 @@
       </ion-button>
       <ion-label class="text-sm font-semibold">Purchase Order</ion-label>
     </div>
+    <div class="flex flex-col items-center justify-center space-y-2" style="">
+      <ion-button id="input-plan-button" shape="default" href="/plans">
+        <ion-icon class="text-4xl" slot="icon-only"  :icon ="receipt"></ion-icon>
+      </ion-button>
+      <ion-label class="text-sm font-semibold">Input Plan Visit</ion-label>
+    </div>
+
+    <!-- <div class="flex flex-col items-center justify-center space-y-2">
+      <ion-button id="daftar-plan-button" shape="default" href="/daftarplanvisit">
+        <ion-icon class="text-4xl" slot="icon-only"  :icon ="pencil"></ion-icon>
+      </ion-button>
+      <ion-label class="text-sm font-semibold">Daftar Plan Visit</ion-label>
+    </div> -->
     <!-- <div class="flex flex-col items-center justify-center space-y-2">
       <ion-button id="achievement-button" shape="round">
         <ion-icon class="text-2xl" slot="icon-only"  :icon="trophy"></ion-icon>
@@ -50,6 +63,9 @@ import {
   cube,
   card,
   albums,
+  bookmark,
+  receipt,
+  pencil
 } from 'ionicons/icons';
 import { IonButton } from '@ionic/vue';
 import { redirectToOwnerFormPage, redirectToRegisterStorePage ,RedirectVisitPage} from '@/services/redirectHandlers';
@@ -135,6 +151,27 @@ async function registrerClik(){
   --background-hover: #FEFF86;
   --background-activated: #FEFF86;
   --background-focused: #FEFF86;
+  --color: #202020;
+  --box-shadow: 0 2px 6px 0 rgb(0, 0, 0, 0.25);
+  --padding-top: 10px;
+  --padding-bottom: 10px;
+}
+
+#input-plan-button {
+  --background: #FEFF86;
+  --background-hover: #FEFF86;
+  --background-activated: #FEFF86;
+  --background-focused: #FEFF86;
+  --color: #202020;
+  --box-shadow: 0 2px 6px 0 rgb(0, 0, 0, 0.25);
+  --padding-top: 10px;
+  --padding-bottom: 10px;
+}
+#daftar-plan-button {
+  --background: #f5bef4;
+  --background-hover: #f5bef4;
+  --background-activated: #f5bef4;
+  --background-focused: #f5bef4;
   --color: #202020;
   --box-shadow: 0 2px 6px 0 rgb(0, 0, 0, 0.25);
   --padding-top: 10px;

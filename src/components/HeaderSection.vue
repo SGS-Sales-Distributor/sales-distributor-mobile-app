@@ -1,5 +1,5 @@
 <template>
-  <header class="bg-blue-500 p-6 rounded-b-3xl">
+  <header class="bg-blue-500 p-6 rounded-b-3xl" >
     <div class="flex justify-between">
       <router-link :to="{ name: 'home' }" class="flex items-center space-x-3 rtl:space-x-reverse">
         <img src="/public/1630597076257.jpeg" class="h-12 rounded-full" alt="Sinergi Global Service" />

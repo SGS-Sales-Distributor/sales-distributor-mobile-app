@@ -15,6 +15,8 @@ import { isAuthenticated } from "@/services/auth";
 import "maplibre-gl/dist/maplibre-gl.css";
 import RegistrasiPage from "@/views/RegistrasiPage.vue";
 import historyVisit from "./../views/HistoryVisitPage.vue";
+import Plans from "./../views/Plans.vue";
+import DaftarPlanVisit from "./../views/DaftarPlanVisit.vue";
 
 const routes: Array<RouteRecordRaw> = [
   {
@@ -33,9 +35,9 @@ const routes: Array<RouteRecordRaw> = [
     },
   },
   {
-    path : "/registerAkun",
-    name : "registerAkun",
-    component : RegistrasiPage
+    path: "/registerAkun",
+    name: "registerAkun",
+    component: RegistrasiPage
   },
   // {
   //   path: "registerAkun",
@@ -63,7 +65,7 @@ const routes: Array<RouteRecordRaw> = [
         name: "purchaseOrder",
         component: PurchaseOrderPage,
       },
-      { 
+      {
         path: "/store/:id",
         name: "storeDetail",
         component: StoreDetailPage,
@@ -93,15 +95,25 @@ const routes: Array<RouteRecordRaw> = [
         name: "profile",
         component: ProfilePage
       },
-      { 
+      {
         path: "/storeInfo/:id",
         name: "storeDetailFromPO",
         component: StoreDetailPageFromPO,
       },
       {
-        path :"historyVisit/:id",
-        name :"historyVisit",
-        component : historyVisit,
+        path: "historyVisit/:id",
+        name: "historyVisit",
+        component: historyVisit,
+      },
+      {
+        path: "Plans",
+        name: "Plans",
+        component: Plans,
+      },
+      {
+        path: "DaftarPlanVisit",
+        name: "DaftarPlanVisit",
+        component: DaftarPlanVisit,
       },
     ],
   },
