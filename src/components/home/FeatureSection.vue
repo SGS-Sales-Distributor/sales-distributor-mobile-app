@@ -38,6 +38,18 @@
       </ion-button>
       <ion-label class="text-sm font-semibold">Input Plan Visit</ion-label>
     </div>
+    <div class="flex flex-col items-center justify-center space-y-2">
+      <ion-button id="daftar-toko-button" shape="default" href="/daftartoko">
+        <ion-icon class="text-4xl" slot="icon-only"  :icon ="businessOutline"></ion-icon>
+      </ion-button>
+      <ion-label class="text-sm font-semibold">Daftar Toko</ion-label>
+    </div>
+    <div class="flex flex-col items-center justify-center space-y-2">
+      <ion-button id="daftar-po-button" shape="default"  @click="DaftarPo()">
+        <ion-icon class="text-4xl" slot="icon-only"  :icon ="bagCheckOutline"></ion-icon>
+      </ion-button>
+      <ion-label class="text-sm font-semibold">Daftar Po</ion-label>
+    </div>
 
     <!-- <div class="flex flex-col items-center justify-center space-y-2">
       <ion-button id="daftar-plan-button" shape="default" href="/daftarplanvisit">
@@ -65,7 +77,9 @@ import {
   albums,
   bookmark,
   receipt,
-  pencil
+  pencil,
+  businessOutline,
+  bagCheckOutline,
 } from 'ionicons/icons';
 import { IonButton } from '@ionic/vue';
 import { redirectToOwnerFormPage, redirectToRegisterStorePage ,RedirectVisitPage} from '@/services/redirectHandlers';
@@ -172,6 +186,26 @@ async function registrerClik(){
   --background-hover: #f5bef4;
   --background-activated: #f5bef4;
   --background-focused: #f5bef4;
+  --color: #202020;
+  --box-shadow: 0 2px 6px 0 rgb(0, 0, 0, 0.25);
+  --padding-top: 10px;
+  --padding-bottom: 10px;
+}
+#daftar-toko-button {
+  --background: #176af0;
+  --background-hover: #176af0;
+  --background-activated: #176af0;
+  --background-focused: #176af0;
+  --color: #202020;
+  --box-shadow: 0 2px 6px 0 rgb(0, 0, 0, 0.25);
+  --padding-top: 10px;
+  --padding-bottom: 10px;
+}
+#daftar-po-button {
+  --background: #f75356;
+  --background-hover: #f75356;
+  --background-activated: #f75356;
+  --background-focused: #f75356;
   --color: #202020;
   --box-shadow: 0 2px 6px 0 rgb(0, 0, 0, 0.25);
   --padding-top: 10px;
