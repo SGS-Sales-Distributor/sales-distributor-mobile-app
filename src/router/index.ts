@@ -17,6 +17,10 @@ import RegistrasiPage from "@/views/RegistrasiPage.vue";
 import historyVisit from "./../views/HistoryVisitPage.vue";
 import Plans from "./../views/Plans.vue";
 import DaftarPlanVisit from "./../views/DaftarPlanVisit.vue";
+import DaftarToko from "@/views/DaftarToko.vue";
+import DaftarPo from "@/views/DaftarPo.vue";
+import DetailOrder from "@/views/DetailOrder.vue";
+import DetailBeforeOrder from "@/views/DetailBeforeOrder.vue";
 
 const routes: Array<RouteRecordRaw> = [
   {
@@ -81,7 +85,7 @@ const routes: Array<RouteRecordRaw> = [
         component: RegistrasiTokoBaruPage,
       },
       {
-        path: "/store/register/owner",
+        path: "/store/register/owner/:id",
         name: "registerOwnerStore",
         component: RegistrasiOwnerBaruPage,
       },
@@ -114,6 +118,29 @@ const routes: Array<RouteRecordRaw> = [
         path: "DaftarPlanVisit",
         name: "DaftarPlanVisit",
         component: DaftarPlanVisit,
+      },
+      {
+        path :"DaftarToko",
+        name :"DaftarToko",
+        component: DaftarToko,
+      },
+
+      {
+        path :"DaftarPo",
+        name :"DaftarPo",
+        component: DaftarPo,
+      },
+
+      {
+        path :"DetailOrder",
+        name :"DetailOrder",
+        component: DetailOrder,
+      },
+
+      {
+        path :"DetailBeforeOrder",
+        name :"DetailBeforeOrder",
+        component: DetailBeforeOrder,
       },
     ],
   },

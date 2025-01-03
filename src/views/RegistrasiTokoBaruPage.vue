@@ -56,7 +56,8 @@
                                 <Field v-model="formData.store_fax" :type="fieldTypes.phone" id="store_fax"
                                     name="store_fax"
                                     class="form-input w-full px-4 py-2 border rounded-lg text-gray-700 focus:ring-blue-500"
-                                    placeholder="Masukkan Nomer Fax Toko" aria-label="store_fax" aria-describedby="store_fax" />
+                                    placeholder="Masukkan Nomer Fax Toko" aria-label="store_fax"
+                                    aria-describedby="store_fax" />
                                 <ErrorMessage name="store_fax" class="text-rose-500" />
                             </div>
                             <div class="mb-4">
@@ -115,6 +116,7 @@ import { Form, Field, ErrorMessage } from 'vee-validate';
 const storeTypes = ref([]);
 const storeCabangs = ref([]);
 
+const user = localStorage.getItem("user") ? JSON.parse(localStorage.getItem("user")) : null;
 
 const formData = ref({
     store_name: null,
@@ -124,6 +126,7 @@ const formData = ref({
     store_fax: null,
     store_type_id: null,
     subcabang_id: null,
+    userFullname : user.fullname
 });
 
 const validation = Yup.object().shape({
@@ -138,7 +141,7 @@ const validation = Yup.object().shape({
     store_phone: Yup.string()
         .required('Nomor Telepon toko tidak boleh kosong!')
         .min(11, 'Nomor Telepon toko tidak boleh kurang dari 11 digit')
-        .matches(/^[0-9]{11,12}$/, 'Nomor telepon harus terdiri dari 11-12 digit angka'), 
+        .matches(/^[0-9]{11,12}$/, 'Nomor telepon harus terdiri dari 11-12 digit angka'),
     store_fax: Yup.string()
         .required('Nomor fax toko tidak boleh kosong!')
         .max(10, 'Nomor fax toko tidak boleh lebih dari 10-11 Digit')
@@ -175,13 +178,25 @@ async function storeDataAlert() {
     return alert.present();
 }
 
+function clearForm() {
+    formData.value = {
+        store_name: null,
+        store_alias: null,
+        store_address: null,
+        store_phone: null,
+        store_fax: null,
+        store_type_id: null,
+        subcabang_id: null,
+        userFullname : null,
+    };
+}
+
 async function saveStoreData() {
     try {
         refreshAccessTokenHandler();
 
         const tokens = localStorage.getItem("tokens") ? JSON.parse(localStorage.getItem("tokens")) : null;
-        const user = localStorage.getItem("user") ? JSON.parse(localStorage.getItem("user")) : null;
-
+        
         const headers = {
             'Authorization': `Bearer ${tokens.access_token}`,
         }
@@ -190,7 +205,6 @@ async function saveStoreData() {
 
         const response = await axios.post(`${API_URL.value}/api/v2/stores`, formData.value, {
             headers: headers,
-            "userNumber" : user.number,
         });
 
         stopLoading();
@@ -198,18 +212,17 @@ async function saveStoreData() {
         savedStoreData.value = response.data.resource.store_id;
 
         console.log(savedStoreData.value);
-        // localStorage.setItem('store',savedStoreData.value);
-        localStorage.setItem('store_id',savedStoreData.value);
-
-
+        sessionStorage.setItem('store_id', savedStoreData.value);
         catchToast(response.data.message, 3000);
-        redirectToOwnerFormPage();
+        clearForm();
+        // this.formData.reset();
+        redirectToOwnerFormPage(savedStoreData.value);
     } catch (error) {
         if (error.response && error.response.data.status == 401) {
             catchToastError(error.response.data.message, 3000);
             //catchToastError("Gagal membuat data toko baru", 3000);
             redirectToRegisterStorePage();
-        } 
+        }
         // else if(error.response.data.status == 422){   
         //     catchToastError(error.response.data.message, 3000);
         //     redirectToRegisterStorePage();
@@ -268,11 +281,11 @@ async function fetchStoreCabangs(query = '') {
             },
         });
 
-        storeCabangs.value = response.data.resource.data;
+        storeCabangs.value = response.data.resource;
     } catch (error) {
         catchToastError("Failed to fetch store cabangs", 3000);
 
-        console.error("Failed to fetch store cabangs", error);
+        console.error(error);
     }
 }
 

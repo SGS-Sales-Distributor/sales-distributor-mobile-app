@@ -61,10 +61,10 @@ export function redirectToStorePurchaseOrderPage(storeId) {
     }, 300);
 }
 
-export function redirectToOwnerFormPage() {
+export function redirectToOwnerFormPage(storeId) {
     setTimeout(() => {
         router.push({
-            name: 'registerOwnerStore'
+            name: 'registerOwnerStore', params: { id: storeId }
         });
     }, 300);
 }
@@ -121,6 +121,30 @@ export function RedirectInputVisitPage(){
     setTimeout(() => {
         router.replace({
             name: 'Plans'
+        });
+    }, 300);
+}
+
+export function DaftarPo(userId){
+    setTimeout(() => {
+        router.replace({
+            name: 'DaftarPo', params: { id: userId }
+        });
+    }, 300);
+}
+
+export function DetailOrder(orderId){
+    setTimeout(() => {
+        router.push({
+            name: 'DetailOrder', params: { id: orderId }
+        });
+    }, 300);
+}
+
+export function DetailBeforeOrder(){
+    setTimeout(() => {
+        router.push({
+            name: 'DetailBeforeOrder'
         });
     }, 300);
 }

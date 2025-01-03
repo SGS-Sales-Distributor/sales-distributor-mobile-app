@@ -306,6 +306,21 @@ async function storeDataAlert() {
     return alert.present();
 }
 
+function clearForm() {
+    formData.value = {
+        user_id: user_id.user_id,
+        fullname: user_id.fullname,
+        month_plan: null,
+        year_plan: null,
+        frekuensi: null,
+        daily_plan: [{ tanggal: "", cabang: "", toko: "" }],
+    };
+    // presentLoading();
+    // fetchAllUser();
+    fetchStoreCabang();
+    // stopLoading();
+}
+
 async function saveCallPlan() {
     try {
         presentLoading();
@@ -325,14 +340,8 @@ async function saveCallPlan() {
 
         stopLoading();
         catchToast(response.data.message, 3000);
-        // formData.value = {
-        //     // user_id: null,
-        //     month_plan: null,
-        //     year_plan: null,
-        //     frekuensi: null,
-        //     daily_plan: [{ tanggal: "", cabang: "", toko: "" }],
-        // };
-        redirectToHomePage();
+        clearForm();
+
     } catch (error) {
         if (error.response && error.response.data.status === 401) {
             catchToastError(error.response.data.message, 3000);
@@ -370,7 +379,7 @@ async function fetchStoreCabang() {
 
         const headers = { Authorization: `Bearer ${tokens.access_token}` };
         const response = await axios.get(`${API_URL.value}/api/v2/cabangsByUser/${user_id.user_id}`, {
-        // const response = await axios.get(`${API_URL.value}/api/v2/cabangsAll`, {
+            // const response = await axios.get(`${API_URL.value}/api/v2/cabangsAll`, {
             headers: headers,
         });
 

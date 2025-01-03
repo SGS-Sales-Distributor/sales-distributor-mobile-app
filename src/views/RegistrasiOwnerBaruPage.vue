@@ -87,7 +87,7 @@
 import * as Yup from 'yup';
 import HeaderSection from './../components/HeaderSection.vue'
 import { analytics, chevronBackOutline, ellipsisVerticalOutline } from 'ionicons/icons';
-import { redirectToPurchaseOrderPage, redirectToOwnerFormPage, replaceToOwnerFormPage } from '@/services/redirectHandlers';
+import { redirectToPurchaseOrderPage, redirectToOwnerFormPage, replaceToOwnerFormPage, redirectToRegisterStorePage } from '@/services/redirectHandlers';
 import { onMounted, ref } from 'vue';
 import { Form, Field, ErrorMessage } from 'vee-validate';
 import { refreshAccessTokenHandler } from '@/services/auth';
@@ -103,7 +103,8 @@ const showDataStoreInfoDistVal = ref(null);
 
 // const store = JSON.parse(localStorage.getItem("store_id"));
 // const getstoreId = JSON.parse(localStorage.getItem("store_id"));
-const store = localStorage.getItem("store_id") ? JSON.parse(localStorage.getItem("store_id")) : null;
+const store = sessionStorage.getItem("store_id") ? JSON.parse(sessionStorage.getItem("store_id")) : null;
+const user = localStorage.getItem("user") ? JSON.parse(localStorage.getItem("user")) : null;
 
 const formData = ref({
   owner: null,
@@ -111,6 +112,7 @@ const formData = ref({
   email_owner: null,
   ktp_owner: null,
   photo_other: null,
+  userFullname : user.fullname
 });
 
 const validation = Yup.object().shape({
@@ -158,11 +160,24 @@ async function storeDataAlert() {
   return alert.present();
 }
 
+function clearForm() {
+  formData.value = {
+    owner: null,
+    nik_owner: null,
+    email_owner: null,
+    ktp_owner: null,
+    photo_other: null,
+    userFullname : null,
+  };
+  sessionStorage.clear();
+}
+
 async function saveOwnerData(storeId) {
   try {
     refreshAccessTokenHandler();
 
     const tokens = localStorage.getItem("tokens") ? JSON.parse(localStorage.getItem("tokens")) : null;
+    
 
     const headers = {
       'Authorization': `Bearer ${tokens.access_token}`,
@@ -179,7 +194,8 @@ async function saveOwnerData(storeId) {
     stopLoading();
 
     catchToast(response.data.message, 3000);
-    redirectToPurchaseOrderPage();
+    clearForm();
+    redirectToRegisterStorePage();
   } catch (error) {
     if (error.response && error.response.data.status == 401) {
       catchToastError(error.response.data.message, 3000);
