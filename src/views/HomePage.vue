@@ -1,8 +1,8 @@
 <template>
   <ion-page>
-    <ion-content :fullscreen="true">
-      <HeaderSection />
-      <div class="flex min-h-full flex-col justify-start px-4 py-1 bg-white">
+    <HeaderSection />
+    <ion-content fullscreen="true">
+      <div class="home-menu">
         <!-- Header -->
         <!-- End of header -->
 
@@ -34,6 +34,9 @@
         </div> -->
 
         <!-- End of swipe -->
+      <ion-refresher slot="fixed" @ionRefresh="handleRefresh">
+        <ion-refresher-content/>
+      </ion-refresher>
       </div>
       <!-- <ion-button expand="block" @click="setOpen(true)">Open</ion-button> -->
 
@@ -111,9 +114,11 @@ import { refreshAccessTokenHandler } from '@/services/auth';
 import axios from 'axios';
 import { API_URL } from '@/services/globalVariables';
 import { presentLoading, stopLoading } from '@/services/loadingHandlers';
-import { catchToast, catchToastInfo } from '@/services/toastHandlers';
-import { IonButton } from '@ionic/vue';
+import { catchToast, catchToastInfo, catchToastError } from '@/services/toastHandlers';
+import { IonButton, IonRefresher, IonRefresherContent } from '@ionic/vue';
 import { Form, Field, ErrorMessage } from 'vee-validate';
+import { redirectAbsenIn, redirectAbsenOut } from '@/services/redirectHandlers';
+import { data } from '@maptiler/sdk';
 
 const isOpen = ref(false);
 const planStore = ref([]);
@@ -136,23 +141,33 @@ const formData = ref({
   ket_not_vst: null,
 });
 
+
 const tokenset = localStorage.getItem("tokens") ? JSON.parse(localStorage.getItem("tokens")) : null;
 
 const formatedDate = ((days[tday.getDay()] === 'Senin') ? days[tday.getDay() + 5] : days[tday.getDay() - 1]) + ', ' + ('0' + (((days[tday.getDay()] === 'Senin') ? tday.getDate() - 2 : tday.getDate() - 1))).slice(-2) + ' ' + bulan[tday.getMonth()] + ' ' + tday.getFullYear();
 
 const nowDate = y + '-' + m + '-' + d;
+const userId = localStorage.getItem("user") ? JSON.parse(localStorage.getItem("user")) : "";
 
 const formNotedVisit = Yup.object().shape({
   ket_not_vst: Yup.string()
     .required('Keterangan Harus Diisi, tidak boleh kosong!'),
 });
 
+const handleRefresh = (event) => {
+  window.location.reload();
+  setTimeout(() => {
+    event.target.complete();
+  }, 2000);
+};
+
+
+
 async function getNotVisited() {
 
   try {
     presentLoading();
     const tokens = localStorage.getItem("tokens") ? JSON.parse(localStorage.getItem("tokens")) : null;
-    const userId = localStorage.getItem("user") ? JSON.parse(localStorage.getItem("user")) : "";
 
     const headers = {
       'Content-Type': 'application/json',
@@ -170,6 +185,12 @@ async function getNotVisited() {
     if (userId.user_id !== null) {
       planStore.value = response.data.resource;
       isOpen.value = true;
+    } else {
+      isOpen.value = false;
+    }
+
+    if (tokenset.access_token == null) {
+      isOpen.value = false;
     }
 
   } catch (error) {
@@ -180,6 +201,33 @@ async function getNotVisited() {
   }
 
 }
+
+async function getAbsenDay() {
+try {
+  presentLoading();
+  const headers = {
+    "Content-Type": "application/json",
+     Authorization: `Bearer ${tokenset.access_token}`,
+  }
+
+  const response = await axios.get(`${API_URL.value}/api/v2/getAbsen/${userId.user_id}/`, {
+    headers: headers
+  })
+
+  const datAbsen = response.data;
+
+} catch (error) {
+  console.log(error.response, 3000);
+  if (error.response && error.response.data.status == 404) {
+      redirectAbsenIn();
+      isOpen.value = false;
+    }
+  }
+  finally {
+    stopLoading();
+  }
+}
+
 
 async function formKet() {
   try {
@@ -215,8 +263,9 @@ async function formKet() {
 }
 
 onMounted(() => {
+  getAbsenDay();
   if (tokenset != null) {
-    getNotVisited();
+    // getNotVisited();
   }
   refreshAccessTokenHandler();
 })
@@ -262,5 +311,14 @@ ion-modal ion-icon {
 
 ion-modal .wrapper {
   margin-bottom: 10px;
+}
+
+.home-menu {
+  margin-top: 28%;
+  flex-direction: column;
+  background-color: white;
+  align-items: center;
+  padding-left : 20px;
+  padding-right : 20px;
 }
 </style>

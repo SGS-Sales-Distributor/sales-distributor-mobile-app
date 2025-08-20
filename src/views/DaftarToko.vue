@@ -1,10 +1,10 @@
 <template>
   <ion-page>
+    <HeaderSection />
     <ion-content :fullscreen="true">
       <!-- Header -->
-      <HeaderSection />
 
-      <div class="flex min-h-full flex-col p-4">
+      <div class="container">
         <div class="relative overflow-x-auto">
           <div class="py-2 rounded-lg max-w-sm-full w-full">
             <h2 class="text-2xl font-semibold text-center mb-4">Daftar Toko</h2>
@@ -53,7 +53,7 @@
                 <ion-card-content class="bg-gray-50">
                   <div class="flex w-full justify-center items-center px-4 pb-2 space-x-4">
                     <!-- Edit Button -->
-                    <ion-button shape="round" color="primary" @click="openEditModal(store)">Edit</ion-button>
+                    <ion-button shape="round" color="primary" @click="openEditModal(store)"><ion-icon slot="start" :icon="createSharp"></ion-icon> Edit</ion-button>
                   </div>
                 </ion-card-content>
               </ion-card>
@@ -109,22 +109,27 @@
               placeholder="Masukkan Credit Limit" readonly></ion-input>
           </ion-item>
           <div class="ion-padding">
-            <ion-button expand="block" color="primary" @click="saveStoreChanges">Save</ion-button>
+            <ion-button expand="block" color="primary" @click="saveStoreChanges"><ion-icon slot="start" :icon="checkmarkCircleSharp"></ion-icon> Save</ion-button>
           </div>
         </ion-content>
       </ion-modal>
+      <ion-refresher slot="fixed" @ionRefresh="handleRefresh($event)">
+        <ion-refresher-content></ion-refresher-content>
+      </ion-refresher>
     </ion-content>
   </ion-page>
 </template>
 
 <script setup>
 import axios from "axios";
+import { createSharp,checkmarkCircleSharp } from "ionicons/icons";
 import HeaderSection from "./../components/HeaderSection.vue";
 import { API_URL, currentRoute } from "@/services/globalVariables";
 import { computed, onMounted, ref } from "vue";
 import { refreshAccessTokenHandler } from "@/services/auth";
 import { useRoute } from "vue-router";
 import { catchToast, catchToastError } from "@/services/toastHandlers";
+import { IonRefresher, IonRefresherContent } from "@ionic/vue";
 
 const route = useRoute();
 const currentPageRouteName = computed(() => route.name);
@@ -191,6 +196,13 @@ async function fetchStoresData() {
   }
 }
 
+const handleRefresh = () => {
+  window.location.reload();
+  setTimeout(() => {
+    event.target.complete();
+  }, 1000);
+};
+
 function openEditModal(store) {
   const userId = localStorage.getItem("user_id");
   selectedStore.value = {
@@ -249,3 +261,11 @@ onMounted(() => {
   fetchStoresData();
 });
 </script>
+
+<style scoped>
+.container {
+  margin-top: 28%;
+  position: flex;
+  flex-direction: column;
+}
+</style>

@@ -73,7 +73,7 @@
     <div class="flex flex-col space-y-6">
       <button type="submit"
         class="flex w-full justify-center rounded-md bg-blue-600 px-3 py-1.5 text-sm font-semibold leading-6 text-white shadow-sm hover:bg-blue-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-blue-600 transition-all">
-        <span>Login</span>
+        <span><ion-icon slot="start" :icon="logIn"></ion-icon> Login</span>
       </button>
     </div>
 
@@ -87,7 +87,7 @@
     </center>
     <button type="button"
       class="flex w-full justify-center rounded-md bg-red-600 px-3 py-1.5 text-sm font-semibold leading-6 text-white shadow-sm hover:bg-red-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-red-600 transition-all"
-      @click="registerAkun"><span>Register Now</span></button>
+      @click="registerAkun"><span><ion-icon slot="start" :icon="create"></ion-icon> Register Now</span></button>
   </div>
 </template>
 
@@ -101,6 +101,7 @@ import { redirectToHomePage, redirectToRegisterAkun} from '@/services/redirectHa
 import { presentLoading, stopLoading } from '@/services/loadingHandlers';
 import { Form, Field, ErrorMessage } from 'vee-validate';
 import { elevation } from '@maptiler/sdk';
+import { create, logIn } from 'ionicons/icons';
 
 const passwordFieldType = ref('password');
 const emailFieldType = ref('email');

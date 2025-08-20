@@ -1,13 +1,9 @@
 <template>
     <ion-page>
-        <ion-content>
-            <HeaderSection />
-            <div>
-                <ion-card-header class="text-md text-gray-900 font-bold pb-2 text-center">
-                    <h1>History Visit </h1>
-                </ion-card-header>
-            </div>
-            <div>
+        <HeaderSection />
+        <ion-content :fullscreen="true">
+
+            <div class="rekap-container">
                 <ion-card color="">
                     <ion-card-content>
                         <label for="dari">Dari Tanggal : </label>
@@ -21,11 +17,14 @@
                         <br>
                         <button type="button"
                             class="w-full bg-blue-500 text-white px-4 py-2 rounded-lg hover:bg-blue-600 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-opacity-50"
-                            @click="getDataVisit">Lihat</button>
+                            @click="getDataVisit"><ion-icon slot="start" :icon="checkmarkCircleSharp"></ion-icon> Lihat</button>
                     </ion-card-content>
                 </ion-card>
             </div>
-            <div v-for="(visit, index) in storeInfoDistri" :key="index + 1" class="relative overflow-x-auto">
+            <div v-if="!storeInfoDistri" class="relative overflow-x-auto">
+                <ion-card class="py-2 odd:bg-blue-500 even:bg-sky-400">Belum Ada Data</ion-card>
+            </div>
+            <div v-for="(visit, index) in storeInfoDistri" :key="index + 1" class="relative overflow-x-auto" v-else>
                 <ion-card class="py-2 odd:bg-blue-500 even:bg-sky-400">
                     <ion-card-header class="bg-gray-50">
                         <div class="flex flex-col w-full h-full space-y-2">
@@ -107,7 +106,8 @@
                                     <ion-badge v-else color="danger">Tidak Terpenuhi</ion-badge>
                                 </div>
                             </div>
-                            <div v-if="visit.idNotVisit !== null" class="flex flex-row w-full justify-between space-x-2">
+                            <div v-if="visit.idNotVisit !== null"
+                                class="flex flex-row w-full justify-between space-x-2">
                                 <label for="nama-toko" class="flex-initial w-56 font-semibold">Keterangan</label>
                                 <p>{{ visit.ketNotVisit }}</p>
                             </div>
@@ -115,24 +115,28 @@
                     </ion-card-header>
                 </ion-card>
             </div>
-            <ion-infinite-scroll @ionInfinite="ionInfinite">
+            <!-- <ion-infinite-scroll @ionInfinite="ionInfinite">
                 <ion-infinite-scroll-content loading-text="Load more history visit..."
                     loading-spinner="bubbles"></ion-infinite-scroll-content>
-            </ion-infinite-scroll>
+            </ion-infinite-scroll> -->
+            <ion-refresher slot="fixed" @ionRefresh="handleRefresh($event)">
+                <ion-refresher-content></ion-refresher-content>
+            </ion-refresher>
         </ion-content>
     </ion-page>
 </template>
 <script setup>
+import { checkmarkCircleSharp } from 'ionicons/icons';
 import { refreshAccessTokenHandler } from '@/services/auth';
 import HeaderSection from '@/components/HeaderSection.vue';
 import { IonInput, IonSearchbar } from '@ionic/vue';
 import { onMounted, ref, computed } from 'vue';
-import { catchToastError, catchToastWarn, catchToastInfo } from '@/services/toastHandlers';
+import { catchToastError, catchToastWarn, catchToastInfo, catchToast } from '@/services/toastHandlers';
 import axios from 'axios';
 import { API_URL } from '@/services/globalVariables';
 import { useRoute } from 'vue-router';
 import { presentLoading, stopLoading } from '@/services/loadingHandlers';
-import { IonDatetime, IonDatetimeButton, IonModal } from '@ionic/vue';
+import { IonDatetime, IonDatetimeButton, IonModal, IonRefresher, IonRefresherContent } from '@ionic/vue';
 
 const route = useRoute();
 const currentPageRouteName = computed(() => route.name);
@@ -172,7 +176,12 @@ const formData = ref({
     sampaiTanggal: null,
 });
 
-
+const handleRefresh = () => {
+    window.location.reload();
+    setTimeout(() => {
+        event.target.complete();
+    }, 1000);
+};
 
 async function fetchStoresData() {
 
@@ -232,8 +241,12 @@ async function getDataVisit() {
         });
 
         storeInfoDistri.value = response.data.resource;
+        catchToast("Berhasil", 3000);
 
     } catch (error) {
+        if (error.response && error.response.data.status == 404 || error.response.data.status == 500) {
+            catchToastWarn('Data Kosong', 3000);
+        }
         console.log(error.message);
     }
     finally {
@@ -248,3 +261,10 @@ onMounted(() => {
 
 })
 </script>
+<style scoped>
+.rekap-container {
+    margin-top: 28%;
+    position: flex;
+    flex-direction: column;
+}
+</style>

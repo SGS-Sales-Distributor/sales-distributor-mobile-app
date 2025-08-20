@@ -15,13 +15,17 @@
                 </table>
             </ion-card-title>
             <ion-card-subtitle>
-                <h1><b>Kak, {{ user.fullname }} </b></h1>
+                <h1><b>Kak, {{ user.fullname }} 
+                    <ion-text v-if="checkError === 404" color="danger">(Anda Belum Absen)</ion-text> 
+                    <ion-text v-else-if="detAbsen.attendee_time_in !== null && detAbsen.attendee_time_out === null" color="primary">(Absen Masuk Jam {{detAbsen.attendee_time_in}}) </ion-text>
+                     <ion-text v-else color="secondary">(Absen Pulang Jam {{detAbsen.attendee_time_out}})</ion-text></b> </h1>
+                
             </ion-card-subtitle>
         </ion-card-header>
 
         <ion-card-content>
             <h3>Welcome To
-                Sidia (SGS Distribution Application)</h3>
+                SiSOPA (SGS Sales Operasional Application)</h3>
         </ion-card-content>
     </ion-card>
 </template>
@@ -32,6 +36,8 @@
 import { onMounted, ref } from 'vue';
 import axios from 'axios';
 import { API_URL } from '@/services/globalVariables';
+import { IonText } from '@ionic/vue';
+import { catchToastError }from '@/services/toastHandlers';
 
 // const isOpen = ref(false);
 // const setOpen = (open) => (isOpen.value = open);
@@ -47,8 +53,33 @@ const d = String(tday.getDate() - 3).padStart(2, '0');
 const y = String(tday.getFullYear());
 
 const formatedDate = days[tday.getDay()] + ', ' + ('0' + (tday.getDate())).slice(-2) + ' ' + bulan[tday.getMonth()] + ' ' + tday.getFullYear();;
+const tokenset = localStorage.getItem("tokens") ? JSON.parse(localStorage.getItem("tokens")) : null;
+const userId = localStorage.getItem("user") ? JSON.parse(localStorage.getItem("user")) : "";
+const detAbsen = ref([]);
+const checkError = ref(null);
+
+
+async function getAbsenDay() {
+  try {
+    const headers = {
+      "Content-Type": "application/json",
+      Authorization: `Bearer ${tokenset.access_token}`,
+    };
+
+    const response = await axios.get(`${API_URL.value}/api/v2/getAbsen/${userId.user_id}/`, {
+      headers: headers,
+    });
+
+     detAbsen.value= response.data.resource;
+
+  } catch (error) {
+    console.log(error.message, 3000);
+    checkError.value=error.response.data.status;
+  }
+}
 
 
 onMounted(() => {
+    getAbsenDay();
 });
 </script>

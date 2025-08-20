@@ -36,9 +36,8 @@
                                 sm:text-md 
                                 sm:leading-6">
                                 <option disabled selected value="">Pilih Area</option>
-                                <!-- <option value="1">Bandung</option>
-                                <option value="2">Bogor</option> -->
-                                <option v-for="area in Lokasi" :key="area.id" :value="area.kode_lokasi">
+                                <option v-for="area in Lokasi" :key="area.id"
+                                    :value="data = { kode_lokasi: area.kode_lokasi, cabangId: area.idCabang }">
                                     {{ area.nama_cabang }}
                                 </option>
                             </vee-field>
@@ -74,6 +73,41 @@
                                 <vee-error-message name="email" class="mt-4 text-rose-500" />
                             </div>
                         </div> -->
+
+                        <div>
+                            <label for="area" class="block text-sm font-medium leading-6 text-grey-900">Pilih
+                                Job Desk</label>
+                        </div>
+                        <div class="mt-2">
+                            <vee-field v-model="formData.jobdesk" as="select" name="jobdesk" id="jobdesk" class="block 
+                                w-full 
+                                bg-transparent
+                                rounded-md 
+                                ring-1
+                                ring-inset
+                                ring-white-300
+                                py-2.5
+                                px-2.5 
+                                text-white-900
+                                shadow-sm
+                                focus:ring-2
+                                focus:ring-inset
+                                focus:ring-blue-500
+                                focus:outline-0
+                                disabled:border-0
+                                placeholder:text-white-400
+                                transition-all  
+                                sm:text-md 
+                                sm:leading-6">
+                                <option disabled selected value="">Pilih Job Desk Anda</option>
+                                <!-- <option value="1">Bandung</option>
+                                <option value="2">Bogor</option> -->
+                                <option v-for="jobs in jabatan" :key="jobs.id" :value="jobs.id">
+                                    {{ jobs.jabatan }}
+                                </option>
+                            </vee-field>
+                            <vee-error-message name="jobdesk" class="mt-4 text-rose-500" />
+                        </div>
 
                         <!-- Fullname Input -->
                         <div>
@@ -269,7 +303,7 @@
                         <div class="flex flex-col space-y-6">
                             <button type="submit"
                                 class="flex w-full justify-center rounded-md bg-blue-600 px-3 py-1.5 text-sm font-semibold leading-6 text-white shadow-sm hover:bg-blue-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-blue-600 transition-all">
-                                <span>Registrasi Akun</span>
+                                <span><ion-icon slot="start" :icon="checkmarkCircleSharp"></ion-icon> Registrasi Akun</span>
                             </button>
                             <!-- <p class="text-center font-bold">Atau</p>
                             <button
@@ -303,7 +337,7 @@
                             </button> -->
                         </div>
                     </vee-form>
-                    <p class="mt-10 text-center text-xs font-normal text-gray-900">© PT. Sinergi Global Servis 2024.
+                    <p class="mt-10 text-center text-xs font-normal text-gray-900">© PT. Sinergi Global Servis 2025.
                         All rights reserved.</p>
                 </div>
             </div>
@@ -314,7 +348,7 @@
 <script setup>
 
 
-import { chevronBackCircleOutline, chevronBackOutline } from 'ionicons/icons'
+import { checkmarkCircleSharp, chevronBackCircleOutline, chevronBackOutline } from 'ionicons/icons'
 import * as Yup from 'yup';
 import axios from 'axios';
 import { API_URL } from '@/services/globalVariables';
@@ -328,17 +362,24 @@ import { alertController } from '@ionic/vue';
 
 
 const Lokasi = ref([]);
+const jabatan = ref([]);
 // const saveUserData = ref([]);
 
 const formData = ref({
     // nik: null,
-    kode_lokasi: null,
+    // data: {
+    //     kode_lokasi: null,
+    //     cabangId: null,
+    // },
+
     fullname: null,
     phone: null,
     email: null,
     username: null,
+    jobdesk: null,
     password: null,
     password_confirmation: null,
+    // idCabang: ,
     // name: 'Hengky',
 });
 
@@ -347,8 +388,11 @@ const formValidate = Yup.object().shape({
     // nik: Yup.string()
     //     .required('NIK diperlukan, tidak dapat kosong!')
     //     .max(20, 'NIK tidak boleh lebih dari 20 karakter'),
-    kode_lokasi: Yup.string()
-        .required('Mohon Pilih Salah Satu Area !'),
+    kode_lokasi: Yup.object().shape({
+        kode_lokasi: Yup.string().required('Mohon Pilih Salah Satu Area !')
+    }),
+    jobdesk: Yup.string()
+        .required('Mohon Pilih Satu Job Desk Untuk Anda'),
     fullname: Yup.string()
         .required('Nama Lengkap diperlukan, tidak dapat kosong!')
         .max(200, 'Nama Lengkap tidak boleh lebih dari 200 karakter'),
@@ -439,10 +483,26 @@ async function register() {
 
 }
 
+async function JabatanAll() {
+    try {
+        const response = await axios.get(`${API_URL.value}/api/v2/jabatanAll`, {
+            // },
+        });
+
+        jabatan.value = response.data;
+        console.log(jabatan);
+
+    } catch (error) {
+        catchToastError("Failed to fetch Jabatan", 3000);
+        console.log(error.message, error);
+    }
+}
+
 onMounted(() => {
     presentLoading();
     kodeLokasi();
     stopLoading();
+    JabatanAll();
 });
 </script>
 <style scoped></style>

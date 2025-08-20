@@ -1,8 +1,8 @@
 <template>
   <ion-page>
+    <HeaderSection />
     <ion-content :fullscreen="true" class="bg-gray-100">
       <!-- Header -->
-      <HeaderSection />
       <!-- End of header -->
 
       <!-- Content -->

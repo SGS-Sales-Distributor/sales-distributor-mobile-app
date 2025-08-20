@@ -3,9 +3,7 @@
     <ion-content>
       <HeaderSection />
       <div>
-        <ion-card-header
-          class="text-md text-gray-900 font-bold pb-2 text-center"
-        >
+        <ion-card-header class="text-md text-gray-900 font-bold pb-2 text-center">
           <h1>Daftar PO</h1>
         </ion-card-header>
       </div>
@@ -15,24 +13,10 @@
         <ion-card>
           <ion-card-content>
             <label for="dari">Dari Tanggal :</label>
-            <ion-input
-              type="date"
-              v-model="dariTanggal"
-              name="dariTanggal"
-              id="dariTanggal"
-            ></ion-input>
+            <ion-input type="date" v-model="dariTanggal" name="dariTanggal" id="dariTanggal"></ion-input>
             <label for="sampai">Sampai Tanggal :</label>
-            <ion-input
-              type="date"
-              v-model="sampaiTanggal"
-              name="sampaiTanggal"
-              id="sampaiTanggal"
-            ></ion-input>
-            <button
-              type="button"
-              class="w-full bg-blue-500 text-white px-4 py-2 rounded-lg mt-4"
-              @click="fetchOrders"
-            >
+            <ion-input type="date" v-model="sampaiTanggal" name="sampaiTanggal" id="sampaiTanggal"></ion-input>
+            <button type="button" class="w-full bg-blue-500 text-white px-4 py-2 rounded-lg mt-4" @click="fetchOrders">
               Lihat
             </button>
           </ion-card-content>
@@ -40,11 +24,7 @@
       </div>
 
       <!-- PO List with Edit and Delete Buttons -->
-      <div
-        v-for="(order, index) in filteredOrders"
-        :key="index"
-        class="relative overflow-x-auto"
-      >
+      <div v-for="(order, index) in filteredOrders" :key="index" class="relative overflow-x-auto">
         <ion-card class="py-2 odd:bg-blue-500 even:bg-sky-400">
           <ion-card-header class="bg-gray-50">
             <div class="flex flex-col w-full h-full space-y-2">
@@ -55,94 +35,60 @@
                 </p>
               </div>
               <div class="flex flex-row w-full justify-between space-x-2">
-                <label class="flex-initial w-56 font-semibold"
-                  >Nomor Order</label
-                >
+                <label class="flex-initial w-56 font-semibold">Nomor Order</label>
                 <p class="flex-initial w-44 text-right">{{ order.no_order }}</p>
               </div>
               <div class="flex flex-row w-full justify-between space-x-2">
-                <label class="flex-initial w-56 font-semibold"
-                  >Tanggal Order</label
-                >
+                <label class="flex-initial w-56 font-semibold">Tanggal Order</label>
                 <p class="flex-initial w-44 text-right">
                   {{ new Date(order.tgl_order).toLocaleDateString("id-ID") }}
                 </p>
               </div>
               <div class="flex flex-row w-full justify-between space-x-2">
-                <label class="flex-initial w-56 font-semibold"
-                  >Status Order</label
-                >
+                <label class="flex-initial w-56 font-semibold">Status Order</label>
                 <ion-badge :color="getStatusColor(order.status_id)">{{
                   getStatusText(order.status_id)
                 }}</ion-badge>
               </div>
-              <div
-                class="flex justify-end space-x-4 mt-2"
-                v-if="order.status_id == 0"
-              >
-                <ion-button
-                  expand="block"
-                  @click="
-                    () => {
-                      getDetOrder(order.id);
-                    }
-                  "
-                  >Detail Order</ion-button
-                >
-                <ion-button
-                  expand="block"
-                  color="success"
-                  @click="
-                    setId(order.id),
-                      setObjOrder(order.details),
-                      setWhatsapp(order.store),
-                      setOpen(true)
-                  "
-                >
+              <div class="flex justify-end space-x-4 mt-2" v-if="order.status_id == 0">
+                <ion-button expand="block" @click="
+                  () => {
+                    getDetOrder(order.id);
+                  }
+                ">Detail Order</ion-button>
+                <ion-button expand="block" color="success" @click="
+                  setId(order.id),
+                  setObjOrder(order.details),
+                  setWhatsapp(order.store),
+                  setOpen(true)
+                  ">
                   Konfirmasi OTP
                 </ion-button>
 
-                <ion-button
-                  expand="block"
-                  color="danger"
-                  @click="softDeleteOrder(order.id)"
-                >
+                <ion-button expand="block" color="danger" @click="softDeleteOrder(order.id)">
                   Batal
                 </ion-button>
 
                 <!-- <ion-button color="danger" @click="deleteDataAlert(order.id)">Delete</ion-button> -->
               </div>
-              <div
-                class="flex justify-end space-x-4 mt-2"
-                v-else-if="
-                  order.status_id == 1 &&
-                  getusers.jabatan_id !=
-                    15 /*|| getusers.jabatan_id != 1 || getusers.jabatan_id != 8 || getusers.jabatan_id != 9*/
-                "
-              >
-                <ion-button
-                  expand="block"
-                  @click="
-                    () => {
-                      getDetOrder(order.id);
-                    }
-                  "
-                  >Detail Order</ion-button
-                >
-                <ion-button expand="block" @click="openConfirmAlert(order)"
-                  >Approve PO</ion-button
-                >
+              <div class="flex justify-end space-x-4 mt-2" v-else-if="
+                order.status_id == 1 &&
+                getusers.jabatan_id !=
+                15 /*|| getusers.jabatan_id != 1 || getusers.jabatan_id != 8 || getusers.jabatan_id != 9*/
+              ">
+                <ion-button expand="block" @click="
+                  () => {
+                    getDetOrder(order.id);
+                  }
+                ">Detail Order</ion-button>
+                <ion-button expand="block" @click="openConfirmAlert(order)">Approve PO</ion-button>
               </div>
               <div class="flex justify-end space-x-4 mt-2" v-else>
-                <ion-button
-                  expand="block"
-                  @click="
-                    () => {
-                      getDetOrder(order.id);
-                    }
-                  "
-                  >Detail Order</ion-button
-                >
+                <ion-button expand="block" @click="
+                  () => {
+                    getDetOrder(order.id);
+                  }
+                ">Detail Order</ion-button>
               </div>
             </div>
           </ion-card-header>
@@ -157,27 +103,15 @@
             </ion-toolbar>
           </ion-header>
           <ion-content>
-            <div
-              v-if="flagOTP"
-              class="relative flex min-h-screen flex-col justify-center overflow-hidden"
-            >
-              <div
-                class="relative bg-white px-6 mx-auto w-full max-w-lg rounded-2xl"
-              >
+            <div v-if="flagOTP" class="relative flex min-h-screen flex-col justify-center overflow-hidden">
+              <div class="relative bg-white px-6 mx-auto w-full max-w-lg rounded-2xl">
                 <div class="mx-auto flex w-full max-w-md flex-col space-y-16">
-                  <div
-                    class="flex flex-col items-center justify-center text-center space-y-2"
-                  >
-                    <img
-                      src="/public/3d-mobile-phone-with-security-code-padlock.jpg"
-                      alt="OTP Images"
-                    />
+                  <div class="flex flex-col items-center justify-center text-center space-y-2">
+                    <img src="/public/3d-mobile-phone-with-security-code-padlock.jpg" alt="OTP Images" />
                     <div class="font-semibold text-3xl">
                       <p>Kirim OTP Whatsapp</p>
                     </div>
-                    <div
-                      class="flex flex-row text-sm font-medium text-gray-400"
-                    >
+                    <div class="flex flex-row text-sm font-medium text-gray-400">
                       <p>
                         Kami akan mengirimkan kode OTP ke nomor <br />{{
                           nomorWhatsappOTP
@@ -187,10 +121,8 @@
                   </div>
                   <div class="flex flex-col space-y-5">
                     <div>
-                      <button
-                        @click="sendOtp(nomorWhatsappOTP)"
-                        class="flex flex-row items-center justify-center text-center w-full border rounded-xl outline-none py-5 bg-blue-700 border-none text-white text-sm shadow-sm"
-                      >
+                      <button @click="sendOtp(nomorWhatsappOTP)"
+                        class="flex flex-row items-center justify-center text-center w-full border rounded-xl outline-none py-5 bg-blue-700 border-none text-white text-sm shadow-sm">
                         Kirim OTP
                       </button>
                     </div>
@@ -198,23 +130,15 @@
                 </div>
               </div>
             </div>
-            <div
-              v-if="!flagOTP"
-              class="relative flex min-h-screen flex-col justify-center overflow-hidden bg-gray-50 py-12"
-            >
-              <div
-                class="relative bg-white px-6 py-8 mx-auto w-full max-w-lg rounded-2xl"
-              >
+            <div v-if="!flagOTP"
+              class="relative flex min-h-screen flex-col justify-center overflow-hidden bg-gray-50 py-12">
+              <div class="relative bg-white px-6 py-8 mx-auto w-full max-w-lg rounded-2xl">
                 <div class="mx-auto flex w-full max-w-md flex-col space-y-16">
-                  <div
-                    class="flex flex-col items-center justify-center text-center space-y-2"
-                  >
+                  <div class="flex flex-col items-center justify-center text-center space-y-2">
                     <div class="font-semibold text-3xl">
                       <p>Verifikasi OTP Whatsapp</p>
                     </div>
-                    <div
-                      class="flex flex-row text-sm font-medium text-gray-400"
-                    >
+                    <div class="flex flex-row text-sm font-medium text-gray-400">
                       <p>
                         Kami telah mengirim kode OTP ke nomor
                         {{ nomorWhatsappOTP }}
@@ -224,72 +148,42 @@
 
                   <div>
                     <div class="flex flex-col space-y-16">
-                      <div
-                        class="flex flex-row items-center justify-between mx-auto w-full max-w-xs"
-                      >
+                      <div class="flex flex-row items-center justify-between mx-auto w-full max-w-xs">
                         <div class="w-16 h-16">
-                          <input
-                            v-model="firstOTPNumber"
+                          <input v-model="firstOTPNumber"
                             class="w-full h-full flex flex-col items-center justify-center text-center px-5 outline-none rounded-xl border border-gray-200 text-lg bg-white focus:bg-gray-50 focus:ring-1 ring-blue-700"
-                            type="text"
-                            name=""
-                            id=""
-                            maxlength="1"
-                          />
+                            type="text" name="" id="" maxlength="1" />
                         </div>
                         <div class="w-16 h-16">
-                          <input
-                            v-model="secondOTPNumber"
+                          <input v-model="secondOTPNumber"
                             class="w-full h-full flex flex-col items-center justify-center text-center px-5 outline-none rounded-xl border border-gray-200 text-lg bg-white focus:bg-gray-50 focus:ring-1 ring-blue-700"
-                            type="text"
-                            name=""
-                            id=""
-                            maxlength="1"
-                          />
+                            type="text" name="" id="" maxlength="1" />
                         </div>
                         <div class="w-16 h-16">
-                          <input
-                            v-model="thirdOTPNumber"
+                          <input v-model="thirdOTPNumber"
                             class="w-full h-full flex flex-col items-center justify-center text-center px-5 outline-none rounded-xl border border-gray-200 text-lg bg-white focus:bg-gray-50 focus:ring-1 ring-blue-700"
-                            type="text"
-                            name=""
-                            id=""
-                            maxlength="1"
-                          />
+                            type="text" name="" id="" maxlength="1" />
                         </div>
                         <div class="w-16 h-16">
-                          <input
-                            v-model="fourthOTPNumber"
+                          <input v-model="fourthOTPNumber"
                             class="w-full h-full flex flex-col items-center justify-center text-center px-5 outline-none rounded-xl border border-gray-200 text-lg bg-white focus:bg-gray-50 focus:ring-1 ring-blue-700"
-                            type="text"
-                            name=""
-                            id=""
-                            maxlength="1"
-                          />
+                            type="text" name="" id="" maxlength="1" />
                         </div>
                       </div>
 
                       <div class="flex flex-col space-y-5">
                         <div>
-                          <button
-                            @click="confirmOTP"
-                            class="flex flex-row items-center justify-center text-center w-full border rounded-xl outline-none py-5 bg-blue-700 border-none text-white text-sm shadow-sm"
-                          >
+                          <button @click="confirmOTP"
+                            class="flex flex-row items-center justify-center text-center w-full border rounded-xl outline-none py-5 bg-blue-700 border-none text-white text-sm shadow-sm">
                             Verifikasi OTP
                           </button>
                         </div>
 
                         <div
-                          class="flex flex-row items-center justify-center text-center text-sm font-medium space-x-1 text-gray-500"
-                        >
+                          class="flex flex-row items-center justify-center text-center text-sm font-medium space-x-1 text-gray-500">
                           <p>Tidak menerima kode OTP?</p>
-                          <a
-                            class="flex flex-row items-center text-blue-600"
-                            href="javascript:void(0)"
-                            @click="resendOTPHandler"
-                            rel="noopener noreferrer"
-                            >Resend</a
-                          >
+                          <a class="flex flex-row items-center text-blue-600" href="javascript:void(0)"
+                            @click="resendOTPHandler" rel="noopener noreferrer">Resend</a>
                         </div>
                       </div>
                     </div>
@@ -297,6 +191,9 @@
                 </div>
               </div>
             </div>
+            <ion-refresher slot="fixed" @ionRefresh="handleRefresh($event)">
+              <ion-refresher-content></ion-refresher-content>
+            </ion-refresher>
           </ion-content>
         </ion-modal>
       </div>
@@ -317,6 +214,8 @@ import {
   IonContent,
   IonInput,
   IonPage,
+  IonRefresher,
+  IonRefresherContent
 } from "@ionic/vue";
 import { presentLoading, stopLoading } from "@/services/loadingHandlers";
 import { useRoute } from "vue-router";
@@ -369,8 +268,8 @@ export default {
     const newStatusId = ref(null);
     const selectedOrder = ref(null);
     const showAlert = ref(false);
-    
-    
+
+
 
     const objOrder = ref([]);
     const orderId = ref(null);
@@ -378,7 +277,7 @@ export default {
     const resendNomorPO = ref(null);
     const resendOTP = ref(null);
     const flagOTP = ref(true);
-    
+
 
     const isOpen = ref(false);
     const setOpen = (open) => ((isOpen.value = open), (flagOTP.value = true));
@@ -468,8 +367,8 @@ export default {
     const confirmChangeStatus = async () => {
       try {
         await axios.put(
-        `${API_URL.value}/api/sgs/orders/${selectedOrder.value.id}/confirm`,
-            { status_id: newStatusId.value }
+          `${API_URL.value}/api/sgs/orders/${selectedOrder.value.id}/confirm`,
+          { status_id: newStatusId.value }
         );
         selectedOrder.value.status_id = newStatusId.value;
         alert("Order status updated successfully!");
@@ -577,6 +476,13 @@ export default {
     const getDetOrder = async (id) => {
       localStorage.setItem("orderId", id);
       DetailOrder(id);
+    };
+
+    const handleRefresh = () => {
+      window.location.reload();
+      setTimeout(() => {
+        event.target.complete();
+      }, 1000);
     };
 
     async function sendOtp(nomorWhatsappOTP) {
@@ -749,34 +655,34 @@ export default {
     }
 
     const softDeleteOrder = async (orderId) => {
-    try {
+      try {
         const confirmDelete = confirm("Apakah Anda yakin ingin membatalkan draft PO ini?");
         if (!confirmDelete) return;
 
         const tokens = localStorage.getItem("tokens")
-            ? JSON.parse(localStorage.getItem("tokens"))
-            : null;
+          ? JSON.parse(localStorage.getItem("tokens"))
+          : null;
 
         const headers = {
-            Authorization: `Bearer ${tokens.access_token}`,
+          Authorization: `Bearer ${tokens.access_token}`,
         };
 
         // Pastikan orderId dikonversi menjadi number
         const response = await axios.delete(`${API_URL.value}/api/v2/stores/delete-draft/${(orderId)}`, {
-            headers: headers,
+          headers: headers,
         });
 
         if (response.status === 200 && response.data.success) {
-            orders.value = orders.value.filter((order) => order.id !== orderId);
-            alert("Draft PO berhasil dibatalkan.");
+          orders.value = orders.value.filter((order) => order.id !== orderId);
+          alert("Draft PO berhasil dibatalkan.");
         } else {
-            alert("Gagal membatalkan draft PO. Silakan coba lagi.");
+          alert("Gagal membatalkan draft PO. Silakan coba lagi.");
         }
-    } catch (error) {
+      } catch (error) {
         console.error("Error saat membatalkan draft PO:", error);
         alert("Terjadi kesalahan saat mencoba membatalkan draft PO.");
-    }
-};
+      }
+    };
 
 
 
