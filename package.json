@@ -1,5 +1,5 @@
 {
-  "name": "sgs-sales-distributor-app",
+  "name": "sgs-sales-officer-app",
   "private": true,
   "version": "0.0.1",
   "type": "module",
@@ -30,12 +30,15 @@
     "@vee-validate/yup": "^4.12.6",
     "animate.css": "^4.1.1",
     "axios": "^1.6.8",
+    "capacitor-check-ismock-location": "^1.0.4",
     "flowbite": "^2.3.0",
     "ionicons": "^7.0.0",
     "vee-validate": "^4.12.6",
     "vue": "^3.3.0",
+    "vue-barcode-reader": "^1.0.3",
     "vue-router": "^4.2.0",
-    "vuex": "^4.0.2"
+    "vuex": "^4.0.2",
+    "yup": "^1.6.1"
   },
   "devDependencies": {
     "@capacitor/assets": "^3.0.5",

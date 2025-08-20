@@ -5,13 +5,19 @@
         class="flex min-h-full flex-col justify-center px-6 py-12 lg:px-8 bg-[url('/public/14547779_rm222-mind-14.jpg')] bg-cover">
         <div class="p-2.5 bg-white rounded-2xl">
           <div class="sm:mx-auto sm:w-lg sm:max-w-sm">
-            <img class="mx-auto h-40 w-auto" src="/public/logo_sidia.png" style="width: 59%; height: 50%;"
-              alt="PT. Sinergi Global Service" />
+            <img class="mx-auto h-40 w-auto" src="/public/1630597076257.jpeg" style="width: 70%; height: 50%;"
+              alt="PT. Sinergi Global Servis" />
           </div>
+          <center>
+          <ion-text color="medium">
+            <h1>SALES OPERATION APPLICATION</h1>
+          </ion-text>
+          </center>
+
           <div class="mt-4 sm:mx-auto sm:w-full sm:max-w-sm p-2.5">
             <FormLogin />
             <p class="mt-10 text-center align-text-bottom text-xs font-normal text-gray-900">© PT. Sinergi Global
-              Servis 2024. All rights reserved.<br>Versi 1.7</p>
+              Servis 2025. All rights reserved.<br>Versi 2.2</p>
           </div>
         </div>
       </div>

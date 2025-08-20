@@ -10,12 +10,17 @@
 
         <ion-tab-button tab="absensi" href="/absensi">
           <ion-icon class="text-2xl active" aria-hidden="true" :icon="camera" />
-          <ion-label>Absensi</ion-label>
+          <ion-label>Visit</ion-label>
         </ion-tab-button>
 
-        <ion-tab-button tab="profile" href="/profile">
+        <!-- <ion-tab-button tab="profile" href="/profile">
           <ion-icon class="text-2xl" aria-hidden="true" :icon="person" />
           <ion-label class="text-md">Profile</ion-label>
+        </ion-tab-button> -->
+
+        <ion-tab-button tab="historyVisit" href="/historyVisit">
+          <ion-icon class="text-2xl active" aria-hidden="true" :icon="newspaperSharp" />
+          <ion-label class="text-md">Rekap Visit</ion-label>
         </ion-tab-button>
 
         <ion-tab-button tab="logout" @click="AlertLogout">
@@ -34,10 +39,15 @@ import {
   home,
   logOut,
   person,
+  newspaper,
+  newspaperSharp,
 } from 'ionicons/icons';
 import { catchToast, catchToastError } from '@/services/toastHandlers';
 import { redirectToLoginPage } from '@/services/redirectHandlers';
 import { alertController } from '@ionic/vue';
+import { RedirectVisitPage } from '@/services/redirectHandlers';
+
+const user = localStorage.getItem("user") ? JSON.parse(localStorage.getItem("user")) : null;
 
 async function AlertLogout() {
   const alert = await alertController.create({

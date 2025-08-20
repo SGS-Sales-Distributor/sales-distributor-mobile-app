@@ -1,14 +1,14 @@
 <template>
   <ion-page>
+    <HeaderSection />
     <ion-content :fullscreen="true">
       <!-- Header -->
-      <HeaderSection />
       <!-- End of header -->
 
       <LocationNotAllowed v-if="!statusGPS" />
 
       <!-- Card -->
-      <div v-if="statusGPS" class="flex min-h-full flex-col px-4 py-4">
+      <div v-if="statusGPS" class="visit-container">
         <AddressInfoSection />
 
         <!-- Card Content -->
@@ -126,11 +126,11 @@
 
         <div v-if="statusGPS" class="flex w-full px-4 pb-2 space-x-4">
           <ion-button :disabled="disabledCheckIn" @click="takeCheckInPicture" id="check-in-button"
-            class="w-full py-2 rounded-lg font-bold text-nowrap">
+            class="w-full py-2 rounded-lg font-bold text-nowrap"><ion-icon slot="start" :icon="logIn"></ion-icon>
             Check-In
           </ion-button>
           <ion-button :disabled="disabledCheckOut" @click="takeCheckOutPicture" id="check-out-button"
-            class="w-full py-2 rounded-lg font-bold text-nowrap">
+            class="w-full py-2 rounded-lg font-bold text-nowrap"><ion-icon slot="start" :icon="logOut"></ion-icon>
             Check-Out
           </ion-button>
         </div>
@@ -141,8 +141,7 @@
         </div>
         <div v-if="imageUrl">
           <label for="catatan_visit">Catatan Visit</label>
-          <Field v-model="keterangan" name="keterangan"
-            as="textarea" id="keterangan"
+          <Field v-model="keterangan" name="keterangan" as="textarea" id="keterangan"
             class="form-input w-full px-4 py-2 border rounded-lg text-gray-700 focus:ring-blue-500"
             placeholder="Catatan Visit Toko" cols="20" rows="10" aria-label="catatan_visit"
             aria-describedby="catatan_visit" v-bind:value="detailStoreInfoDistri.keterangan"></Field>
@@ -151,19 +150,19 @@
         <ion-grid v-if="statusGPS" :fixed="true">
           <ion-row v-if="renderModCheckInBtn">
             <ion-col style="margin: 20px">
-              <ion-button @click="passCheckInAlert" id="save-btn">Save</ion-button></ion-col>
+              <ion-button @click="passCheckInAlert" id="save-btn"><ion-icon slot="start" :icon="checkmarkCircleSharp"></ion-icon> Save</ion-button></ion-col>
             <ion-col></ion-col>
             <ion-col style="margin: 20px">
-              <ion-button @click="clearImage" id="clear-btn">Clear</ion-button>
+              <ion-button @click="clearImage" id="clear-btn"><ion-icon slot="start" :icon="trash"></ion-icon> Clear</ion-button>
             </ion-col>
           </ion-row>
           <ion-row v-if="renderModeCheckOutBtn">
             <ion-col style="margin: 20px">
-              <ion-button @click="passCheckOutAlert" id="save-btn">Save</ion-button>
+              <ion-button @click="passCheckOutAlert" id="save-btn"><ion-icon slot="start" :icon="checkmarkCircleSharp"></ion-icon> Save</ion-button>
             </ion-col>
             <ion-col></ion-col>
             <ion-col style="margin: 20px">
-              <ion-button @click="clearImage" id="clear-btn">Clear</ion-button>
+              <ion-button @click="clearImage" id="clear-btn"><ion-icon slot="start" :icon="trash"></ion-icon> Clear</ion-button>
             </ion-col>
           </ion-row>
         </ion-grid>
@@ -229,7 +228,7 @@
                 </ion-button>
 
                 <!-- <router-link :to="{ name: 'storeDetail', params: { id: store.store_id } }"> -->
-                <ion-button :disabled="store.enablePurchaseOrderBtn" @click="redirectToStoreDetailPage(store.store_id)"
+                <ion-button :disabled="true" @click="redirectToStoreDetailPage(store.store_id)"
                   size="small">
                   <ion-icon slot="start" :icon="documentAttach"></ion-icon>
                   <span class="text-nowrap">Purchase Order</span>
@@ -244,6 +243,9 @@
             loading-spinner="bubbles"></ion-infinite-scroll-content>
         </ion-infinite-scroll>
       </div>
+      <ion-refresher slot="fixed" @ionRefresh="handleRefresh($event)">
+        <ion-refresher-content></ion-refresher-content>
+      </ion-refresher>
     </ion-content>
   </ion-page>
 </template>
@@ -255,7 +257,11 @@ import { IonSearchbar } from '@ionic/vue';
 import {
   documentAttach,
   camera,
-  constructOutline
+  constructOutline,
+  logIn,
+  logOut,
+  trash,
+  checkmarkCircleSharp
 } from 'ionicons/icons';
 
 import HeaderSection from '@/components/HeaderSection.vue';
@@ -266,7 +272,7 @@ import router from '@/router';
 
 import { Camera, CameraResultType, CameraSource } from '@capacitor/camera';
 import { computed, nextTick, onMounted, ref, shallowRef } from 'vue';
-import { alertController } from '@ionic/vue';
+import { alertController, IonRefresher, IonRefresherContent } from '@ionic/vue';
 
 import { printCurrentPosition, checkLocationAccess } from '@/services/locationHandlers';
 import { statusGPS, API_URL, latitude, longitude, currentRoute } from '@/services/globalVariables';
@@ -310,6 +316,13 @@ const ionInfinite = (event) => {
     event.target.disabled = true;
   }
 }
+
+const handleRefresh = () => {
+  window.location.reload();
+  setTimeout(() => {
+    event.target.complete();
+  }, 1000);
+};
 
 function searchStoreHandler(event) {
   const query = event.target.value.toLowerCase();
@@ -487,7 +500,7 @@ async function fetchStoresData(query = '') {
 
     console.error('Failed to fetch store data: ', error);
   }
-  finally{
+  finally {
     stopLoading();
   }
 }
@@ -787,5 +800,14 @@ ion-button[disabled] {
 .store-detail-card.show {
   opacity: 1;
   transform: translateY(0);
+}
+
+.visit-container {
+  margin-top: 28%;
+  flex-direction: column;
+  /* background-color: white; */
+  align-items: center;
+  padding-left: 0px;
+  padding-right: 0px;
 }
 </style>

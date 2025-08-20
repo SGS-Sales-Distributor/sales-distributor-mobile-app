@@ -11,11 +11,12 @@ import { redirectToLoginPage } from './services/redirectHandlers';
 import { catchToastError } from './services/toastHandlers';
 import axios from 'axios';
 import { API_URL } from './services/globalVariables';
+import { constructOutline } from 'ionicons/icons';
 const isOpen = ref(true);
+const tokens = localStorage.getItem("tokens") ? JSON.parse(localStorage.getItem("tokens")) : null;
 
 async function authUser() {
   try {
-    const tokens = localStorage.getItem("tokens") ? JSON.parse(localStorage.getItem("tokens")) : null;
 
     if (!tokens) {
       console.error("Access Token and Refresh Token not found.");
@@ -47,6 +48,7 @@ async function authUser() {
     console.error(`Failed to fetch auth user: ${error.message}`);
   }
 }
+
 
 onMounted(() => {
   authUser();

@@ -1,8 +1,8 @@
 <template>
     <ion-page>
+        <HeaderSection />
         <ion-content :fullscreen="true">
-            <HeaderSection />
-            <div class="container mx-auto">
+            <div class="container">
                 <div class="flex items-center justify-center min-h-screen">
                     <div class="p-8 rounded-lg max-w-sm w-full">
                         <h2 class="text-2xl font-semibold text-center mb-4">Daftar Outlet Baru</h2>
@@ -66,9 +66,9 @@
                                 <Field v-model="formData.store_type_id" as="select" id="store_type" name="store_type"
                                     class="form-input w-full px-4 py-2 border rounded-lg text-gray-700 focus:ring-blue-500">
                                     <option disabled selected value="">Pilih Tipe Toko</option>
-                                    <option v-for="type in storeTypes" :key="type.store_type_id"
-                                        :value="type.store_type_id">
-                                        {{ type.store_type_name }}
+                                    <option v-for="type in storeTypes" :key="type.code"
+                                        :value="type.code">
+                                        {{ type.label }}
                                     </option>
                                 </Field>
                                 <ErrorMessage name="store_type" class="text-rose-500" />
@@ -87,21 +87,25 @@
                             </div>
                             <br>
                             <button type="submit"
-                                class="w-full bg-blue-500 text-white px-4 py-2 rounded-lg hover:bg-blue-600 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-opacity-50">Daftarkan
+                                class="w-full bg-blue-500 text-white px-4 py-2 rounded-lg hover:bg-blue-600 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-opacity-50"><ion-icon slot="start" :icon="checkmarkCircleSharp"></ion-icon> Daftarkan
                             </button>
                             <p class="text-gray-600 text-xs text-center mt-4">
-                                Dengan menekan tombol Daftarkan, maka toko bisa melakukan purchase order.
+                                Dengan menekan tombol Daftarkan, maka toko bisa terdaftar dalam Call Plan Anda.
                             </p>
                         </Form>
                     </div>
                 </div>
             </div>
+            <ion-refresher slot="fixed" @ionRefresh="handleRefresh($event)">
+                <ion-refresher-content></ion-refresher-content>
+            </ion-refresher>
         </ion-content>
     </ion-page>
 </template>
 
 <script setup>
 import * as Yup from 'yup';
+import {checkmarkCircleSharp} from 'ionicons/icons';
 import HeaderSection from './../components/HeaderSection.vue'
 import { onMounted, ref } from 'vue';
 import { refreshAccessTokenHandler } from '@/services/auth';
@@ -110,7 +114,7 @@ import { API_URL, fieldTypes, savedStoreData } from '@/services/globalVariables'
 import { redirectToOwnerFormPage, redirectToRegisterStorePage } from '@/services/redirectHandlers';
 import { presentLoading, stopLoading } from '@/services/loadingHandlers';
 import { catchToast, catchToastError } from '@/services/toastHandlers';
-import { alertController } from '@ionic/vue';
+import { alertController,IonIcon,IonRefresher,IonRefresherContent } from '@ionic/vue';
 import { Form, Field, ErrorMessage } from 'vee-validate';
 
 const storeTypes = ref([]);
@@ -126,7 +130,7 @@ const formData = ref({
     store_fax: null,
     store_type_id: null,
     subcabang_id: null,
-    userFullname : user.fullname
+    userFullname: user.fullname
 });
 
 const validation = Yup.object().shape({
@@ -152,6 +156,13 @@ const validation = Yup.object().shape({
         .required('Mohon Pilih Cabang Terlebih Dahulu!'),
 
 });
+
+const handleRefresh = () => {
+  window.location.reload();
+  setTimeout(() => {
+    event.target.complete();
+  }, 2000);
+};
 
 async function storeDataAlert() {
     const alert = await alertController.create({
@@ -187,7 +198,7 @@ function clearForm() {
         store_fax: null,
         store_type_id: null,
         subcabang_id: null,
-        userFullname : null,
+        userFullname: null,
     };
 }
 
@@ -196,7 +207,7 @@ async function saveStoreData() {
         refreshAccessTokenHandler();
 
         const tokens = localStorage.getItem("tokens") ? JSON.parse(localStorage.getItem("tokens")) : null;
-        
+
         const headers = {
             'Authorization': `Bearer ${tokens.access_token}`,
         }
@@ -241,26 +252,19 @@ async function saveStoreData() {
 
 async function fetchStoreTypes(query = '') {
     try {
-        refreshAccessTokenHandler();
 
-        const tokens = localStorage.getItem("tokens") ? JSON.parse(localStorage.getItem("tokens")) : null;
-
-        const headers = {
-            'Authorization': `Bearer ${tokens.access_token}`,
-        }
-
-        const response = await axios.get(`${API_URL.value}/api/v2/store-types`, {
-            headers: headers,
-            params: {
-                q: query
-            },
+        const response = await axios.get(`${API_URL.value}/api/v2/getStype`, {
+            // headers: headers,
+            // params: {
+            //     q: query
+            // },
         });
 
-        storeTypes.value = response.data.resource.data;
+        storeTypes.value = await response.data;
     } catch (error) {
         catchToastError("Failed to fetch store types", 3000);
 
-        console.error("Failed to fetch store types", error);
+        console.error("Failed to fetch store types", error.message);
     }
 }
 
@@ -301,4 +305,13 @@ onMounted(() => {
 });
 </script>
 
-<style scoped></style>
+<style scoped>
+.container {
+    margin-top: 28%;
+    flex-direction: column;
+    /* background-color: white; */
+    align-items: center;
+    padding-left: 0px;
+    padding-right: 0px;
+}
+</style>

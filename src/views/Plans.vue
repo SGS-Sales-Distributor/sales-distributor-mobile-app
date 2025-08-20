@@ -1,8 +1,8 @@
 <template>
     <ion-page>
+        <HeaderSection />
         <ion-content :fullscreen="true">
-            <HeaderSection />
-            <div class="container mx-auto">
+            <div class="container">
                 <div class="flex items-center justify-center min-h-screen">
                     <div class="p-8 rounded-lg max-w-sm w-full">
                         <h2 class="text-2xl font-semibold text-center mb-4">
@@ -120,19 +120,19 @@
                                 <button type="button" @click="addDailyPlan(index, formData.frekuensi)"
                                     class="mr-2 bg-green-500 text-white px-4 py-2 rounded-lg hover:bg-green-600 focus:outline-none focus:ring-2 focus:ring-green-500 focus:ring-opacity-50"
                                     v-show="index == formData.daily_plan.length - 1">
-                                    Add
+                                    <ion-icon slot="start" :icon="addCircleSharp"></ion-icon> Add
                                 </button>
                                 <button type="button" @click="removeDailyPlan(index)"
                                     class="bg-red-500 text-white px-4 py-2 rounded-lg hover:bg-red-600 focus:outline-none focus:ring-2 focus:ring-red-500 focus:ring-opacity-50"
                                     v-show="index || (!index && formData.daily_plan.length > 1)">
-                                    Delete
+                                    <ion-icon slot="start" :icon="trash"></ion-icon> Delete
                                 </button>
                             </div>
 
                             <br />
                             <button type="submit"
                                 class="w-full bg-blue-500 text-white px-4 py-2 rounded-lg hover:bg-blue-600 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-opacity-50">
-                                Submit
+                                <ion-icon slot="start" :icon="checkmarkCircleSharp"></ion-icon> Submit
                             </button>
                             <p class="text-gray-600 text-xs text-center mt-4">
                                 Dengan menekan tombol Submit, maka bisa Menyimpan Call Plans Anda.
@@ -157,7 +157,8 @@ import { alertController } from "@ionic/vue";
 // import * as Yup from "yup";
 import { object, string, array } from "yup";
 import { IonPage, IonContent, IonInput } from "@ionic/vue";
-import { RedirectInputVisitPage, redirectToHomePage } from "@/services/redirectHandlers";
+import { RedirectInputVisitPage, redirectToAbsensiPage, redirectToHomePage } from "@/services/redirectHandlers";
+import { checkmarkCircleSharp,trash,addCircleSharp} from "ionicons/icons";
 
 const user = ref([]);
 const storeCabang = ref([]);
@@ -200,10 +201,16 @@ const validation = object().shape({
 });
 
 const frekuensi = [
-    { value: 8, label: "F8" },
-    { value: 6, label: "F6" },
-    { value: 4, label: "F4" },
+    { value: 1, label: "F1" },
     { value: 2, label: "F2" },
+    { value: 3, label: "F3" },
+    { value: 4, label: "F4" },
+    { value: 5, label: "F5" },
+    { value: 6, label: "F6" },
+    { value: 8, label: "F8" },
+    { value: 10, label: "F10" },
+    { value: 12, label: "F12" },
+    { value: 14, label: "F14" },
 ];
 
 const date = new Date().getFullYear();
@@ -341,6 +348,7 @@ async function saveCallPlan() {
         stopLoading();
         catchToast(response.data.message, 3000);
         clearForm();
+        // redirectToAbsensiPage();
 
     } catch (error) {
         if (error.response && error.response.data.status === 401) {
@@ -416,4 +424,13 @@ onMounted(() => {
 });
 </script>
 
-<style scoped></style>
+<style scoped>
+.container {
+    margin-top: 28%;
+    flex-direction: column;
+    /* background-color: white; */
+    align-items: center;
+    padding-left: 0px;
+    padding-right: 0px;
+}
+</style>

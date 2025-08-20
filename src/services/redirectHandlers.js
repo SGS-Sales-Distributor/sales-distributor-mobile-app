@@ -148,3 +148,19 @@ export function DetailBeforeOrder(){
         });
     }, 300);
 }
+
+export function redirectAbsenIn() {
+    setTimeout(() => {
+        router.push({
+            name: 'absen_in',
+        });
+    }, 300);
+}
+
+export function redirectAbsenOut() {
+    setTimeout(() => {
+        router.push({
+            name: 'absen_out',
+        });
+    }, 300);
+}

@@ -2,23 +2,61 @@
   <!-- Main feature -->
   <div class="grid grid-cols-4 gap-6 text-center">
     <div class="flex flex-col items-center justify-center space-y-2">
-      <ion-button id="absensi-button" shape="default" href="/absensi">
-        <ion-icon class="text-4xl" slot="icon-only"  :icon="camera"></ion-icon>
+      <ion-button id="daftar-otl-button" shape="round" @click="redirectAbsenIn()" :disabled="buttonDisabledIn">
+        <!-- <ion-icon class="text-4xl" slot="icon-only" :icon="businessOutline"></ion-icon> -->
+        <img src="/public/south-direction-svgrepo-com.svg" slot="icon-only" class="" alt="">
       </ion-button>
-      <ion-label class="text-sm font-semibold">Absensi Visit</ion-label>
+      <ion-label class="text-sm font-semibold">Absen Masuk</ion-label>
     </div>
     <div class="flex flex-col items-center justify-center space-y-2">
-      <ion-button id="history-visit-button" shape="default" @click="RedirectVisitPage(user.user_id)">
-          <ion-icon class="text-4xl" slot="icon-only" :icon="albums"></ion-icon>
+      <ion-button id="daftar-otl-button" shape="round"  @click="redirectAbsenOut()" :disabled="buttonDisabledOut">
+        <!-- <ion-icon class="text-4xl" slot="icon-only" :icon="businessOutline"></ion-icon> -->
+        <img src="/public/east-direction-svgrepo-com.svg" slot="icon-only" class="" alt="">
       </ion-button>
-      <ion-label class="text-sm font-semibold">History Visit</ion-label>
+      <ion-label class="text-sm font-semibold">Absen Pulang</ion-label>
     </div>
     <div class="flex flex-col items-center justify-center space-y-2">
-      <!-- <ion-button id="registrasi-toko-button" shape="default" href="/store/register" > -->
-      <ion-button id="registrasi-toko-button" shape="default" @click="registrerClik">
-        <ion-icon class="text-4xl" slot="icon-only"  :icon="storefront"></ion-icon>
+      <ion-button id="daftar-otl-button" shape="round" href="/HistoryAbsen">
+        <!-- <ion-icon class="text-4xl" slot="icon-only" :icon="businessOutline"></ion-icon> -->
+        <img src="/public/worldwide-location-svgrepo-com.svg" slot="icon-only" class="" alt="">
       </ion-button>
-      <ion-label class="text-sm font-semibold">Registrasi Toko</ion-label>
+      <ion-label class="text-sm font-semibold">Rekap Absensi</ion-label>
+    </div>
+    <div class="flex flex-col items-center justify-center space-y-2">
+      <!-- <ion-button id="registrasi-toko-button" shape="round" href="/store/register" > -->
+      <ion-button id="registrasi-otl-button" shape="round" @click="registrerClik">
+        <!-- <ion-icon class="text-4xl" slot="icon-only" :icon="storefront"></ion-icon> -->
+        <img src="/public/ticket-purchase-svgrepo-com.svg" slot="icon-only" class="" alt="">
+      </ion-button>
+      <ion-label class="text-sm font-semibold">Registrasi Outlet</ion-label>
+    </div>
+    <div class="flex flex-col items-center justify-center space-y-2">
+      <ion-button id="daftar-otl-button" shape="round" href="/daftartoko">
+        <!-- <ion-icon class="text-4xl" slot="icon-only" :icon="businessOutline"></ion-icon> -->
+        <img src="/public/train-ticket-svgrepo-com.svg" slot="icon-only" class="" alt="">
+      </ion-button>
+      <ion-label class="text-sm font-semibold">Data Outlet</ion-label>
+    </div>
+    <div class="flex flex-col items-center justify-center space-y-2" style="">
+      <ion-button id="input-plan-button" shape="round" href="/plans">
+        <!-- <ion-icon class="text-4xl" slot="icon-only" :icon="receipt"></ion-icon> -->
+        <img src="/public/map-editing-svgrepo-com.svg" slot="icon-only" class="" alt="">
+      </ion-button>
+      <ion-label class="text-sm font-semibold">Buat Plan Visit</ion-label>
+    </div>
+    <div class="flex flex-col items-center justify-center space-y-6">
+      <ion-button id="action-visit-button" shape="round" href="/absensi">
+        <!-- <ion-icon class="text-4xl" slot="icon-only" :icon="camera"></ion-icon> -->
+        <img src="/public/map-marker-svgrepo-com.svg" slot="icon-only" class="" alt="">
+      </ion-button>
+      <ion-label class="text-sm font-semibold">Visit</ion-label>
+    </div>
+    <div class="flex flex-col items-center justify-center space-y-2">
+      <ion-button id="history-visit-button" shape="round" @click="RedirectVisitPage">
+        <!-- <ion-icon class="text-4xl" slot="icon-only" :icon="albums"></ion-icon> -->
+        <img src="/public/timezone-svgrepo-com.svg" slot="icon-only" class="" alt="">
+      </ion-button>
+      <ion-label class="text-sm font-semibold">Rekap Visit</ion-label>
     </div>
     <!-- <div class="flex flex-col items-center justify-center space-y-2">
       <ion-button id="katalog-produk-button" shape="round">
@@ -26,49 +64,55 @@
       </ion-button>
       <ion-label class="text-sm font-semibold">Katalog Produk</ion-label>
     </div> -->
-    <div class="flex flex-col items-center justify-center space-y-2">
-      <ion-button id="purchase-order-button" shape="default" href="/order">
-        <ion-icon class="text-4xl" slot="icon-only"  :icon="card"></ion-icon>
-      </ion-button>
-      <ion-label class="text-sm font-semibold">Purchase Order</ion-label>
-    </div>
-    <div class="flex flex-col items-center justify-center space-y-2" style="">
-      <ion-button id="input-plan-button" shape="default" href="/plans">
-        <ion-icon class="text-4xl" slot="icon-only"  :icon ="receipt"></ion-icon>
-      </ion-button>
-      <ion-label class="text-sm font-semibold">Input Plan Visit</ion-label>
-    </div>
-    <div class="flex flex-col items-center justify-center space-y-2">
-      <ion-button id="daftar-toko-button" shape="default" href="/daftartoko">
-        <ion-icon class="text-4xl" slot="icon-only"  :icon ="businessOutline"></ion-icon>
-      </ion-button>
-      <ion-label class="text-sm font-semibold">Daftar Toko</ion-label>
-    </div>
-    <div class="flex flex-col items-center justify-center space-y-2">
-      <ion-button id="daftar-po-button" shape="default"  @click="DaftarPo()">
-        <ion-icon class="text-4xl" slot="icon-only"  :icon ="bagCheckOutline"></ion-icon>
-      </ion-button>
-      <ion-label class="text-sm font-semibold">Daftar Po</ion-label>
-    </div>
+  </div>
 
-    <!-- <div class="flex flex-col items-center justify-center space-y-2">
+  <!-- <div class="flex flex-col items-center justify-center space-y-2">
       <ion-button id="daftar-plan-button" shape="default" href="/daftarplanvisit">
         <ion-icon class="text-4xl" slot="icon-only"  :icon ="pencil"></ion-icon>
       </ion-button>
       <ion-label class="text-sm font-semibold">Daftar Plan Visit</ion-label>
     </div> -->
-    <!-- <div class="flex flex-col items-center justify-center space-y-2">
+  <!-- <div class="flex flex-col items-center justify-center space-y-2">
       <ion-button id="achievement-button" shape="round">
         <ion-icon class="text-2xl" slot="icon-only"  :icon="trophy"></ion-icon>
       </ion-button>
       <ion-label class="text-sm font-semibold">Reward</ion-label>
     </div> -->
+  <div class="grid grid-cols-4 gap-6 text-center" v-if="seterJab.jabatan === 'Salesman'">
+    <div class="flex flex-col items-center justify-center space-y-2">
+      <ion-button id="purchase-order-button" shape="default" href="/order">
+        <ion-icon class="text-4xl" slot="icon-only" :icon="card"></ion-icon>
+      </ion-button>
+      <ion-label class="text-sm font-semibold">Purchase Order</ion-label>
+    </div>
+    <div class="flex flex-col items-center justify-center space-y-2">
+      <ion-button id="daftar-po-button" shape="default" @click="DaftarPo()">
+        <ion-icon class="text-4xl" slot="icon-only" :icon="bagCheckOutline"></ion-icon>
+      </ion-button>
+      <ion-label class="text-sm font-semibold">Daftar Po</ion-label>
+    </div>
   </div>
+
+  <!-- Menu Non Absen -->
+
+  <!-- <div class="flex flex-col items-center justify-center space-y-2">
+      <ion-button id="daftar-plan-button" shape="default" href="/daftarplanvisit">
+        <ion-icon class="text-4xl" slot="icon-only"  :icon ="pencil"></ion-icon>
+      </ion-button>
+      <ion-label class="text-sm font-semibold">Daftar Plan Visit</ion-label>
+    </div> -->
+  <!-- <div class="flex flex-col items-center justify-center space-y-2">
+      <ion-button id="achievement-button" shape="round">
+        <ion-icon class="text-2xl" slot="icon-only"  :icon="trophy"></ion-icon>
+      </ion-button>
+      <ion-label class="text-sm font-semibold">Reward</ion-label>
+    </div> -->
   <!-- End main feature -->
 </template>
 
 <script setup>
-import { 
+import axios from 'axios';
+import {
   camera,
   storefront,
   trophy,
@@ -82,29 +126,82 @@ import {
   bagCheckOutline,
 } from 'ionicons/icons';
 import { IonButton } from '@ionic/vue';
-import { redirectToOwnerFormPage, redirectToRegisterStorePage ,RedirectVisitPage} from '@/services/redirectHandlers';
+import { redirectToOwnerFormPage, redirectToRegisterStorePage, RedirectVisitPage, redirectAbsenIn, redirectAbsenOut } from '@/services/redirectHandlers';
 import { presentLoading, stopLoading } from '@/services/loadingHandlers';
 import { catchToast, catchToastError } from '@/services/toastHandlers';
 import { alertController } from '@ionic/vue';
 import { Form, Field, ErrorMessage } from 'vee-validate';
 import { data } from '@maptiler/sdk';
+import { onMounted, ref } from 'vue';
+import { API_URL } from '@/services/globalVariables';
 
-const store =localStorage.getItem("store_id") ? JSON.parse(localStorage.getItem("store_id")) : null;
-const user =localStorage.getItem("user") ? JSON.parse(localStorage.getItem("user")) : null;
 
-async function registrerClik(){
-  if(store == null || store == ""){
+const store = localStorage.getItem("store_id") ? JSON.parse(localStorage.getItem("store_id")) : null;
+const user = localStorage.getItem("user") ? JSON.parse(localStorage.getItem("user")) : null;
+const tokenSet = localStorage.getItem("tokens") ? JSON.parse(localStorage.getItem("tokens")) : null;
+const detAbsen = ref([]);
+const seterJab = ref([]);
+const checkError = ref(null);
+const buttonDisabledIn = ref(checkError == "404" ?true:false);
+const buttonDisabledOut = ref(detAbsen.attendee_time_in !== null && detAbsen.attendee_time_out === null? true : false);
+
+async function registrerClik() {
+  if (store == null || store == "") {
     redirectToRegisterStorePage();
-  }else{
+  } else {
     redirectToOwnerFormPage();
   }
 
 }
 
+async function getAbsenDay() {
+  try {
+    const headers = {
+      "Content-Type": "application/json",
+      Authorization: `Bearer ${tokenSet.access_token}`,
+    };
+
+    const response = await axios.get(`${API_URL.value}/api/v2/getAbsen/${user.user_id}/`, {
+      headers: headers,
+    });
+
+    detAbsen.value = response.data.resource;
+
+  } catch (error) {
+    console.log(error.message, 3000);
+    checkError.value=error.response.data.status;
+
+  }
+}
+
+async function stsJabatan() {
+  try {
+    const headers = {
+      "Content-Type": "application/json",
+      Authorization: `Bearer ${tokenSet.access_token}`,
+    };
+
+    const response = await axios.get(`${API_URL.value}/api/v2/jabatanbyOne/${user.jabatan_id}/`, {
+      headers: headers,
+    });
+
+    const seterJab = response.data;
+    //  console.log(seterJab.jabatan);
+
+  } catch (error) {
+    console.log(error.message, 3000);
+  }
+}
+
+
+onMounted(() => {
+  getAbsenDay();
+  stsJabatan();
+});
 
 </script>
 
-<style scoped>
+<style>
 #history-visit-button {
   --background: #f49883;
   --background-hover: #9ce0be;
@@ -181,6 +278,7 @@ async function registrerClik(){
   --padding-top: 10px;
   --padding-bottom: 10px;
 }
+
 #daftar-plan-button {
   --background: #f5bef4;
   --background-hover: #f5bef4;
@@ -191,6 +289,7 @@ async function registrerClik(){
   --padding-top: 10px;
   --padding-bottom: 10px;
 }
+
 #daftar-toko-button {
   --background: #176af0;
   --background-hover: #176af0;
@@ -201,8 +300,86 @@ async function registrerClik(){
   --padding-top: 10px;
   --padding-bottom: 10px;
 }
+
 #daftar-po-button {
   --background: #f75356;
+  --background-hover: #f75356;
+  --background-activated: #f75356;
+  --background-focused: #f75356;
+  --color: #202020;
+  --box-shadow: 0 2px 6px 0 rgb(0, 0, 0, 0.25);
+  --padding-top: 10px;
+  --padding-bottom: 10px;
+}
+
+#absen-in-button {
+  --background: #ffffff;
+  --background-hover: #f75356;
+  --background-activated: #f75356;
+  --background-focused: #f75356;
+  --color: #202020;
+  --box-shadow: 0 2px 6px 0 rgb(0, 0, 0, 0.25);
+  --padding-top: 10px;
+  --padding-bottom: 10px;
+}
+
+#absen-out-button {
+  --background: #ffffff;
+  --background-hover: #f75356;
+  --background-activated: #f75356;
+  --background-focused: #f75356;
+  --color: #202020;
+  --box-shadow: 0 2px 6px 0 rgb(0, 0, 0, 0.25);
+  --padding-top: 10px;
+  --padding-bottom: 10px;
+}
+
+#input-plan-button {
+  --background: #ffffff;
+  --background-hover: #f75356;
+  --background-activated: #f75356;
+  --background-focused: #f75356;
+  --color: #202020;
+  --box-shadow: 0 2px 6px 0 rgb(0, 0, 0, 0.25);
+  --padding-top: 10px;
+  --padding-bottom: 10px;
+}
+
+#action-visit-button {
+  --background: #ffffff;
+  --background-hover: #f75356;
+  --background-activated: #f75356;
+  --background-focused: #f75356;
+  --color: #202020;
+  --box-shadow: 0 2px 6px 0 rgb(0, 0, 0, 0.25);
+  --padding-top: 10px;
+  --padding-bottom: 10px;
+}
+
+#history-visit-button {
+  --background: #ffffff;
+  --background-hover: #f75356;
+  --background-activated: #f75356;
+  --background-focused: #f75356;
+  --color: #202020;
+  --box-shadow: 0 2px 6px 0 rgb(0, 0, 0, 0.25);
+  --padding-top: 10px;
+  --padding-bottom: 10px;
+}
+
+#registrasi-otl-button {
+  --background: #ffffff;
+  --background-hover: #f75356;
+  --background-activated: #f75356;
+  --background-focused: #f75356;
+  --color: #202020;
+  --box-shadow: 0 2px 6px 0 rgb(0, 0, 0, 0.25);
+  --padding-top: 10px;
+  --padding-bottom: 10px;
+}
+
+#daftar-otl-button {
+  --background: #ffffff;
   --background-hover: #f75356;
   --background-activated: #f75356;
   --background-focused: #f75356;

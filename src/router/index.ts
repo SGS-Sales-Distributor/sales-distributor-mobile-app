@@ -21,6 +21,9 @@ import DaftarToko from "@/views/DaftarToko.vue";
 import DaftarPo from "@/views/DaftarPo.vue";
 import DetailOrder from "@/views/DetailOrder.vue";
 import DetailBeforeOrder from "@/views/DetailBeforeOrder.vue";
+import Absence from "@/views/Absence.vue";
+import AbsenceOut from "@/views/AbsenceOut.vue";
+import HistoryAbsen from "@/views/HistoryAbsen.vue"
 
 const routes: Array<RouteRecordRaw> = [
   {
@@ -105,7 +108,7 @@ const routes: Array<RouteRecordRaw> = [
         component: StoreDetailPageFromPO,
       },
       {
-        path: "historyVisit/:id",
+        path: "historyVisit",
         name: "historyVisit",
         component: historyVisit,
       },
@@ -141,6 +144,22 @@ const routes: Array<RouteRecordRaw> = [
         path :"DetailBeforeOrder",
         name :"DetailBeforeOrder",
         component: DetailBeforeOrder,
+      },
+
+      {
+        path: "in",
+        name: "absen_in",
+        component: Absence,
+      },
+      {
+        path: "out",
+        name: "absen_out",
+        component: AbsenceOut,
+      },
+      {
+        path: "historyAbsen",
+        name: "rekap_absen",
+        component: HistoryAbsen,
       },
     ],
   },
