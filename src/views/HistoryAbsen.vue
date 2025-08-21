@@ -157,8 +157,8 @@
                     <ion-button
                       v-if="locationLat !== null && locationLong !== null"
                       class="flex flex-row justify-center items-center space-x-2"
-                      :href="`https://google.com/maps?q=${locationLong},${locationLat}`"
-                      target="_blank"
+                      :href="`https://www.google.com/maps/search/?api=1&query=${locationLong},${locationLat}`"
+                      target="_system"
                       rel="noopener noreferrer"
                     >
                       <ion-icon slot="start" :icon="eye"></ion-icon>
