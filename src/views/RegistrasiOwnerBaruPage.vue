@@ -15,67 +15,121 @@
 
         <!-- </div> -->
         <!-- </header> -->
-        <div class="container mx-auto">
-          <button type="button"
-            class="relative inline-flex items-center p-2 text-sm font-medium text-center text-white bg-transparent rounded-lg focus:ring-4 focus:outline-none focus:ring-blue-300"
-            @click="NotBack">
-            <ion-icon class="text-2xl" :icon="chevronBackOutline" color="dark"></ion-icon>
-          </button>
+        <div class="flex min-h-full flex-col justify-center px-4 py-4 lg:px-6">
+          <ion-button shape="round" @click="NotBack">
+            <ion-icon
+              class="text-4xl"
+              slot="icon-only"
+              :icon="arrowBack"
+            ></ion-icon>
+          </ion-button>
           <div class="flex justify-center min-h-screen">
             <div class="p-8 rounded-lg max-w-sm w-full">
-              <h2 class="text-2xl font-semibold text-center mb-4">Form Pendaftaran Owner Dari Outlet {{ store.store_name
-              }}</h2>
-              <p class="text-gray-600 text-center mb-6">Masukkan data yang diperlukan.</p>
-              <Form @submit="storeDataAlert" method="post" novalidate :validation-schema="validation">
+              <h2 class="text-2xl font-semibold text-center mb-4">
+                Form Pendaftaran Owner Dari Outlet {{ store.store_name }}
+              </h2>
+              <p class="text-gray-600 text-center mb-6">
+                Masukkan data yang diperlukan.
+              </p>
+              <Form
+                @submit="storeDataAlert"
+                method="post"
+                novalidate
+                :validation-schema="validation"
+              >
                 <div class="mb-4">
-                  <label for="owner" class="block text-gray-700 text-sm font-semibold mb-2">Nama Owner
-                    *</label>
-                  <Field v-model="formData.owner" :type="fieldTypes.text" id="owner" name="owner"
+                  <label
+                    for="owner"
+                    class="block text-gray-700 text-sm font-semibold mb-2"
+                    >Nama Owner *</label
+                  >
+                  <Field
+                    v-model="formData.owner"
+                    :type="fieldTypes.text"
+                    id="owner"
+                    name="owner"
                     class="form-input w-full px-4 py-2 border rounded-lg text-gray-700 focus:ring-blue-500"
-                    placeholder="Masukkan nama owner" aria-label="owner" aria-describedby="owner" />
+                    placeholder="Masukkan nama owner"
+                    aria-label="owner"
+                    aria-describedby="owner"
+                  />
                   <ErrorMessage name="owner" class="text-rose-500" />
                 </div>
                 <div class="mb-4">
-                  <label for="nik_owner" class="block text-gray-700 text-sm font-semibold mb-2">NIK Owner *</label>
-                  <Field v-model="formData.nik_owner" :type="fieldTypes.text" id="nik_owner" name="nik_owner"
+                  <label
+                    for="nik_owner"
+                    class="block text-gray-700 text-sm font-semibold mb-2"
+                    >NIK Owner *</label
+                  >
+                  <Field
+                    v-model="formData.nik_owner"
+                    :type="fieldTypes.text"
+                    id="nik_owner"
+                    name="nik_owner"
                     class="form-input w-full px-4 py-2 border rounded-lg text-gray-700 focus:ring-blue-500"
-                    placeholder="Masukkan NIK owner" aria-label="nik_owner" aria-describedby="nik_owner" />
+                    placeholder="Masukkan NIK owner"
+                    aria-label="nik_owner"
+                    aria-describedby="nik_owner"
+                  />
                   <ErrorMessage name="nik_owner" class="text-rose-500" />
                 </div>
                 <div class="mb-4">
-                  <label for="email" class="block text-gray-700 text-sm font-semibold mb-2">Email Owner
-                    *</label>
-                  <Field v-model="formData.email_owner" name="email" :type="fieldTypes.email" id="email"
+                  <label
+                    for="email"
+                    class="block text-gray-700 text-sm font-semibold mb-2"
+                    >Email Owner *</label
+                  >
+                  <Field
+                    v-model="formData.email_owner"
+                    name="email"
+                    :type="fieldTypes.email"
+                    id="email"
                     class="form-input w-full px-4 py-2 border rounded-lg text-gray-700 focus:ring-blue-500"
-                    placeholder="Masukkan email owner" aria-label="email" aria-describedby="email">
+                    placeholder="Masukkan email owner"
+                    aria-label="email"
+                    aria-describedby="email"
+                  >
                   </Field>
                   <ErrorMessage name="email" class="text-rose-500" />
                 </div>
                 <div class="mb-4">
-                  <label for="ktp_image" class="block text-gray-700 text-sm font-semibold mb-2">Upload KTP Owner
-                    *</label>
+                  <label
+                    for="ktp_image"
+                    class="block text-gray-700 text-sm font-semibold mb-2"
+                    >Upload KTP Owner *</label
+                  >
                   <!-- <Field v-model="formData.ktp_owner" name="ktp_image" :type="fieldTypes.file" id="ktp_image"
                   class="form-input w-full px-4 py-2 border rounded-lg text-gray-700 focus:ring-blue-500"
                   placeholder="Masukkan gambar KTP owner" aria-label="ktp_image" aria-describedby="ktp_image">
                 </Field> -->
-                  <p style="color: red;">Diupload Oleh Admin Dari Web</p>
+                  <p style="color: red">Diupload Oleh Admin Dari Web</p>
                 </div>
                 <div class="mb-4">
-                  <label for="photo_other" class="block text-gray-700 text-sm font-semibold mb-2">Upload Foto Pendukung
-                    Lainnya</label>
+                  <label
+                    for="photo_other"
+                    class="block text-gray-700 text-sm font-semibold mb-2"
+                    >Upload Foto Pendukung Lainnya</label
+                  >
                   <!-- <Field v-model="formData.photo_other" name="photo_other" :type="fieldTypes.file" id="photo_other"
                 class="form-input w-full px-4 py-2 border rounded-lg text-gray-700 focus:ring-blue-500"
                 placeholder="Masukkan gambar lainnya" aria-label="photo_other" aria-describedby="photo_other">
               </Field> -->
-                  <p style="color: red;">Diupload Oleh Admin Dari Web</p>
+                  <p style="color: red">Diupload Oleh Admin Dari Web</p>
                 </div>
-                <br>
-                <button type="submit"
-                  class="w-full bg-blue-500 text-white px-4 py-2 rounded-lg hover:bg-blue-600 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-opacity-50"><ion-icon slot="start" :icon="checkmarkCircleSharp"></ion-icon> Selesai
-                  Registrasi
+                <br />
+                <button
+                  type="submit"
+                  class="w-full bg-blue-500 text-white px-4 py-2 rounded-lg hover:bg-blue-600 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-opacity-50"
+                >
+                  <ion-icon
+                    slot="start"
+                    :icon="checkmarkCircleSharp"
+                  ></ion-icon>
+                  Selesai Registrasi
                 </button>
                 <p class="text-gray-600 text-xs text-center mt-4">
-                  Dengan menekan tombol Daftarkan, maka toko bisa melakukan purchase order.
+                  Dengan menekan tombol Daftarkan, maka toko bisa melakukan
+                  purchase order.
                 </p>
               </Form>
             </div>
@@ -87,27 +141,41 @@
 </template>
 
 <script setup>
-import * as Yup from 'yup';
-import HeaderSection from './../components/HeaderSection.vue'
-import { analytics, chevronBackOutline, ellipsisVerticalOutline,checkmarkCircleSharp } from 'ionicons/icons';
-import { redirectToPurchaseOrderPage, redirectToOwnerFormPage, replaceToOwnerFormPage, redirectToRegisterStorePage } from '@/services/redirectHandlers';
-import { onMounted, ref } from 'vue';
-import { Form, Field, ErrorMessage } from 'vee-validate';
-import { refreshAccessTokenHandler } from '@/services/auth';
-import { presentLoading, stopLoading } from '@/services/loadingHandlers';
-import axios from 'axios';
-import { API_URL } from '@/services/globalVariables';
-import { catchToast, catchToastError } from '@/services/toastHandlers';
-import { fieldTypes } from '@/services/globalVariables';
-import { alertController } from '@ionic/vue';
+import * as Yup from "yup";
+import HeaderSection from "./../components/HeaderSection.vue";
+import {
+  analytics,
+  chevronBackOutline,
+  ellipsisVerticalOutline,
+  checkmarkCircleSharp,
+} from "ionicons/icons";
+import {
+  redirectToPurchaseOrderPage,
+  redirectToOwnerFormPage,
+  replaceToOwnerFormPage,
+  redirectToRegisterStorePage,
+} from "@/services/redirectHandlers";
+import { onMounted, ref } from "vue";
+import { Form, Field, ErrorMessage } from "vee-validate";
+import { refreshAccessTokenHandler } from "@/services/auth";
+import { presentLoading, stopLoading } from "@/services/loadingHandlers";
+import axios from "axios";
+import { API_URL } from "@/services/globalVariables";
+import { catchToast, catchToastError } from "@/services/toastHandlers";
+import { fieldTypes } from "@/services/globalVariables";
+import { alertController } from "@ionic/vue";
 const showDataStoreInfoDistVal = ref(null);
 
 // const storeId = ref(JSON.parse(resource.store_id));
 
 // const store = JSON.parse(localStorage.getItem("store_id"));
 // const getstoreId = JSON.parse(localStorage.getItem("store_id"));
-const store = sessionStorage.getItem("store_id") ? JSON.parse(sessionStorage.getItem("store_id")) : null;
-const user = localStorage.getItem("user") ? JSON.parse(localStorage.getItem("user")) : null;
+const store = sessionStorage.getItem("store_id")
+  ? JSON.parse(sessionStorage.getItem("store_id"))
+  : null;
+const user = localStorage.getItem("user")
+  ? JSON.parse(localStorage.getItem("user"))
+  : null;
 
 const formData = ref({
   owner: null,
@@ -115,27 +183,27 @@ const formData = ref({
   email_owner: null,
   ktp_owner: null,
   photo_other: null,
-  userFullname: user.fullname
+  userFullname: user.fullname,
 });
 
 const validation = Yup.object().shape({
   owner: Yup.string()
-    .required('Nama pemilik tidak boleh kosong!')
-    .max(255, 'Nama pemilik tidak boleh lebih dari 255 karakter.'),
+    .required("Nama pemilik tidak boleh kosong!")
+    .max(255, "Nama pemilik tidak boleh lebih dari 255 karakter."),
   nik_owner: Yup.string()
-    .required('NIK pemilik tidak boleh kosong!')
-    .max(16, 'NIK tidak boleh lebih dari 16 Digit!')
-    .min(16, 'NIK harus berisi 16 Digit!'),
+    .required("NIK pemilik tidak boleh kosong!")
+    .max(16, "NIK tidak boleh lebih dari 16 Digit!")
+    .min(16, "NIK harus berisi 16 Digit!"),
   email: Yup.string()
-    .required('Email tidak boleh kosong!')
-    .max(100, 'Email tidak boleh lebih dari 100 karakter')
-    .email('Email tidak valid, gunakan format email yang resmi!'),
+    .required("Email tidak boleh kosong!")
+    .max(100, "Email tidak boleh lebih dari 100 karakter")
+    .email("Email tidak valid, gunakan format email yang resmi!"),
   ktp_owner: Yup.string()
     .nullable()
-    .max(255, 'Nama gambar KTP tidak boleh lebih dari 255 karakter'),
+    .max(255, "Nama gambar KTP tidak boleh lebih dari 255 karakter"),
   photo_other: Yup.string()
     .nullable()
-    .max('Nama gambar Foto tambahan tidak boleh lebih dari 255 karaketer'),
+    .max("Nama gambar Foto tambahan tidak boleh lebih dari 255 karaketer"),
 });
 
 async function storeDataAlert() {
@@ -179,18 +247,23 @@ async function saveOwnerData(storeId) {
   try {
     refreshAccessTokenHandler();
 
-    const tokens = localStorage.getItem("tokens") ? JSON.parse(localStorage.getItem("tokens")) : null;
-
+    const tokens = localStorage.getItem("tokens")
+      ? JSON.parse(localStorage.getItem("tokens"))
+      : null;
 
     const headers = {
-      'Authorization': `Bearer ${tokens.access_token}`,
-    }
+      Authorization: `Bearer ${tokens.access_token}`,
+    };
 
     presentLoading();
 
-    const response = await axios.post(`${API_URL.value}/api/v2/stores/${storeId}/owners`, formData.value, {
-      headers: headers,
-    });
+    const response = await axios.post(
+      `${API_URL.value}/api/v2/stores/${storeId}/owners`,
+      formData.value,
+      {
+        headers: headers,
+      }
+    );
 
     console.log(response);
 
@@ -219,14 +292,14 @@ async function saveOwnerData(storeId) {
 }
 
 function NotBack() {
-  catchToastError('Mohon Selesaikan Register Toko Ini !', 3000)
+  catchToastError("Mohon Selesaikan Register Toko Ini !", 3000);
   redirectToOwnerFormPage();
 }
 
 onMounted(() => {
   refreshAccessTokenHandler();
   stopLoading();
-})
+});
 </script>
 <style scoped>
 .container {

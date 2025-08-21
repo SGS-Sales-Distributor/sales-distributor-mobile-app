@@ -2,17 +2,13 @@
   <ion-page>
     <ion-content>
       <div class="flex min-h-full flex-col justify-center px-4 py-4 lg:px-6">
-        <div
-          class="justify-left items-left"
-        >
-          <ion-button id="action-visit-button" shape="round" href="/login">
-            <ion-icon
-              class="text-4xl"
-              slot="icon-only"
-              :icon="arrowBack"
-            ></ion-icon>
-          </ion-button>
-        </div>
+        <ion-button id="action-visit-button" shape="round" href="/login">
+          <ion-icon
+            class="text-4xl"
+            slot="icon-only"
+            :icon="arrowBack"
+          ></ion-icon>
+        </ion-button>
         <div class="sm:mx-auto sm:w-lg sm:max-w-sm">
           <h2 class="text-2xl font-semibold text-center mb-4">
             FORM REGISTRASI
