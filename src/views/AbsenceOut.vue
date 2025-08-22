@@ -375,7 +375,7 @@ ion-button[disabled] {
 }
 
 .map-address {
-  margin-top: 90%;
+  margin-top: 80%;
 }
 
 .absen-cont {
