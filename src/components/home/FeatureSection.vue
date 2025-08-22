@@ -1,21 +1,21 @@
 <template>
   <!-- Main feature -->
   <div class="grid grid-cols-4 gap-6 text-center">
-    <div class="flex flex-col items-center justify-center space-y-2">
+    <div v-if="jabatanGetName === 'Sales Officer' || jabatanGetName === 'Beauty Advisor' || jabatanGetName === 'Sales Merchandiser' || jabatanGetName === 'Merchandiser' || jabatanGetName === 'Salesman' || jabatanGetName === 'Beauty Promotor'" class="flex flex-col items-center justify-center space-y-2">
       <ion-button id="daftar-otl-button" shape="round" @click="redirectAbsenIn()" :disabled="buttonDisabledIn">
         <!-- <ion-icon class="text-4xl" slot="icon-only" :icon="businessOutline"></ion-icon> -->
         <img src="/public/south-direction-svgrepo-com.svg" slot="icon-only" class="" alt="">
       </ion-button>
       <ion-label class="text-sm font-semibold">Absen Masuk</ion-label>
     </div>
-    <div class="flex flex-col items-center justify-center space-y-2">
+    <div v-if="jabatanGetName === 'Sales Officer' || jabatanGetName === 'Beauty Advisor' || jabatanGetName === 'Sales Merchandiser' || jabatanGetName === 'Merchandiser' || jabatanGetName === 'Salesman' || jabatanGetName === 'Beauty Promotor'" class="flex flex-col items-center justify-center space-y-2">
       <ion-button id="daftar-otl-button" shape="round"  @click="redirectAbsenOut()" :disabled="buttonDisabledOut">
         <!-- <ion-icon class="text-4xl" slot="icon-only" :icon="businessOutline"></ion-icon> -->
         <img src="/public/east-direction-svgrepo-com.svg" slot="icon-only" class="" alt="">
       </ion-button>
       <ion-label class="text-sm font-semibold">Absen Pulang</ion-label>
     </div>
-    <div class="flex flex-col items-center justify-center space-y-2">
+    <div v-if="jabatanGetName === 'Sales Officer' || jabatanGetName === 'Beauty Advisor' || jabatanGetName === 'Sales Merchandiser' || jabatanGetName === 'Merchandiser' || jabatanGetName === 'Salesman' || jabatanGetName === 'Beauty Promotor'" class="flex flex-col items-center justify-center space-y-2">
       <ion-button id="daftar-otl-button" shape="round" href="/HistoryAbsen">
         <!-- <ion-icon class="text-4xl" slot="icon-only" :icon="businessOutline"></ion-icon> -->
         <img src="/public/worldwide-location-svgrepo-com.svg" slot="icon-only" class="" alt="">
@@ -142,6 +142,7 @@ const tokenSet = localStorage.getItem("tokens") ? JSON.parse(localStorage.getIte
 const detAbsen = ref([]);
 const seterJab = ref([]);
 const checkError = ref(null);
+const jabatanGetName = ref(null);
 const buttonDisabledIn = ref(checkError == "404" ?true:false);
 const buttonDisabledOut = ref(detAbsen.attendee_time_in !== null && detAbsen.attendee_time_out === null? true : false);
 
@@ -186,9 +187,10 @@ async function stsJabatan() {
     });
 
     const seterJab = response.data;
-    //  console.log(seterJab.jabatan);
-
+    jabatanGetName.value = response.data.jabatan;
+    // catchToastInfo(response.data.jabatan,3000);
   } catch (error) {
+    // catchToastError(error.response.data.message,3000);
     console.log(error.message, 3000);
   }
 }

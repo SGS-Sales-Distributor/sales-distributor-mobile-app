@@ -5,7 +5,7 @@
       <div class="home-menu">
         <!-- Header -->
         <!-- End of header -->
-
+        <p>Akses : {{ jabatanName }}</p>
         <welcomeSection />
         <!-- Feature Section -->
         <FeatureSection />
@@ -34,17 +34,16 @@
         </div> -->
 
         <!-- End of swipe -->
-      <ion-refresher slot="fixed" @ionRefresh="handleRefresh">
-        <ion-refresher-content/>
-      </ion-refresher>
+        <ion-refresher slot="fixed" @ionRefresh="handleRefresh()">
+          <ion-refresher-content></ion-refresher-content>
+        </ion-refresher>
       </div>
       <!-- <ion-button expand="block" @click="setOpen(true)">Open</ion-button> -->
 
       <ion-modal ref="modal" :is-open="isOpen">
         <!-- <ion-modal id="example-modal" ref="modal" trigger="open-custom-dialog"> -->
         <ion-toolbar>
-          <ion-title>Visit Tidak Terpenuhi <br>
-          </ion-title>
+          <ion-title>Visit Tidak Terpenuhi <br /> </ion-title>
           <p>
             <center>{{ formatedDate }}</center>
           </p>
@@ -56,15 +55,22 @@
           <div v-if="!selectedPlans">
             <ion-item v-for="(plans, index) in planStore" :key="index + 1">
               <ion-avatar slot="start">
-                <img src="/public/flat-store-icons.png">
+                <img src="/public/flat-store-icons.png" />
               </ion-avatar>
               <ion-label>
                 <h2>{{ plans.nama_toko }}</h2>
                 <p>{{ plans.alamat_toko }}</p>
               </ion-label>
-              <ion-button v-if="plans.idKetVisit === null" :disabled="false" @click="selectedPlans = plans"
-                color="secondary">Alasan</ion-button>
-              <ion-button v-else :disabled="true" color="secondary">Alasan</ion-button>
+              <ion-button
+                v-if="plans.idKetVisit === null"
+                :disabled="false"
+                @click="selectedPlans = plans"
+                color="secondary"
+                >Alasan</ion-button
+              >
+              <ion-button v-else :disabled="true" color="secondary"
+                >Alasan</ion-button
+              >
             </ion-item>
           </div>
           <!-- <div v-else><center><p>Tidak Ada Data</p></center></div> -->
@@ -72,28 +78,46 @@
             <div>
               <ion-item>
                 <ion-avatar slot="start">
-                  <img src="/public/flat-store-icons.png">
+                  <img src="/public/flat-store-icons.png" />
                 </ion-avatar>
                 <ion-label>
                   <h2>{{ selectedPlans.nama_toko }}</h2>
                   <p>{{ selectedPlans.alamat_toko }}</p>
                 </ion-label>
-
               </ion-item>
             </div>
-            <Form method="post" @submit="formKet" novalidate :validation-schema="formNotedVisit">
+            <Form
+              method="post"
+              @submit="formKet"
+              novalidate
+              :validation-schema="formNotedVisit"
+            >
               <ion-row>
                 <ion-col>
                   <ErrorMessage name="ket_not_vst" class="mt-4 text-rose-500" />
-                  <Field v-model="formData.ket_not_vst" as="textarea" id="ket_not_vst" name="ket_not_vst" rows="4"
+                  <Field
+                    v-model="formData.ket_not_vst"
+                    as="textarea"
+                    id="ket_not_vst"
+                    name="ket_not_vst"
+                    rows="4"
                     class="form-input w-full px-4 py-2 border rounded-lg text-gray-700 focus:ring-blue-500"
-                    placeholder="Alasan Tidak Visit Toko" aria-describedby="ket_not_vst"></Field>
+                    placeholder="Alasan Tidak Visit Toko"
+                    aria-describedby="ket_not_vst"
+                  ></Field>
                 </ion-col>
               </ion-row>
               <ion-row>
                 <ion-col>
-                  <ion-button type="submit" id="save-btn" color="primary">Simpan</ion-button>
-                  <ion-button @click="selectedPlans = null" id="clear-btn" color="danger">Kembali</ion-button>
+                  <ion-button type="submit" id="save-btn" color="primary"
+                    >Simpan</ion-button
+                  >
+                  <ion-button
+                    @click="selectedPlans = null"
+                    id="clear-btn"
+                    color="danger"
+                    >Kembali</ion-button
+                  >
                 </ion-col>
               </ion-row>
             </Form>
@@ -105,149 +129,270 @@
 </template>
 
 <script setup>
-import * as Yup from 'yup';
-import FeatureSection from './../components/home/FeatureSection.vue'
-import HeaderSection from '../components/HeaderSection.vue';
-import welcomeSection from '@/components/home/welcomeSection.vue';
-import { onMounted, ref } from 'vue';
-import { refreshAccessTokenHandler } from '@/services/auth';
-import axios from 'axios';
-import { API_URL } from '@/services/globalVariables';
-import { presentLoading, stopLoading } from '@/services/loadingHandlers';
-import { catchToast, catchToastInfo, catchToastError } from '@/services/toastHandlers';
-import { IonButton, IonRefresher, IonRefresherContent } from '@ionic/vue';
-import { Form, Field, ErrorMessage } from 'vee-validate';
-import { redirectAbsenIn, redirectAbsenOut } from '@/services/redirectHandlers';
-import { data } from '@maptiler/sdk';
+import * as Yup from "yup";
+import FeatureSection from "./../components/home/FeatureSection.vue";
+import HeaderSection from "../components/HeaderSection.vue";
+import welcomeSection from "@/components/home/welcomeSection.vue";
+import { onMounted, ref } from "vue";
+import { refreshAccessTokenHandler } from "@/services/auth";
+import axios from "axios";
+import { API_URL } from "@/services/globalVariables";
+import { presentLoading, stopLoading } from "@/services/loadingHandlers";
+import {
+  catchToast,
+  catchToastInfo,
+  catchToastError,
+} from "@/services/toastHandlers";
+import { IonButton, IonRefresher, IonRefresherContent } from "@ionic/vue";
+import { Form, Field, ErrorMessage } from "vee-validate";
+import { redirectAbsenIn, redirectAbsenOut } from "@/services/redirectHandlers";
+import { data } from "@maptiler/sdk";
 
 const isOpen = ref(false);
 const planStore = ref([]);
 const modal = ref();
 const selectedPlans = ref(null);
 const submitedPlans = ref(null);
+const jabatanName = ref(null);
 
 const setOpen = (open = Boolean) => (isOpen.value = open);
 
-const days = ['Minggu', 'Senin', 'Selasa', 'Rabu', 'Kamis', 'Jumat', 'Sabtu'];
-const bulan = ['Januari', 'Februari', 'Maret', 'April', 'Mei', 'Juni', 'Juli', 'Agustus', 'September', 'Oktober', 'November', 'Desember'];
-const tday = new Date((new Date).toLocaleString("en-US", {
-  timeZone: "Asia/Jakarta"
-}));
-const m = String(tday.getMonth() + 1).padStart(2, '0');
-const d = days[tday.getDay()] === 'Senin' ? String(tday.getDate() - 2) : String(tday.getDate() - 1).padStart(2, '0');
+const days = ["Minggu", "Senin", "Selasa", "Rabu", "Kamis", "Jumat", "Sabtu"];
+const bulan = [
+  "Januari",
+  "Februari",
+  "Maret",
+  "April",
+  "Mei",
+  "Juni",
+  "Juli",
+  "Agustus",
+  "September",
+  "Oktober",
+  "November",
+  "Desember",
+];
+const tday = new Date(
+  new Date().toLocaleString("en-US", {
+    timeZone: "Asia/Jakarta",
+  })
+);
+const m = String(tday.getMonth() + 1).padStart(2, "0");
+const d =
+  days[tday.getDay()] === "Senin"
+    ? String(tday.getDate() - 2)
+    : String(tday.getDate() - 1).padStart(2, "0");
 const y = String(tday.getFullYear());
 
 const formData = ref({
   ket_not_vst: null,
 });
 
+const tokenset = localStorage.getItem("tokens")
+  ? JSON.parse(localStorage.getItem("tokens"))
+  : null;
 
-const tokenset = localStorage.getItem("tokens") ? JSON.parse(localStorage.getItem("tokens")) : null;
+const formatedDate =
+  (days[tday.getDay()] === "Senin"
+    ? days[tday.getDay() + 5]
+    : days[tday.getDay() - 1]) +
+  ", " +
+  (
+    "0" +
+    (days[tday.getDay()] === "Senin" ? tday.getDate() - 2 : tday.getDate() - 1)
+  ).slice(-2) +
+  " " +
+  bulan[tday.getMonth()] +
+  " " +
+  tday.getFullYear();
 
-const formatedDate = ((days[tday.getDay()] === 'Senin') ? days[tday.getDay() + 5] : days[tday.getDay() - 1]) + ', ' + ('0' + (((days[tday.getDay()] === 'Senin') ? tday.getDate() - 2 : tday.getDate() - 1))).slice(-2) + ' ' + bulan[tday.getMonth()] + ' ' + tday.getFullYear();
-
-const nowDate = y + '-' + m + '-' + d;
-const userId = localStorage.getItem("user") ? JSON.parse(localStorage.getItem("user")) : "";
+const nowDate = y + "-" + m + "-" + d;
+const userId = localStorage.getItem("user")
+  ? JSON.parse(localStorage.getItem("user"))
+  : "";
 
 const formNotedVisit = Yup.object().shape({
-  ket_not_vst: Yup.string()
-    .required('Keterangan Harus Diisi, tidak boleh kosong!'),
+  ket_not_vst: Yup.string().required(
+    "Keterangan Harus Diisi, tidak boleh kosong!"
+  ),
 });
 
+// const handleRefresh = (event) => {
+//   window.location.reload();
+//   setTimeout(() => {
+//     event.target.complete();
+//   }, 2000);
+// };
+
 const handleRefresh = (event) => {
-  window.location.reload();
   setTimeout(() => {
+    // Any calls to load data go here
     event.target.complete();
   }, 2000);
 };
 
-
-
-async function getNotVisited() {
-
+async function getJabatanName() {
   try {
-    presentLoading();
-    const tokens = localStorage.getItem("tokens") ? JSON.parse(localStorage.getItem("tokens")) : null;
+    const tokens = localStorage.getItem("tokens")
+      ? JSON.parse(localStorage.getItem("tokens"))
+      : null;
 
     const headers = {
-      'Content-Type': 'application/json',
-      'Authorization': `Bearer ${tokens.access_token}`
+      "Content-Type": "application/json",
+      Authorization: `Bearer ${tokens.access_token}`,
     };
 
-    const response = await axios.get(`${API_URL.value}/api/sgs/call-plans/notVisited/${userId.user_id}/`, {
-      headers: headers,
-      "userId": userId.user_id,
-      params: {
-        tomorrow: nowDate,
-      }
-    });
+    const response = await axios.get(
+      `${API_URL.value}/api/v2/jabatanbyOne/${userId.jabatan_id}`,
+      { headers: headers }
+    );
 
-    if (userId.user_id !== null) {
-      planStore.value = response.data.resource;
-      isOpen.value = true;
-    } else {
-      isOpen.value = false;
-    }
-
-    if (tokenset.access_token == null) {
-      isOpen.value = false;
-    }
-
+    jabatanName.value = response.data.jabatan;
+    // catchToast(jabatanName.value, 3000);
   } catch (error) {
-    console.log(error.message);
+    catchToastError(error.response.data.message, 3000);
   }
-  finally {
+}
+
+async function getNotVisited() {
+  try {
+    presentLoading();
+    const tokens = localStorage.getItem("tokens")
+      ? JSON.parse(localStorage.getItem("tokens"))
+      : null;
+
+    const headers = {
+      "Content-Type": "application/json",
+      Authorization: `Bearer ${tokens.access_token}`,
+    };
+
+    const response = await axios.get(
+      `${API_URL.value}/api/sgs/call-plans/notVisited/${userId.user_id}/`,
+      {
+        headers: headers,
+        userId: userId.user_id,
+        params: {
+          tomorrow: nowDate,
+        },
+      }
+    );
+    // catchToastInfo(jabatanName.value, 3000);
+    switch (jabatanName.value) {
+      case "Sales Officer":
+        isOpen.value = false;
+        break;
+
+      case "Beauty Advisor":
+        isOpen.value = false;
+        break;
+
+      case "Merchandiser":
+        isOpen.value = false;
+
+        break;
+
+      case "Sales Merchandiser":
+        isOpen.value = false;
+        break;
+
+      case "Beauty Promotor":
+        isOpen.value = false;
+        break;
+
+      default:
+        isOpen.value = true;
+        planStore.value = response.data.resource;
+        break;
+    }
+  } catch (error) {
+    // console.log(error.message);
+    catchToastError(error.response.data.message, 3000);
+  } finally {
     stopLoading();
   }
-
 }
 
 async function getAbsenDay() {
-try {
-  presentLoading();
-  const headers = {
-    "Content-Type": "application/json",
-     Authorization: `Bearer ${tokenset.access_token}`,
-  }
+  try {
+    presentLoading();
+    const headers = {
+      "Content-Type": "application/json",
+      Authorization: `Bearer ${tokenset.access_token}`,
+    };
 
-  const response = await axios.get(`${API_URL.value}/api/v2/getAbsen/${userId.user_id}/`, {
-    headers: headers
-  })
+    const response = await axios.get(
+      `${API_URL.value}/api/v2/getAbsen/${userId.user_id}/`,
+      {
+        headers: headers,
+      }
+    );
 
-  const datAbsen = response.data;
+    const datAbsen = response.data;
+  } catch (error) {
+    console.log(error.response, 3000);
+    if (error.response && error.response.data.status == 404) {
+      switch (jabatanName.value) {
+        case "Sales Officer":
+          redirectAbsenIn();
+          isOpen.value = false;
+          break;
 
-} catch (error) {
-  console.log(error.response, 3000);
-  if (error.response && error.response.data.status == 404) {
-      redirectAbsenIn();
-      isOpen.value = false;
+        case "Beauty Advisor":
+          redirectAbsenIn();
+          isOpen.value = false;
+          break;
+
+        case "Merchandiser":
+          redirectAbsenIn();
+          isOpen.value = false;
+
+          break;
+
+        case "Sales Merchandiser":
+          redirectAbsenIn();
+          isOpen.value = false;
+          break;
+
+        case "Beauty Promotor":
+          redirectAbsenIn();
+          isOpen.value = false;
+          break;
+
+        default:
+          break;
+      }
     }
-  }
-  finally {
+  } finally {
     stopLoading();
   }
 }
-
 
 async function formKet() {
   try {
     presentLoading();
-    const tokens = localStorage.getItem("tokens") ? JSON.parse(localStorage.getItem("tokens")) : null;
-    const userID = localStorage.getItem("user") ? JSON.parse(localStorage.getItem("user")) : null;
+    const tokens = localStorage.getItem("tokens")
+      ? JSON.parse(localStorage.getItem("tokens"))
+      : null;
+    const userID = localStorage.getItem("user")
+      ? JSON.parse(localStorage.getItem("user"))
+      : null;
 
     const headers = {
-      'Authorization': `Bearer ${tokens.access_token}`,
-    }
+      Authorization: `Bearer ${tokens.access_token}`,
+    };
 
-
-    const response = await axios.post(`${API_URL.value}/api/v2/plantsNotvisit`, {
-      id_master_call_plan_detail: selectedPlans.value.idPlanDetail,
-      ket: ket_not_vst.value,
-      created_by: userID.fullname,
-      updated_by: null,
-    }, {
-      headers: headers,
-    });
+    const response = await axios.post(
+      `${API_URL.value}/api/v2/plantsNotvisit`,
+      {
+        id_master_call_plan_detail: selectedPlans.value.idPlanDetail,
+        ket: ket_not_vst.value,
+        created_by: userID.fullname,
+        updated_by: null,
+      },
+      {
+        headers: headers,
+      }
+    );
 
     catchToast(response.data.message, 3000);
     isOpen.value = false;
@@ -256,19 +401,19 @@ async function formKet() {
     ket_not_vst.value = null;
   } catch (error) {
     console.log(error.message);
-  }
-  finally {
+  } finally {
     stopLoading();
   }
 }
 
 onMounted(() => {
   getAbsenDay();
+  getJabatanName();
   if (tokenset != null) {
-    // getNotVisited();
+    getNotVisited();
   }
   refreshAccessTokenHandler();
-})
+});
 </script>
 
 <style scoped>
@@ -318,7 +463,7 @@ ion-modal .wrapper {
   flex-direction: column;
   background-color: white;
   align-items: center;
-  padding-left : 20px;
-  padding-right : 20px;
+  padding-left: 20px;
+  padding-right: 20px;
 }
 </style>
