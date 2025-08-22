@@ -2,13 +2,14 @@
   <ion-page>
     <ion-content>
       <div class="flex min-h-full flex-col justify-center px-4 py-4 lg:px-6">
-        <ion-button id="action-visit-button" shape="round" href="/login">
-          <ion-icon
-            class="text-4xl"
-            slot="icon-only"
-            :icon="arrowBack"
-          ></ion-icon>
-        </ion-button>
+        <ion-button
+            class="custom-rounded-button"
+            fill="outline"
+            shape="round"
+            @click="$router.back()"
+          >
+            <ion-icon slot="icon-only" :icon="arrowBack" />
+          </ion-button>
         <div class="sm:mx-auto sm:w-lg sm:max-w-sm">
           <h2 class="text-2xl font-semibold text-center mb-4">
             FORM REGISTRASI
@@ -463,4 +464,14 @@ onMounted(() => {
   JabatanAll();
 });
 </script>
-<style scoped></style>
+<style scoped>
+.custom-rounded-button {
+  width: 60px;
+  height: 60px;
+  border-radius: 30px;
+  --border-color: #ccc;
+  --color: black;
+  --background: white;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.15);
+}
+</style>

@@ -304,6 +304,7 @@ async function getNotVisited() {
         planStore.value = response.data.resource;
         break;
     }
+    stopLoading();
   } catch (error) {
     // console.log(error.message);
     catchToastError(error.response.data.message, 3000);
