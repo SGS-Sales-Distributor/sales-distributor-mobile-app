@@ -276,27 +276,30 @@ async function getNotVisited() {
         },
       }
     );
-    // catchToastInfo(jabatanName.value, 3000);
     switch (jabatanName.value) {
       case "Sales Officer":
         isOpen.value = false;
+        getAbsenDay();
         break;
 
       case "Beauty Advisor":
         isOpen.value = false;
+        getAbsenDay();
         break;
 
       case "Merchandiser":
         isOpen.value = false;
-
+        getAbsenDay();
         break;
 
       case "Sales Merchandiser":
         isOpen.value = false;
+        getAbsenDay();
         break;
 
       case "Beauty Promotor":
         isOpen.value = false;
+        getAbsenDay();
         break;
 
       default:
@@ -304,6 +307,7 @@ async function getNotVisited() {
         planStore.value = response.data.resource;
         break;
     }
+
     stopLoading();
   } catch (error) {
     // console.log(error.message);
@@ -332,36 +336,7 @@ async function getAbsenDay() {
   } catch (error) {
     console.log(error.response, 3000);
     if (error.response && error.response.data.status == 404) {
-      switch (jabatanName.value) {
-        case "Sales Officer":
-          redirectAbsenIn();
-          isOpen.value = false;
-          break;
-
-        case "Beauty Advisor":
-          redirectAbsenIn();
-          isOpen.value = false;
-          break;
-
-        case "Merchandiser":
-          redirectAbsenIn();
-          isOpen.value = false;
-
-          break;
-
-        case "Sales Merchandiser":
-          redirectAbsenIn();
-          isOpen.value = false;
-          break;
-
-        case "Beauty Promotor":
-          redirectAbsenIn();
-          isOpen.value = false;
-          break;
-
-        default:
-          break;
-      }
+      redirectAbsenIn();
     }
   } finally {
     stopLoading();
@@ -408,11 +383,9 @@ async function formKet() {
 }
 
 onMounted(() => {
-  getAbsenDay();
   getJabatanName();
-  if (tokenset != null) {
-    getNotVisited();
-  }
+  getNotVisited();
+
   refreshAccessTokenHandler();
 });
 </script>
