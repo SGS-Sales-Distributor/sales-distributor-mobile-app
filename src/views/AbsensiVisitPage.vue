@@ -1,7 +1,7 @@
 <template>
   <ion-page>
     <HeaderSection />
-    <ion-content :fullscreen="true">
+    <ion-content class="ion-padding" :fullscreen="true">
       <!-- Header -->
       <!-- End of header -->
 

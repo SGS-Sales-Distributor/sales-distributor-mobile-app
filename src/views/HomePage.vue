@@ -256,7 +256,7 @@ async function getJabatanName() {
 
 async function getNotVisited() {
   try {
-    presentLoading();
+    // presentLoading();
     const tokens = localStorage.getItem("tokens")
       ? JSON.parse(localStorage.getItem("tokens"))
       : null;
@@ -308,7 +308,7 @@ async function getNotVisited() {
         break;
     }
 
-    stopLoading();
+    
   } catch (error) {
     // console.log(error.message);
     catchToastError(error.response.data.message, 3000);
@@ -333,6 +333,7 @@ async function getAbsenDay() {
     );
 
     const datAbsen = response.data;
+    stopLoading();
   } catch (error) {
     console.log(error.response, 3000);
     if (error.response && error.response.data.status == 404) {
@@ -375,6 +376,7 @@ async function formKet() {
 
     selectedPlans.value = null;
     ket_not_vst.value = null;
+    stopLoading();
   } catch (error) {
     console.log(error.message);
   } finally {

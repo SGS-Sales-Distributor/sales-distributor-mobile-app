@@ -15,7 +15,7 @@ export async function printCurrentPosition() {
 
 export async function checkLocationAccess() {
     try {
-        // presentLoading();
+        presentLoading();
         if (Capacitor.isNativePlatform) {
             const hasPermission = await Geolocation.checkPermissions();
             const coordinates = await Geolocation.getCurrentPosition();
@@ -43,12 +43,13 @@ export async function checkLocationAccess() {
 
             catchToastWarn('Geolocation not supported on web platform.', 3000);
         }
+        stopLoading();
     } catch (error) {
         console.error(`Error checking location access: ${error.message}`);
 
         catchToastError(error.message, 3000);
     } 
-    // finally {
-    //     stopLoading();
-    // }
+    finally {
+        stopLoading();
+    }
 }
