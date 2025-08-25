@@ -24,6 +24,7 @@ export async function checkLocationAccess() {
 
                 isLocationPermissionAllowed.value = true;
                 statusGPS.value = true;
+                stopLoading();
             } else if (hasPermission.location === "prompt") {
                 console.log('Current PositionL', coordinates);
                 console.log(hasPermission.location);
@@ -31,19 +32,21 @@ export async function checkLocationAccess() {
                 catchToast("Lokasi Terakhir Ditemukan", 3000);
                 isLocationPermissionAllowed.value = true;
                 statusGPS.value = true;
+                stopLoading();
             } else {
                 catchToastError("Akses Lokasi Ditolak, mohon nyalakan GPS secara manual!", 3000);
                 catchToastError(hasPermission.location);
 
                 isLocationPermissionAllowed.value = false;
                 statusGPS.value = false;
+                stopLoading();
             }
         } else {
             console.warn('Geolocation not supported on web platform.');
 
             catchToastWarn('Geolocation not supported on web platform.', 3000);
+            stopLoading();
         }
-        stopLoading();
     } catch (error) {
         console.error(`Error checking location access: ${error.message}`);
 
