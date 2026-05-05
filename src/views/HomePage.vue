@@ -145,7 +145,6 @@ import {
 } from "@/services/toastHandlers";
 import { IonButton, IonRefresher, IonRefresherContent } from "@ionic/vue";
 import { Form, Field, ErrorMessage } from "vee-validate";
-import { redirectAbsenIn, redirectAbsenOut } from "@/services/redirectHandlers";
 import { data } from "@maptiler/sdk";
 
 const isOpen = ref(false);
@@ -187,10 +186,6 @@ const y = String(tday.getFullYear());
 const formData = ref({
   ket_not_vst: null,
 });
-
-const tokenset = localStorage.getItem("tokens")
-  ? JSON.parse(localStorage.getItem("tokens"))
-  : null;
 
 const formatedDate =
   (days[tday.getDay()] === "Senin"
@@ -279,27 +274,22 @@ async function getNotVisited() {
     switch (jabatanName.value) {
       case "Sales Officer":
         isOpen.value = false;
-        getAbsenDay();
         break;
 
       case "Beauty Advisor":
         isOpen.value = false;
-        getAbsenDay();
         break;
 
       case "Merchandiser":
         isOpen.value = false;
-        getAbsenDay();
         break;
 
       case "Sales Merchandiser":
         isOpen.value = false;
-        getAbsenDay();
         break;
 
       case "Beauty Promotor":
         isOpen.value = false;
-        getAbsenDay();
         break;
 
       default:
@@ -312,33 +302,6 @@ async function getNotVisited() {
   } catch (error) {
     // console.log(error.message);
     catchToastError(error.response.data.message, 3000);
-  } finally {
-    stopLoading();
-  }
-}
-
-async function getAbsenDay() {
-  try {
-    presentLoading();
-    const headers = {
-      "Content-Type": "application/json",
-      Authorization: `Bearer ${tokenset.access_token}`,
-    };
-
-    const response = await axios.get(
-      `${API_URL.value}/api/v2/getAbsen/${userId.user_id}/`,
-      {
-        headers: headers,
-      }
-    );
-
-    const datAbsen = response.data;
-    stopLoading();
-  } catch (error) {
-    console.log(error.response, 3000);
-    if (error.response && error.response.data.status == 404) {
-      redirectAbsenIn();
-    }
   } finally {
     stopLoading();
   }

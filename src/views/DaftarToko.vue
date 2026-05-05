@@ -11,7 +11,7 @@
             <ion-searchbar :debounce="300" @ionInput="searchStoreHandler" placeholder="Cari nama toko..."
               color="light"></ion-searchbar>
             <div v-for="(store, index) in filteredStores" :key="index + 1" class="relative overflow-x-auto">
-              <ion-card class="py-2 bg-lime-500">
+              <ion-card class="py-2 bg-lime-500" @click="openEditModal(store)">
                 <ion-card-header class="bg-gray-50">
                   <div class="flex flex-col w-full h-full space-y-2">
                     <!-- Store Details -->
@@ -23,96 +23,90 @@
                       <label class="flex-initial w-56 font-semibold">Alamat Toko</label>
                       <p class="flex-initial w-44 text-right">{{ store.store_address }}</p>
                     </div>
-                    <div class="flex flex-row w-full h-full justify-between space-x-2">
-                      <label class="flex-initial w-56 font-semibold">Nomor Handphone</label>
-                      <p class="flex-initial w-44 text-right">{{ store.store_phone }}</p>
-                    </div>
-                    <div class="flex flex-row w-full h-full justify-between space-x-2">
-                      <label class="flex-initial w-56 font-semibold">Nama Pemilik Utama</label>
-                      <p class="flex-initial w-44 text-right">{{ store.owner }}</p>
-                    </div>
-                    <div class="flex flex-row w-full h-full justify-between space-x-2"
-                      v-if="store.owner && store.owner.length">
-                      <label class="flex-initial w-56 font-semibold">NIK Pemilik Utama</label>
-                      <p class="flex-initial w-44 text-right">{{ store.nik_owner }}</p>
-                    </div>
-                    <div class="flex flex-row w-full h-full justify-between space-x-2"
-                      v-if="store.owner && store.owner.length">
-                      <label class="flex-initial w-56 font-semibold">Email Pemilik Utama</label>
-                      <p class="flex-initial w-44 text-right">{{ store.email_owner }}</p>
-                    </div>
-                    <div class="flex flex-row w-full h-full justify-between space-x-2">
-                      <label class="flex-initial w-56 font-semibold">Credit Limit</label>
-                      <p class="flex-initial w-44 text-right">
-                        <!-- Rp. {{ new Intl.NumberFormat("id-ID", { minimumFractionDigits: 0 }).format(store.credit_limit) }} -->
-                        Rp. {{ new Intl.NumberFormat("id-ID", { minimumFractionDigits: 0 }).format(0) }}
-                      </p>
-                    </div>
                   </div>
                 </ion-card-header>
-                <ion-card-content class="bg-gray-50">
-                  <div class="flex w-full justify-center items-center px-4 pb-2 space-x-4">
-                    <!-- Edit Button -->
-                    <ion-button shape="round" color="primary" @click="openEditModal(store)"><ion-icon slot="start" :icon="createSharp"></ion-icon> Edit</ion-button>
-                  </div>
-                </ion-card-content>
               </ion-card>
             </div>
-            <ion-infinite-scroll @ionInfinite="ionInfinite">
-              <ion-infinite-scroll-content loading-text="Load more stores..."
-                loading-spinner="bubbles"></ion-infinite-scroll-content>
-            </ion-infinite-scroll>
+
+
+
+            <!-- Edit Modal -->
+            <ion-modal :is-open="isEditModalOpen" :key="selectedStore.store_id" @didDismiss="closeEditModal">
+              <ion-header translucent>
+                <ion-toolbar>
+                  <ion-title>Detail Store</ion-title>
+                  <ion-buttons slot="end">
+                    <ion-button @click="closeEditModal">Close</ion-button>
+                  </ion-buttons>
+                </ion-toolbar>
+              </ion-header>
+
+              <ion-content class="ion-padding">
+
+                <ion-card>
+                  <ion-card-header>
+                    <ion-card-title class="text-center font-bold">
+                      Detail Toko
+                    </ion-card-title>
+                  </ion-card-header>
+
+                  <ion-card-content>
+
+                    <ion-item lines="full">
+                      <ion-label position="stacked">Nama Toko</ion-label>
+                      <ion-input v-model="selectedStore.store_name" :readonly="!canEditStore" />
+                    </ion-item>
+
+                    <ion-item lines="full">
+                      <ion-label position="stacked">Alamat Toko</ion-label>
+                      <!-- <ion-textarea v-model="selectedStore.store_address" auto-grow /> -->
+                      <ion-textarea v-model="selectedStore.store_address" :value="selectedStore.store_address" auto-grow
+                        :readonly="!canEditStore" />
+                    </ion-item>
+
+                    <ion-item lines="full">
+                      <ion-label position="stacked">No HP</ion-label>
+                      <ion-input v-model="selectedStore.store_phone" :readonly="!canEditStore" />
+                    </ion-item>
+
+                    <ion-item lines="full">
+                      <ion-label position="stacked">Owner</ion-label>
+                      <ion-input v-model="selectedStore.owner" :readonly="!canEditStore" />
+                    </ion-item>
+
+                    <ion-item lines="full">
+                      <ion-label position="stacked">NIK</ion-label>
+                      <ion-input v-model="selectedStore.nik_owner" :readonly="!canEditStore" />
+                    </ion-item>
+
+                    <ion-item lines="full">
+                      <ion-label position="stacked">Email</ion-label>
+                      <ion-input v-model="selectedStore.email_owner" :readonly="!canEditStore" />
+                    </ion-item>
+
+                    <ion-item lines="none">
+                      <ion-label position="stacked">Credit Limit</ion-label>
+                      <ion-input :value="formattedCreditLimit" readonly />
+                    </ion-item>
+
+                    <div class="mt-4">
+                      <ion-button v-if="canEditStore" expand="block" color="primary" @click="saveStoreChanges">
+                        Simpan
+                      </ion-button>
+
+                      <ion-button expand="block" color="medium" fill="outline" @click="closeEditModal">
+                        Batal
+                      </ion-button>
+                    </div>
+
+                  </ion-card-content>
+                </ion-card>
+
+              </ion-content>
+            </ion-modal>
           </div>
         </div>
       </div>
-
-      <!-- Edit Modal -->
-      <ion-modal :is-open="isEditModalOpen" @didDismiss="closeEditModal">
-        <ion-header translucent>
-          <ion-toolbar>
-            <ion-title>Edit Store</ion-title>
-            <ion-buttons slot="end">
-              <ion-button @click="closeEditModal">Close</ion-button>
-            </ion-buttons>
-          </ion-toolbar>
-        </ion-header>
-
-        <ion-content class="ion-padding form-container">
-          <ion-item class="form-item">
-            <ion-label position="stacked">Nama Toko</ion-label>
-            <ion-input v-model="selectedStore.nama_toko" placeholder="Masukkan Nama Toko"></ion-input>
-          </ion-item>
-          <ion-item class="form-item">
-            <ion-label position="stacked">Alamat Toko</ion-label>
-            <ion-input v-model="selectedStore.alamat_toko" placeholder="Masukkan Alamat Toko"></ion-input>
-          </ion-item>
-          <ion-item class="form-item">
-            <ion-label position="stacked">Nomor Handphone</ion-label>
-            <ion-input v-model="selectedStore.nomor_telepon_toko" placeholder="Masukkan Nomor Handphone"></ion-input>
-          </ion-item>
-          <ion-item class="form-item">
-            <ion-label position="stacked">Nama Pemilik Utama</ion-label>
-            <ion-input v-model="selectedStore.owner" placeholder="Masukkan Nama Pemilik Utama"></ion-input>
-          </ion-item>
-          <ion-item class="form-item">
-            <ion-label position="stacked">NIK Pemilik Utama</ion-label>
-            <ion-input v-model="selectedStore.nik_owner" placeholder="Masukkan NIK Pemilik Utama"></ion-input>
-          </ion-item>
-          <ion-item class="form-item">
-            <ion-label position="stacked">Email Pemilik Utama</ion-label>
-            <ion-input v-model="selectedStore.email_owner" placeholder="Masukkan Email Pemilik Utama"></ion-input>
-          </ion-item>
-
-          <ion-item class="form-item">
-            <ion-label position="stacked" aria-readonly="">Credit Limit</ion-label>
-            <ion-input :value="formattedCreditLimit" @ionInput="handleCreditLimitInput" type="text"
-              placeholder="Masukkan Credit Limit" readonly></ion-input>
-          </ion-item>
-          <div class="ion-padding">
-            <ion-button expand="block" color="primary" @click="saveStoreChanges"><ion-icon slot="start" :icon="checkmarkCircleSharp"></ion-icon> Save</ion-button>
-          </div>
-        </ion-content>
-      </ion-modal>
       <ion-refresher slot="fixed" @ionRefresh="handleRefresh($event)">
         <ion-refresher-content></ion-refresher-content>
       </ion-refresher>
@@ -122,7 +116,7 @@
 
 <script setup>
 import axios from "axios";
-import { createSharp,checkmarkCircleSharp } from "ionicons/icons";
+import { createSharp, checkmarkCircleSharp } from "ionicons/icons";
 import HeaderSection from "./../components/HeaderSection.vue";
 import { API_URL, currentRoute } from "@/services/globalVariables";
 import { computed, onMounted, ref } from "vue";
@@ -135,11 +129,12 @@ const route = useRoute();
 const currentPageRouteName = computed(() => route.name);
 
 const storesData = ref([]);
-const selectedStore = ref({ credit_limit: null });
+const selectedStore = ref({});
 const isEditModalOpen = ref(false);
 const lastIndex = ref(20);
 const searchQuery = ref("");
 const user_id = localStorage.getItem("user") ? JSON.parse(localStorage.getItem("user")) : null;
+const canEditStore = Number(user_id?.jabatan_id) >= 6;
 
 const formattedCreditLimit = computed(() => {
   if (selectedStore.value.credit_limit) {
@@ -196,7 +191,7 @@ async function fetchStoresData() {
   }
 }
 
-const handleRefresh = () => {
+const handleRefresh = (event) => {
   window.location.reload();
   setTimeout(() => {
     event.target.complete();
@@ -204,18 +199,20 @@ const handleRefresh = () => {
 };
 
 function openEditModal(store) {
-  const userId = localStorage.getItem("user_id");
+  console.log("STORE DATA:", store);
+
   selectedStore.value = {
-    store_id: store.store_id,
-    nama_toko: store.store_name,
-    alamat_toko: store.store_address,
-    nomor_telepon_toko: store.store_phone,
-    owner: store.owner || "",
-    nik_owner: store.nik_owner || "",
-    email_owner: store.email_owner || "",
-    credit_limit: "0",
-    user_id: userId,
+    id: store.id ?? null,
+    store_id: store.store_id ?? null,
+    store_name: store.store_name ?? "",
+    store_address: store.store_address ?? store.alamat_toko ?? "",
+    store_phone: store.store_phone ?? store.nomor_telepon_toko ?? "",
+    owner: store.owner ?? "",
+    nik_owner: store.nik_owner ?? "",
+    email_owner: store.email_owner ?? "",
+    credit_limit: store.credit_limit ?? 0,
   };
+
   isEditModalOpen.value = true;
 }
 
@@ -225,37 +222,57 @@ function closeEditModal() {
 
 async function saveStoreChanges() {
   try {
-    const tokens = localStorage.getItem("tokens") ? JSON.parse(localStorage.getItem("tokens")) : null;
+    if (!canEditStore) {
+      catchToastError("Hanya jabatan 6 ke atas yang bisa edit toko", 3000);
+      return;
+    }
+
+    if (
+      !selectedStore.value.store_name ||
+      !selectedStore.value.store_address ||
+      !selectedStore.value.store_phone ||
+      !selectedStore.value.owner ||
+      !selectedStore.value.nik_owner ||
+      !selectedStore.value.email_owner
+    ) {
+      catchToastError("Semua field wajib diisi", 3000);
+      return;
+    }
+
+    const tokens = JSON.parse(localStorage.getItem("tokens"));
+
     const headers = {
-      "Content-Type": "application/json",
       Authorization: `Bearer ${tokens.access_token}`,
     };
 
-    const post = {
-      store_name: selectedStore.value.nama_toko,
-      store_alias: selectedStore.value.nama_toko,
-      store_address: selectedStore.value.alamat_toko,
-      store_phone: selectedStore.value.nomor_telepon_toko,
-      owner: selectedStore.value.owner,
-      nik_owner: selectedStore.value.nik_owner || "",
-      email_owner: selectedStore.value.email_owner || "",
+    const storeData = {
+      store_name: selectedStore.value.store_name,
+      store_alias: selectedStore.value.store_name, // WAJIB
+      store_address: selectedStore.value.store_address,
+      store_phone: selectedStore.value.store_phone,
       credit_limit: selectedStore.value.credit_limit,
-      updated_by: user_id.fulname
+      owner: selectedStore.value.owner,
+      nik_owner: selectedStore.value.nik_owner,
+      email_owner: selectedStore.value.email_owner,
     };
 
-    const response = await axios.put(`${API_URL.value}/api/v2/stores/${selectedStore.value.store_id}`, post, { headers });
+    await axios.put(
+      `${API_URL.value}/api/v2/stores/${selectedStore.value.store_id}`,
+      storeData,
+      { headers }
+    );
+
+    catchToast("Berhasil update", 2000);
+
     closeEditModal();
     fetchStoresData();
-    catchToast(response.data.message, 3000)
+
   } catch (error) {
-    if (error.response && error.response.data.status == 401) {
-      catchToastError(error.response.data.message, 3000);
-    } else {
-      catchToastError("Gagal Mengedit Data Toko", 3000);
-      console.error(error.response);
-    }
+    console.log(error);
+    catchToastError("Gagal update", 2000);
   }
 }
+
 
 onMounted(() => {
   fetchStoresData();
@@ -267,5 +284,15 @@ onMounted(() => {
   margin-top: 28%;
   position: flex;
   flex-direction: column;
+}
+
+ion-card {
+  border-radius: 16px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+}
+
+ion-item {
+  --border-radius: 8px;
+  margin-bottom: 8px;
 }
 </style>

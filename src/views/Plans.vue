@@ -23,7 +23,7 @@
                                 </Field> -->
                                 <Field v-model="formData.fullname" :type="text" :readonly="user_id.user_id != null"
                                     id="salesmanName" name="salesmanName"
-                                    class="form-input w-full px-4 py-2 border rounded-lg text-gray-700 focus:ring-blue-500"
+                                    class="form-input w-full px-4 py-2 border rounded-lg text-gray-900 bg-white focus:ring-blue-500"
                                     aria-label="salesmanName" aria-describedby="salesmanName">
                                 </Field>
                                 <!-- <Field v-model="formData.user_id" as="select" id="salesman" name="salesman"
@@ -91,10 +91,12 @@
                                 <div class="mb-4 mt-4">
                                     <label for="cabang" class="block text-gray-700 text-sm font-semibold mb-2">Cabang
                                         *</label>
-                                    <select
+                                    <!-- <select
                                         class="form-input w-full px-4 py-2 border rounded-lg text-gray-700 focus:ring-blue-500"
                                         v-model="item.cabang" name="cabang" id="cabang"
-                                        @change="getTokoByCab(item.cabang)">
+                                        @change="getTokoByCab(item.cabang)"> -->
+                                    <select class="form-input w-full px-4 py-2 border rounded-lg text-gray-700 focus:ring-blue-500"
+                                    v-model="item.cabang" @change="getTokoByCab(item.cabang, index)">
                                         <option disabled selected value="">Pilih Cabang</option>
                                         <option v-for="cabang in storeCabang" :key="cabang.id" :value="cabang.id">
                                             {{ cabang.nama_cabang }}
@@ -109,9 +111,11 @@
                                     <select v-model="item.toko" id="toko" name="toko"
                                         class="form-input w-full px-4 py-2 border rounded-lg text-gray-700 focus:ring-blue-500">
                                         <option disabled selected value="">Pilih Toko</option>
-                                        <option v-for="store in storeList" :key="store.store_id"
+                                        <!-- <option v-for="store in storeList" :key="store.store_id"
+                                            :value="store.store_id"> -->
+                                        <option v-for="store in item.storeList" :key="store.store_id"
                                             :value="store.store_id">
-                                            {{ store.store_name }}
+                                        {{ store.store_name }}
                                         </option>
                                     </select>
                                     <!-- <ErrorMessage name="toko" class="text-rose-500" /> -->
@@ -158,7 +162,7 @@ import { alertController } from "@ionic/vue";
 import { object, string, array } from "yup";
 import { IonPage, IonContent, IonInput } from "@ionic/vue";
 import { RedirectInputVisitPage, redirectToAbsensiPage, redirectToHomePage } from "@/services/redirectHandlers";
-import { checkmarkCircleSharp,trash,addCircleSharp} from "ionicons/icons";
+import { checkmarkCircleSharp, trash, addCircleSharp } from "ionicons/icons";
 
 const user = ref([]);
 const storeCabang = ref([]);
@@ -183,6 +187,8 @@ const formData = ref({
             tanggal: "",
             cabang: "",
             toko: "",
+            storeList: []
+
         },
     ],
 });
@@ -347,8 +353,7 @@ async function saveCallPlan() {
 
         stopLoading();
         catchToast(response.data.message, 3000);
-        clearForm();
-        // redirectToAbsensiPage();
+        redirectToHomePage();
 
     } catch (error) {
         if (error.response && error.response.data.status === 401) {
@@ -398,24 +403,44 @@ async function fetchStoreCabang() {
     }
 }
 
-async function getTokoByCab(idCab) {
+// async function getTokoByCab(idCab) {
+//     try {
+//         const tokens = localStorage.getItem("tokens")
+//             ? JSON.parse(localStorage.getItem("tokens"))
+//             : null;
+
+//         const headers = { Authorization: `Bearer ${tokens.access_token}` };
+//         const response = await axios.get(`${API_URL.value}/api/v2/distriByCbg/${idCab}`, {
+//             headers: headers,
+//         });
+
+//         storeList.value = response.data.resource;
+//     } catch (error) {
+//         catchToastError(error.response.data.message, 3000);
+//         formData.toko = null
+//     }
+// }
+
+//new 
+async function getTokoByCab(idCab, index) {
     try {
-        const tokens = localStorage.getItem("tokens")
-            ? JSON.parse(localStorage.getItem("tokens"))
-            : null;
+        const tokens = JSON.parse(localStorage.getItem("tokens"));
 
-        const headers = { Authorization: `Bearer ${tokens.access_token}` };
-        const response = await axios.get(`${API_URL.value}/api/v2/distriByCbg/${idCab}`, {
-            headers: headers,
-        });
+        const response = await axios.get(
+            `${API_URL.value}/api/v2/distriByCbg/${idCab}`,
+            {
+                headers: {
+                    Authorization: `Bearer ${tokens.access_token}`,
+                },
+            }
+        );
 
-        storeList.value = response.data.resource;
+        formData.value.daily_plan[index].storeList = response.data.resource;
+        formData.value.daily_plan[index].toko = ""; // reset toko hanya row itu
     } catch (error) {
-        catchToastError(error.response.data.message, 3000);
-        formData.toko = null
+        catchToastError(error.response?.data?.message || "Error", 3000);
     }
 }
-
 onMounted(() => {
     presentLoading();
     // fetchAllUser();

@@ -1,28 +1,7 @@
 <template>
   <!-- Main feature -->
   <div class="grid grid-cols-4 gap-6 text-center">
-    <div v-if="jabatanGetName === 'Sales Officer' || jabatanGetName === 'Beauty Advisor' || jabatanGetName === 'Sales Merchandiser' || jabatanGetName === 'Merchandiser' || jabatanGetName === 'Salesman' || jabatanGetName === 'Beauty Promotor'" class="flex flex-col items-center justify-center space-y-2">
-      <ion-button id="daftar-otl-button" shape="round" @click="redirectAbsenIn()" :disabled="buttonDisabledIn">
-        <!-- <ion-icon class="text-4xl" slot="icon-only" :icon="businessOutline"></ion-icon> -->
-        <img src="/public/south-direction-svgrepo-com.svg" slot="icon-only" class="" alt="">
-      </ion-button>
-      <ion-label class="text-sm font-semibold">Absen Masuk</ion-label>
-    </div>
-    <div v-if="jabatanGetName === 'Sales Officer' || jabatanGetName === 'Beauty Advisor' || jabatanGetName === 'Sales Merchandiser' || jabatanGetName === 'Merchandiser' || jabatanGetName === 'Salesman' || jabatanGetName === 'Beauty Promotor'" class="flex flex-col items-center justify-center space-y-2">
-      <ion-button id="daftar-otl-button" shape="round"  @click="redirectAbsenOut()" :disabled="buttonDisabledOut">
-        <!-- <ion-icon class="text-4xl" slot="icon-only" :icon="businessOutline"></ion-icon> -->
-        <img src="/public/east-direction-svgrepo-com.svg" slot="icon-only" class="" alt="">
-      </ion-button>
-      <ion-label class="text-sm font-semibold">Absen Pulang</ion-label>
-    </div>
-    <div v-if="jabatanGetName === 'Sales Officer' || jabatanGetName === 'Beauty Advisor' || jabatanGetName === 'Sales Merchandiser' || jabatanGetName === 'Merchandiser' || jabatanGetName === 'Salesman' || jabatanGetName === 'Beauty Promotor'" class="flex flex-col items-center justify-center space-y-2">
-      <ion-button id="daftar-otl-button" shape="round" href="/HistoryAbsen">
-        <!-- <ion-icon class="text-4xl" slot="icon-only" :icon="businessOutline"></ion-icon> -->
-        <img src="/public/worldwide-location-svgrepo-com.svg" slot="icon-only" class="" alt="">
-      </ion-button>
-      <ion-label class="text-sm font-semibold">Rekap Absensi</ion-label>
-    </div>
-    <div class="flex flex-col items-center justify-center space-y-2">
+    <div v-if="canRegisterOutlet" class="flex flex-col items-center justify-center space-y-2">
       <!-- <ion-button id="registrasi-toko-button" shape="round" href="/store/register" > -->
       <ion-button id="registrasi-otl-button" shape="round" @click="registrerClik">
         <!-- <ion-icon class="text-4xl" slot="icon-only" :icon="storefront"></ion-icon> -->
@@ -58,6 +37,20 @@
       </ion-button>
       <ion-label class="text-sm font-semibold">Rekap Visit</ion-label>
     </div>
+    <!-- <div class="flex flex-col items-center justify-center space-y-2">
+      <ion-button id="history-visit-button" shape="round" href="/sales-report">
+        <ion-icon class="text-4xl" slot="icon-only" :icon="albums"></ion-icon>
+        <img src="/public/report-sales.png" slot="icon-only" class="" alt="">
+      </ion-button>
+      <ion-label class="text-sm font-semibold">POS Report</ion-label>
+    </div>
+    <div class="flex flex-col items-center justify-center space-y-2">
+      <ion-button id="history-visit-button" shape="round" href="/stock-actual">
+        <ion-icon class="text-4xl" slot="icon-only" :icon="albums"></ion-icon>
+        <img src="/public/stock.png" slot="icon-only" class="" alt="">
+      </ion-button>
+      <ion-label class="text-sm font-semibold">Stock Actual</ion-label>
+    </div> -->
     <!-- <div class="flex flex-col items-center justify-center space-y-2">
       <ion-button id="katalog-produk-button" shape="round">
         <ion-icon class="text-2xl" slot="icon-only" :icon="cube"></ion-icon>
@@ -126,25 +119,17 @@ import {
   bagCheckOutline,
 } from 'ionicons/icons';
 import { IonButton } from '@ionic/vue';
-import { redirectToOwnerFormPage, redirectToRegisterStorePage, RedirectVisitPage, redirectAbsenIn, redirectAbsenOut } from '@/services/redirectHandlers';
-import { presentLoading, stopLoading } from '@/services/loadingHandlers';
-import { catchToast, catchToastError } from '@/services/toastHandlers';
-import { alertController } from '@ionic/vue';
-import { Form, Field, ErrorMessage } from 'vee-validate';
-import { data } from '@maptiler/sdk';
 import { onMounted, ref } from 'vue';
 import { API_URL } from '@/services/globalVariables';
+import { redirectToOwnerFormPage, redirectToRegisterStorePage, RedirectVisitPage } from '@/services/redirectHandlers';
 
 
 const store = localStorage.getItem("store_id") ? JSON.parse(localStorage.getItem("store_id")) : null;
 const user = localStorage.getItem("user") ? JSON.parse(localStorage.getItem("user")) : null;
 const tokenSet = localStorage.getItem("tokens") ? JSON.parse(localStorage.getItem("tokens")) : null;
-const detAbsen = ref([]);
 const seterJab = ref([]);
-const checkError = ref(null);
 const jabatanGetName = ref(null);
-const buttonDisabledIn = ref(checkError == "404" ?true:false);
-const buttonDisabledOut = ref(detAbsen.attendee_time_in !== null && detAbsen.attendee_time_out === null? true : false);
+const canRegisterOutlet = user.jabatan_id >= 6;
 
 async function registrerClik() {
   if (store == null || store == "") {
@@ -153,26 +138,6 @@ async function registrerClik() {
     redirectToOwnerFormPage();
   }
 
-}
-
-async function getAbsenDay() {
-  try {
-    const headers = {
-      "Content-Type": "application/json",
-      Authorization: `Bearer ${tokenSet.access_token}`,
-    };
-
-    const response = await axios.get(`${API_URL.value}/api/v2/getAbsen/${user.user_id}/`, {
-      headers: headers,
-    });
-
-    detAbsen.value = response.data.resource;
-
-  } catch (error) {
-    console.log(error.message, 3000);
-    checkError.value=error.response.data.status;
-
-  }
 }
 
 async function stsJabatan() {
@@ -197,7 +162,6 @@ async function stsJabatan() {
 
 
 onMounted(() => {
-  getAbsenDay();
   stsJabatan();
 });
 

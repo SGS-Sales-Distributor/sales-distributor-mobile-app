@@ -2,61 +2,34 @@
   <ion-page>
     <ion-content>
       <div class="flex min-h-full flex-col justify-center px-4 py-4 lg:px-6">
-        <ion-button
-            class="custom-rounded-button"
-            fill="outline"
-            shape="round"
-            @click="$router.back()"
-          >
-            <ion-icon slot="icon-only" :icon="arrowBack" />
-          </ion-button>
+        <ion-button class="custom-rounded-button" fill="outline" shape="round" @click="$router.back()">
+          <ion-icon slot="icon-only" :icon="arrowBack" />
+        </ion-button>
         <div class="sm:mx-auto sm:w-lg sm:max-w-sm">
           <h2 class="text-2xl font-semibold text-center mb-4">
             FORM REGISTRASI
           </h2>
         </div>
         <div class="mt-4 sm:mx-auto sm:w-full sm:max-w-sm">
-          <vee-form
-            novalidate
-            class="space-y-4"
-            method="post"
-            @submit="AlertRegister"
-            :validation-schema="formValidate"
-          >
+          <vee-form novalidate class="space-y-4" method="post" @submit="AlertRegister"
+            :validation-schema="formValidate">
             <!-- choose area -->
             <div>
-              <label
-                for="area"
-                class="block text-sm font-medium leading-6 text-grey-900"
-                >Pilih Area</label
-              >
+              <label for="area" class="block text-sm font-medium leading-6 text-grey-900">Pilih Area</label>
             </div>
             <div class="mt-2">
-              <vee-field
-                v-model="formData.kode_lokasi"
-                as="select"
-                name="kode_lokasi"
-                id="kode_lokasi"
-                class="block w-full bg-transparent rounded-md ring-1 ring-inset ring-white-300 py-2.5 px-2.5 text-white-900 shadow-sm focus:ring-2 focus:ring-inset focus:ring-blue-500 focus:outline-0 disabled:border-0 placeholder:text-white-400 transition-all sm:text-md sm:leading-6"
-              >
+              <vee-field v-model="formData.kode_lokasi" as="select" name="kode_lokasi" id="kode_lokasi"
+                class="block w-full bg-transparent rounded-md ring-1 ring-inset ring-white-300 py-2.5 px-2.5 text-white-900 shadow-sm focus:ring-2 focus:ring-inset focus:ring-blue-500 focus:outline-0 disabled:border-0 placeholder:text-white-400 transition-all sm:text-md sm:leading-6">
                 <option disabled selected value="">Pilih Area</option>
-                <option
-                  v-for="area in Lokasi"
-                  :key="area.id"
-                  :value="
-                    (data = {
-                      kode_lokasi: area.kode_lokasi,
-                      cabangId: area.idCabang,
-                    })
-                  "
-                >
+                <option v-for="area in Lokasi" :key="area.id" :value="(data = {
+                    kode_lokasi: area.kode_lokasi,
+                    cabangId: area.idCabang,
+                  })
+                  ">
                   {{ area.nama_cabang }}
                 </option>
               </vee-field>
-              <vee-error-message
-                name="kode_lokasi"
-                class="mt-4 text-rose-500"
-              />
+              <vee-error-message name="kode_lokasi" class="mt-4 text-rose-500" />
             </div>
             <!-- NIK Input -->
             <!-- <div>
@@ -90,20 +63,11 @@
                         </div> -->
 
             <div>
-              <label
-                for="area"
-                class="block text-sm font-medium leading-6 text-grey-900"
-                >Pilih Job Desk</label
-              >
+              <label for="area" class="block text-sm font-medium leading-6 text-grey-900">Pilih Job Desk</label>
             </div>
             <div class="mt-2">
-              <vee-field
-                v-model="formData.jobdesk"
-                as="select"
-                name="jobdesk"
-                id="jobdesk"
-                class="block w-full bg-transparent rounded-md ring-1 ring-inset ring-white-300 py-2.5 px-2.5 text-white-900 shadow-sm focus:ring-2 focus:ring-inset focus:ring-blue-500 focus:outline-0 disabled:border-0 placeholder:text-white-400 transition-all sm:text-md sm:leading-6"
-              >
+              <vee-field v-model="formData.jobdesk" as="select" name="jobdesk" id="jobdesk"
+                class="block w-full bg-transparent rounded-md ring-1 ring-inset ring-white-300 py-2.5 px-2.5 text-white-900 shadow-sm focus:ring-2 focus:ring-inset focus:ring-blue-500 focus:outline-0 disabled:border-0 placeholder:text-white-400 transition-all sm:text-md sm:leading-6">
                 <option disabled selected value="">Pilih Job Desk Anda</option>
                 <!-- <option value="1">Bandung</option>
                                 <option value="2">Bogor</option> -->
@@ -116,155 +80,78 @@
 
             <!-- Fullname Input -->
             <div>
-              <label
-                for="fullname"
-                class="block text-sm font-medium leading-6 text-gray-900"
-                >Nama Lengkap</label
-              >
+              <label for="fullname" class="block text-sm font-medium leading-6 text-gray-900">Nama Lengkap</label>
               <div class="mt-2">
-                <vee-field
-                  v-model="formData.fullname"
-                  id="fullname"
-                  name="fullname"
-                  type="string"
-                  placeholder="Nama Lengkap"
-                  aria-label="fullname"
-                  aria-describedby="fullname"
-                  class="block w-full bg-transparent rounded-md ring-1 ring-inset ring-gray-300 py-2.5 px-2.5 text-gray-900 shadow-sm focus:ring-2 focus:ring-inset focus:ring-blue-500 focus:outline-0 disabled:border-0 placeholder:text-gray-400 transition-all sm:text-md sm:leading-6"
-                />
+                <vee-field v-model="formData.fullname" id="fullname" name="fullname" type="string"
+                  placeholder="Nama Lengkap" aria-label="fullname" aria-describedby="fullname"
+                  class="block w-full bg-transparent rounded-md ring-1 ring-inset ring-gray-300 py-2.5 px-2.5 text-gray-900 shadow-sm focus:ring-2 focus:ring-inset focus:ring-blue-500 focus:outline-0 disabled:border-0 placeholder:text-gray-400 transition-all sm:text-md sm:leading-6" />
                 <vee-error-message name="fullname" class="mt-4 text-rose-500" />
               </div>
             </div>
 
             <!-- Phone Input -->
             <div>
-              <label
-                for="phone"
-                class="block text-sm font-medium leading-6 text-gray-900"
-                >Nomor Handphone</label
-              >
+              <label for="phone" class="block text-sm font-medium leading-6 text-gray-900">Nomor Handphone</label>
               <div class="mt-2">
-                <vee-field
-                  v-model="formData.phone"
-                  id="phone"
-                  name="phone"
-                  type="string"
-                  placeholder="Nomor Handphone"
-                  aria-label="phone"
-                  aria-describedby="phone"
-                  class="block w-full bg-transparent rounded-md ring-1 ring-inset ring-gray-300 py-2.5 px-2.5 text-gray-900 shadow-sm focus:ring-2 focus:ring-inset focus:ring-blue-500 focus:outline-0 disabled:border-0 placeholder:text-gray-400 transition-all sm:text-md sm:leading-6"
-                />
+                <vee-field v-model="formData.phone" id="phone" name="phone" type="string" placeholder="Nomor Handphone"
+                  aria-label="phone" aria-describedby="phone"
+                  class="block w-full bg-transparent rounded-md ring-1 ring-inset ring-gray-300 py-2.5 px-2.5 text-gray-900 shadow-sm focus:ring-2 focus:ring-inset focus:ring-blue-500 focus:outline-0 disabled:border-0 placeholder:text-gray-400 transition-all sm:text-md sm:leading-6" />
                 <vee-error-message name="phone" class="mt-4 text-rose-500" />
               </div>
             </div>
 
             <!-- Email Input -->
             <div>
-              <label
-                for="email"
-                class="block text-sm font-medium leading-6 text-gray-900"
-                >Email address</label
-              >
+              <label for="email" class="block text-sm font-medium leading-6 text-gray-900">Email address</label>
               <div class="mt-2">
-                <vee-field
-                  v-model="formData.email"
-                  id="email"
-                  name="email"
-                  type="email"
-                  autocomplete="email"
-                  placeholder="Alamat email"
-                  aria-label="email"
-                  aria-describedby="email"
-                  class="block w-full bg-transparent rounded-md ring-1 ring-inset ring-gray-300 py-2.5 px-2.5 text-gray-900 shadow-sm focus:ring-2 focus:ring-inset focus:ring-blue-500 focus:outline-0 disabled:border-0 placeholder:text-gray-400 transition-all sm:text-md sm:leading-6"
-                />
+                <vee-field v-model="formData.email" id="email" name="email" type="email" autocomplete="email"
+                  placeholder="Alamat email" aria-label="email" aria-describedby="email"
+                  class="block w-full bg-transparent rounded-md ring-1 ring-inset ring-gray-300 py-2.5 px-2.5 text-gray-900 shadow-sm focus:ring-2 focus:ring-inset focus:ring-blue-500 focus:outline-0 disabled:border-0 placeholder:text-gray-400 transition-all sm:text-md sm:leading-6" />
                 <vee-error-message name="email" class="mt-4 text-rose-500" />
               </div>
             </div>
 
             <!-- Username Input -->
             <div>
-              <label
-                for="username"
-                class="block text-sm font-medium leading-6 text-gray-900"
-                >Username</label
-              >
+              <label for="username" class="block text-sm font-medium leading-6 text-gray-900">Username</label>
               <div class="mt-2">
-                <vee-field
-                  v-model="formData.email"
-                  id="username"
-                  name="username"
-                  type="username"
-                  autocomplete="username"
-                  placeholder="Username"
-                  aria-label="username"
-                  aria-describedby="username"
-                  class="block w-full bg-transparent rounded-md ring-1 ring-inset ring-gray-300 py-2.5 px-2.5 text-gray-900 shadow-sm focus:ring-2 focus:ring-inset focus:ring-blue-500 focus:outline-0 disabled:border-0 placeholder:text-gray-400 transition-all sm:text-md sm:leading-6"
-                />
+                <vee-field v-model="formData.email" id="username" name="username" type="username"
+                  autocomplete="username" placeholder="Username" aria-label="username" aria-describedby="username"
+                  class="block w-full bg-transparent rounded-md ring-1 ring-inset ring-gray-300 py-2.5 px-2.5 text-gray-900 shadow-sm focus:ring-2 focus:ring-inset focus:ring-blue-500 focus:outline-0 disabled:border-0 placeholder:text-gray-400 transition-all sm:text-md sm:leading-6" />
                 <vee-error-message name="username" class="mt-4 text-rose-500" />
               </div>
             </div>
 
             <!-- Password Input -->
             <div>
-              <label
-                for="password"
-                class="block text-sm font-medium leading-6 text-gray-900"
-                >Password</label
-              >
+              <label for="password" class="block text-sm font-medium leading-6 text-gray-900">Password</label>
               <div class="mt-2">
-                <vee-field
-                  v-model="formData.password"
-                  id="password"
-                  name="password"
-                  type="password"
-                  placeholder="******"
-                  autocomplete="current-password"
-                  aria-label="password"
-                  aria-describedby="password"
-                  class="block w-full bg-transparent rounded-md ring-1 ring-inset ring-gray-300 py-2.5 px-2.5 text-gray-900 shadow-sm focus:ring-2 focus:ring-inset focus:ring-blue-500 focus:outline-0 disabled:border-0 placeholder:text-gray-400 transition-all sm:text-md sm:leading-6"
-                />
+                <vee-field v-model="formData.password" id="password" name="password" type="password"
+                  placeholder="******" autocomplete="current-password" aria-label="password" aria-describedby="password"
+                  class="block w-full bg-transparent rounded-md ring-1 ring-inset ring-gray-300 py-2.5 px-2.5 text-gray-900 shadow-sm focus:ring-2 focus:ring-inset focus:ring-blue-500 focus:outline-0 disabled:border-0 placeholder:text-gray-400 transition-all sm:text-md sm:leading-6" />
                 <vee-error-message name="password" class="mt-4 text-rose-500" />
               </div>
             </div>
 
             <!-- Password Confirmation Input -->
             <div>
-              <label
-                for="password_confirmation"
-                class="block text-sm font-medium leading-6 text-gray-900"
-                >Konfirmasi Password</label
-              >
+              <label for="password_confirmation" class="block text-sm font-medium leading-6 text-gray-900">Konfirmasi
+                Password</label>
               <div class="mt-2">
-                <vee-field
-                  v-model="formData.password_confirmation"
-                  id="password_confirmation"
-                  name="password_confirmation"
-                  type="password_confirm"
-                  placeholder="******"
-                  aria-label="password_confirm"
-                  aria-describedby="password_confirm"
-                  class="block w-full bg-transparent rounded-md ring-1 ring-inset ring-gray-300 py-2.5 px-2.5 text-gray-900 shadow-sm focus:ring-2 focus:ring-inset focus:ring-blue-500 focus:outline-0 disabled:border-0 placeholder:text-gray-400 transition-all sm:text-md sm:leading-6"
-                />
-                <vee-error-message
-                  name="password_confirmation"
-                  class="mt-4 text-rose-500"
-                />
+                <vee-field v-model="formData.password_confirmation" id="password_confirmation"
+                  name="password_confirmation" type="password_confirm" placeholder="******"
+                  aria-label="password_confirm" aria-describedby="password_confirm"
+                  class="block w-full bg-transparent rounded-md ring-1 ring-inset ring-gray-300 py-2.5 px-2.5 text-gray-900 shadow-sm focus:ring-2 focus:ring-inset focus:ring-blue-500 focus:outline-0 disabled:border-0 placeholder:text-gray-400 transition-all sm:text-md sm:leading-6" />
+                <vee-error-message name="password_confirmation" class="mt-4 text-rose-500" />
               </div>
             </div>
             <br />
             <!-- Submit button -->
             <div class="flex flex-col space-y-6">
-              <button
-                type="submit"
-                class="flex w-full justify-center rounded-md bg-blue-600 px-3 py-1.5 text-sm font-semibold leading-6 text-white shadow-sm hover:bg-blue-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-blue-600 transition-all"
-              >
-                <span
-                  ><ion-icon
-                    slot="start"
-                    :icon="checkmarkCircleSharp"
-                  ></ion-icon>
-                  Registrasi Akun</span
-                >
+              <button type="submit"
+                class="flex w-full justify-center rounded-md bg-blue-600 px-3 py-1.5 text-sm font-semibold leading-6 text-white shadow-sm hover:bg-blue-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-blue-600 transition-all">
+                <span><ion-icon slot="start" :icon="checkmarkCircleSharp"></ion-icon>
+                  Registrasi Akun</span>
               </button>
               <!-- <p class="text-center font-bold">Atau</p>
                             <button

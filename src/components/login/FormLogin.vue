@@ -100,7 +100,6 @@ import { API_URL } from '@/services/globalVariables';
 import { redirectToHomePage, redirectToRegisterAkun} from '@/services/redirectHandlers';
 import { presentLoading, stopLoading } from '@/services/loadingHandlers';
 import { Form, Field, ErrorMessage } from 'vee-validate';
-import { elevation } from '@maptiler/sdk';
 import { create, logIn } from 'ionicons/icons';
 
 const passwordFieldType = ref('password');
@@ -127,8 +126,14 @@ function togglePasswordVisibility() {
 }
 
 
-async function login() {
+async function login(values) {
+  console.log('LOGIN SUKSES', values);
   try {
+    if (!API_URL.value) {
+      catchToastError('Konfigurasi API belum diatur. Cek VITE_API_HOST dan VITE_API_PORT', 3000);
+      return;
+    }
+
     presentLoading();
 
     const response = await axios.post(`${API_URL.value}/api/v2/auth/login`, formData.value);
@@ -156,11 +161,14 @@ async function login() {
 
     redirectToHomePage();
   } catch (error) {
-    if (error.response && error.response.data.status == 401) {
-      catchToastError(error.response.data.message, 3000);
+    const statusCode = error?.response?.data?.status ?? error?.response?.status;
+    const errorMessage = error?.response?.data?.message || error?.message || 'Terjadi Kesalahan Server! Silahkan Coba Beberapa Saat Lagi';
+
+    if (statusCode === 401 || statusCode === 422) {
+      catchToastError(errorMessage, 3000);
     } else {
-      // catchToastError('Terjadi Kesalahan Server! Silahkan Coba Beberapa Saat Lagi', 3000);
-      console.log(error.response, 3000);
+      catchToastError(errorMessage, 3000);
+      console.error('Login request failed:', error);
     }
   } finally {
     stopLoading();

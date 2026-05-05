@@ -1,6 +1,7 @@
 import axios from "axios";
 import { catchToastError } from "./toastHandlers";
 import { redirectToLoginPage } from "./redirectHandlers";
+import { API_URL } from "./globalVariables";
 
 export function isAuthenticated() {
   const tokens = localStorage.getItem("tokens");
@@ -9,12 +10,12 @@ export function isAuthenticated() {
 }
 
 async function refreshAccessToken(refreshToken) {
-  const API_URL = `${import.meta.env.VITE_API_HOST}:${parseInt(
-    import.meta.env.VITE_API_PORT
-  )}`;
+  if (!API_URL.value) {
+    throw new Error("API URL is not configured.");
+  }
 
   try {
-    const response = await axios.post(`${API_URL}/api/v2/auth/refresh`, {
+    const response = await axios.post(`${API_URL.value}/api/v2/auth/refresh`, {
       refresh_token: refreshToken,
     });
 

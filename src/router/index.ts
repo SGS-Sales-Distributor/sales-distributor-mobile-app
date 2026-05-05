@@ -23,7 +23,9 @@ import DetailOrder from "@/views/DetailOrder.vue";
 import DetailBeforeOrder from "@/views/DetailBeforeOrder.vue";
 import Absence from "@/views/Absence.vue";
 import AbsenceOut from "@/views/AbsenceOut.vue";
-import HistoryAbsen from "@/views/HistoryAbsen.vue"
+import HistoryAbsen from "@/views/HistoryAbsen.vue";
+import SalesReport from "@/views/SalesReport.vue";
+import StockActual from "@/views/StockActual.vue";
 
 const routes: Array<RouteRecordRaw> = [
   {
@@ -123,26 +125,26 @@ const routes: Array<RouteRecordRaw> = [
         component: DaftarPlanVisit,
       },
       {
-        path :"DaftarToko",
-        name :"DaftarToko",
+        path: "DaftarToko",
+        name: "DaftarToko",
         component: DaftarToko,
       },
 
       {
-        path :"DaftarPo",
-        name :"DaftarPo",
+        path: "DaftarPo",
+        name: "DaftarPo",
         component: DaftarPo,
       },
 
       {
-        path :"DetailOrder",
-        name :"DetailOrder",
+        path: "DetailOrder",
+        name: "DetailOrder",
         component: DetailOrder,
       },
 
       {
-        path :"DetailBeforeOrder",
-        name :"DetailBeforeOrder",
+        path: "DetailBeforeOrder",
+        name: "DetailBeforeOrder",
         component: DetailBeforeOrder,
       },
 
@@ -161,6 +163,17 @@ const routes: Array<RouteRecordRaw> = [
         name: "rekap_absen",
         component: HistoryAbsen,
       },
+      {
+        path: "/sales-report",
+        name: "SalesReport",
+        component: SalesReport,
+      },
+      {
+        path: "/stock-actual",
+        name: "StockActual",
+        component: StockActual,
+      },
+
     ],
   },
 ];
