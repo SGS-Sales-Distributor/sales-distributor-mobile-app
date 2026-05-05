@@ -2,7 +2,22 @@ import { Geolocation } from "@capacitor/geolocation";
 import { ref, shallowRef } from "vue";
 
 // API URL
-export const API_URL = ref(`${import.meta.env.VITE_API_HOST}:${parseInt(import.meta.env.VITE_API_PORT)}`);
+function buildApiUrl() {
+    const host = String(import.meta.env.VITE_API_HOST || "").trim().replace(/\/+$/, "");
+    const port = String(import.meta.env.VITE_API_PORT || "").trim();
+
+    if (!host) {
+        return "";
+    }
+
+    if (!port || /:\d+$/.test(host)) {
+        return host;
+    }
+
+    return `${host}:${port}`;
+}
+
+export const API_URL = ref(buildApiUrl());
 
 // Used for Map Content.
 export const hasLocationAccessPermission = Geolocation.checkPermissions();

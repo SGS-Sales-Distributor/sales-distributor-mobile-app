@@ -17,7 +17,7 @@
           <div class="mt-4 sm:mx-auto sm:w-full sm:max-w-sm p-2.5">
             <FormLogin />
             <p class="mt-10 text-center align-text-bottom text-xs font-normal text-gray-900">© PT. Sinergi Global
-              Servis 2025. All rights reserved.<br>Versi 2.1.6</p>
+              Servis 2026. All rights reserved.<br>Versi 2.1.7</p>
           </div>
         </div>
       </div>
