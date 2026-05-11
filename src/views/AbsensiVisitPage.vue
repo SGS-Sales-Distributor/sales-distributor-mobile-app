@@ -545,7 +545,7 @@ async function passCheckOutAlert() {
 // rest api (backend server)
 async function fetchStoresData(query = "") {
   try {
-    presentLoading();
+    await presentLoading();
     refreshAccessTokenHandler();
     lastIndex.value = 5;
 
@@ -610,7 +610,7 @@ async function fetchStoresData(query = "") {
 
     console.error("Failed to fetch store data: ", error);
   } finally {
-    stopLoading();
+    await stopLoading();
   }
 }
 
@@ -677,7 +677,7 @@ async function uploadCheckInImage(userNumber) {
       "Content-Type": "multipart/form-data",
     };
 
-    presentLoading();
+    await presentLoading();
 
     await axios.post(
       `${API_URL.value}/api/v2/salesmen/${userNumber}/visits`,
@@ -687,9 +687,7 @@ async function uploadCheckInImage(userNumber) {
       }
     );
 
-    fetchStoresData();
-
-    stopLoading();
+    await fetchStoresData();
 
     checkInImageUrls.value = [];
     checkInImageLocations.value = [];
@@ -704,9 +702,9 @@ async function uploadCheckInImage(userNumber) {
     catchToastError("Gagal upload gambar untuk absensi check-in", 3000);
 
     // console.error('Gagal upload gambar untuk absensi check-in', error);
-    console.log(error.data.message);
+    console.log(error?.response?.data?.message || error.message);
   } finally {
-    stopLoading();
+    await stopLoading();
   }
 }
 
@@ -732,7 +730,7 @@ async function uploadCheckOutImage(userNumber) {
       "Content-Type": "multipart/form-data",
     };
 
-    presentLoading();
+    await presentLoading();
 
     await axios.post(
       `${API_URL.value}/api/v2/salesmen/${userNumber}/visits/${detailStoreInfoDistri.value.visit_id}`,
@@ -742,9 +740,7 @@ async function uploadCheckOutImage(userNumber) {
       }
     );
 
-    fetchStoresData();
-
-    stopLoading();
+    await fetchStoresData();
 
     checkOutImageUrls.value = [];
     checkOutImageLocations.value = [];
@@ -760,7 +756,7 @@ async function uploadCheckOutImage(userNumber) {
 
     console.error("Gagal upload gambar untuk absensi check-out", error);
   } finally {
-    stopLoading();
+    await stopLoading();
   }
 }
 
@@ -864,18 +860,18 @@ async function takeCheckOutPicture() {
   }
 }
 
-onMounted(() => {
+onMounted(async () => {
   currentRoute.value = null;
-  presentLoading();
+  await presentLoading();
 
   refreshAccessTokenHandler();
   printCurrentPosition();
   if (user != null || user != "") {
-    fetchStoresData();
+    await fetchStoresData();
   }
-  checkLocationAccess();
+  await checkLocationAccess();
 
-  stopLoading();
+  await stopLoading();
 });
 </script>
 
