@@ -115,26 +115,26 @@ import { IonButtons, IonButton, IonModal, IonHeader, IonToolbar, IonContent, Ion
 
 const isOpen = ref(false);
 const storeList = ref([]);
-const cp_id = ref(null)
+const cp_id = ref(null);
+const tanggal = ref("");
+const store_id = ref("");
 
 const setOpen = (open, id) => {
-    (isOpen.value = open)
+    isOpen.value = open;
     if (id != null) {
-        // get one row data call plan detail
-        getOneCallPlan(id);
         cp_id.value = id;
-        // alert(id)
+        getOneCallPlan(id);
     }
 };
 
 const router = useRouter();
 const storeInfoDistri = ref([]);
-const dariTanggal = ref(null);
-const sampaiTanggal = ref(null);
-const lastIndex = ref(5);
-const reachedEnd = computed(() => lastIndex.value >= storeInfoDistri.value.length);
 const today = new Date();
 const formatedDate = `${today.getFullYear()}-${String(today.getMonth() + 1).padStart(2, '0')}-${String(today.getDate()).padStart(2, '0')}`;
+const dariTanggal = ref(formatedDate);
+const sampaiTanggal = ref(formatedDate);
+const lastIndex = ref(5);
+const reachedEnd = computed(() => lastIndex.value >= storeInfoDistri.value.length);
 
 const ionInfinite = (event) => {
     if (!reachedEnd.value) {
@@ -168,7 +168,8 @@ const ionInfinite = (event) => {
 
 const getDataVisit = async () => {
     try {
-        presentLoading();
+        await presentLoading();
+        lastIndex.value = 5;
         const tokens = localStorage.getItem('tokens') ? JSON.parse(localStorage.getItem('tokens')) : null;
         const userId = localStorage.getItem('user') ? JSON.parse(localStorage.getItem('user')) : '';
         const headers = {
@@ -184,9 +185,10 @@ const getDataVisit = async () => {
         });
         storeInfoDistri.value = response.data.resource;
     } catch (error) {
+        catchToastError('Failed to fetch visit data', 3000);
         console.error('Failed to fetch Visit data:', error);
     } finally {
-        stopLoading();
+        await stopLoading();
     }
 };
 
@@ -215,7 +217,7 @@ const getDataVisit = async () => {
 
 const getOneCallPlan = async (id) => {
     try {
-        presentLoading();
+        await presentLoading();
         const tokens = localStorage.getItem('tokens') ? JSON.parse(localStorage.getItem('tokens')) : null;
         const headers = {
             'Content-Type': 'application/json',
@@ -226,14 +228,16 @@ const getOneCallPlan = async (id) => {
         tanggal.value = response.data.resource.date;
         // storeInfoDistri.value = storeInfoDistri.value.filter((visit) => visit.id !== visitId);
     } catch (error) {
-        console.error('Error deleting visit:', error);
+        catchToastError('Failed to fetch call plan detail', 3000);
+        console.error('Error fetching call plan detail:', error);
     } finally {
-        stopLoading();
+        await stopLoading();
     }
-}
+};
 
 const fetchToko = async () => {
     try {
+        await presentLoading();
         const tokens = localStorage.getItem("tokens")
             ? JSON.parse(localStorage.getItem("tokens"))
             : null;
@@ -250,13 +254,15 @@ const fetchToko = async () => {
     } catch (error) {
         catchToastError("Failed to fetch store list", 3000);
         console.error("Failed to fetch store list", error);
+    } finally {
+        await stopLoading();
     }
-}
+};
 
 const updateCallPlanDetail = async (id) => {
-    presentLoading();
     const userId = localStorage.getItem('user') ? JSON.parse(localStorage.getItem('user')) : '';
     try {
+        await presentLoading();
         const tokens = localStorage.getItem("tokens")
             ? JSON.parse(localStorage.getItem("tokens"))
             : null;
@@ -276,21 +282,20 @@ const updateCallPlanDetail = async (id) => {
             });
 
 
-        stopLoading();
         catchToast(response.data.message, 3000);
         setOpen(false);
-        getDataVisit();
+        await getDataVisit();
     } catch (error) {
-        catchToastError("Failed to fetch store list", 3000);
-        console.error("Failed to fetch store list", error);
+        catchToastError("Failed to update call plan", 3000);
+        console.error("Failed to update call plan", error);
+    } finally {
+        await stopLoading();
     }
-}
+};
 
-const handleRefresh = () => {
-    window.location.reload();
-    setTimeout(() => {
-        event.target.complete();
-    }, 1000);
+const handleRefresh = async (event) => {
+    await getDataVisit();
+    event.target.complete();
 };
 
 async function deleteDataAlert(id) {
@@ -319,8 +324,8 @@ async function deleteDataAlert(id) {
 }
 
 const deleteCallPlanDetail = async (id) => {
-    presentLoading();
     try {
+        await presentLoading();
         const tokens = localStorage.getItem("tokens")
             ? JSON.parse(localStorage.getItem("tokens"))
             : null;
@@ -334,18 +339,18 @@ const deleteCallPlanDetail = async (id) => {
         });
 
 
-        stopLoading();
         catchToast(response.data.message, 3000);
         setOpen(false);
-        getDataVisit();
+        await getDataVisit();
     } catch (error) {
-        catchToastError("Failed to fetch store list", 3000);
-        console.error("Failed to fetch store list", error);
+        catchToastError("Failed to delete call plan", 3000);
+        console.error("Failed to delete call plan", error);
+    } finally {
+        await stopLoading();
     }
-}
+};
 
-onMounted(() => {
-    fetchToko();
-    // fetchStoresData();
+onMounted(async () => {
+    await Promise.all([fetchToko(), getDataVisit()]);
 });
 </script>
