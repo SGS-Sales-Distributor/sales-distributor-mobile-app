@@ -1,14 +1,35 @@
 <template>
   <!-- Main feature -->
   <div class="grid grid-cols-4 gap-6 text-center">
+    <!-- AS: jabatan >= 6 → Registrasi Outlet + Inbox Request -->
     <div v-if="canRegisterOutlet" class="flex flex-col items-center justify-center space-y-2">
-      <!-- <ion-button id="registrasi-toko-button" shape="round" href="/store/register" > -->
       <ion-button id="registrasi-otl-button" shape="round" @click="registrerClik">
-        <!-- <ion-icon class="text-4xl" slot="icon-only" :icon="storefront"></ion-icon> -->
-        <img src="/public/ticket-purchase-svgrepo-com.svg" slot="icon-only" class="" alt="">
+        <img src="/public/ticket-purchase-svgrepo-com.svg" slot="icon-only" alt="">
       </ion-button>
       <ion-label class="text-sm font-semibold">Registrasi Outlet</ion-label>
     </div>
+
+    <!-- AS: inbox request dari MD -->
+    <!-- <div v-if="canRegisterOutlet" class="flex flex-col items-center justify-center space-y-2">
+      <ion-button id="inbox-request-button" shape="round" @click="router.push('/inbox-request')">
+        <img src="/public/approv_toko.png" slot="icon-only" alt="">
+      </ion-button>
+      <ion-label class="text-sm font-semibold">Approval Request</ion-label>
+    </div>
+    <div v-if="!canRegisterOutlet" class="flex flex-col items-center justify-center space-y-2">
+      <ion-button id="request-cabang-button" shape="round" @click="router.push('/cabang-request')">
+        <img src="/public/loc.png" slot="icon-only" alt="">
+      </ion-button>
+      <ion-label class="text-sm font-semibold">Request Cabang</ion-label>
+    </div> -->
+    <!-- MD: jabatan < 6 → Request Outlet -->
+    <!-- <div v-if="!canRegisterOutlet" class="flex flex-col items-center justify-center space-y-2">
+      <ion-button id="registrasi-otl-button" shape="round" @click="OutletRequestClick">
+        <img src="/public/req_market.png" slot="icon-only" alt="">
+      </ion-button>
+      <ion-label class="text-sm font-semibold">Request Outlet</ion-label>
+    </div> -->
+
     <div class="flex flex-col items-center justify-center space-y-2">
       <ion-button id="daftar-otl-button" shape="round" href="/daftartoko">
         <!-- <ion-icon class="text-4xl" slot="icon-only" :icon="businessOutline"></ion-icon> -->
@@ -121,23 +142,22 @@ import {
 import { IonButton } from '@ionic/vue';
 import { onMounted, ref } from 'vue';
 import { API_URL } from '@/services/globalVariables';
-import { redirectToOwnerFormPage, redirectToRegisterStorePage, RedirectVisitPage } from '@/services/redirectHandlers';
+import { redirectToRegisterStorePage, RedirectVisitPage } from '@/services/redirectHandlers';
+import { useRouter } from 'vue-router';
 
-
-const store = localStorage.getItem("store_id") ? JSON.parse(localStorage.getItem("store_id")) : null;
 const user = localStorage.getItem("user") ? JSON.parse(localStorage.getItem("user")) : null;
 const tokenSet = localStorage.getItem("tokens") ? JSON.parse(localStorage.getItem("tokens")) : null;
 const seterJab = ref([]);
 const jabatanGetName = ref(null);
 const canRegisterOutlet = user.jabatan_id >= 6;
+const router = useRouter();
 
 async function registrerClik() {
-  if (store == null || store == "") {
-    redirectToRegisterStorePage();
-  } else {
-    redirectToOwnerFormPage();
-  }
+  redirectToRegisterStorePage();
+}
 
+function OutletRequestClick() {
+  router.push('/outlet-request');
 }
 
 async function stsJabatan() {
@@ -345,6 +365,29 @@ onMounted(() => {
 }
 
 #daftar-otl-button {
+  --background: #ffffff;
+  --background-hover: #f75356;
+  --background-activated: #f75356;
+  --background-focused: #f75356;
+  --color: #202020;
+  --box-shadow: 0 2px 6px 0 rgb(0, 0, 0, 0.25);
+  --padding-top: 10px;
+  --padding-bottom: 10px;
+}
+
+#inbox-request-button {
+  --background: #ffffff;
+  --background-hover: #f75356;
+  --background-activated: #f75356;
+  --background-focused: #f75356;
+  --color: #202020;
+  --box-shadow: 0 2px 6px 0 rgb(0, 0, 0, 0.25);
+  --padding-top: 10px;
+  --padding-bottom: 10px;
+}
+
+/* Tambah di style */
+#request-cabang-button {
   --background: #ffffff;
   --background-hover: #f75356;
   --background-activated: #f75356;

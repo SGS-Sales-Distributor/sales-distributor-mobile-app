@@ -41,18 +41,22 @@
                                 <ErrorMessage name="store_address" class="text-rose-500" />
                             </div>
                             <div class="mb-4">
-                                <label for="store_phone" class="block text-gray-700 text-sm font-semibold mb-2">Nomor
-                                    Telepon Toko *</label>
+                                <label for="store_phone" class="block text-gray-700 text-sm font-semibold mb-2">
+                                    Nomor Telepon Toko
+                                    <span class="text-gray-400 font-normal text-xs">(Diisi jika ada)</span>
+                                </label>
                                 <Field v-model="formData.store_phone" :type="fieldTypes.phone" id="store_phone"
-                                    name="store_phone"
+                                    name="store_phone" maxlength="12"
                                     class="form-input w-full px-4 py-2 border rounded-lg text-gray-700 focus:ring-blue-500"
-                                    placeholder="Masukkan Nomer Telepon Toko" aria-label="store_phone"
+                                    placeholder="Diisi jika ada" aria-label="store_phone"
                                     aria-describedby="store_phone" />
                                 <ErrorMessage name="store_phone" class="text-rose-500" />
                             </div>
                             <div class="mb-4">
                                 <label for="store_fax" class="block text-gray-700 text-sm font-semibold mb-2">Nomor Fax
-                                    Toko</label>
+                                    Toko
+                                    <span class="text-gray-400 font-normal text-xs">(Diisi jika ada)</span>
+                                </label>
                                 <Field v-model="formData.store_fax" :type="fieldTypes.phone" id="store_fax"
                                     name="store_fax"
                                     class="form-input w-full px-4 py-2 border rounded-lg text-gray-700 focus:ring-blue-500"
@@ -66,8 +70,7 @@
                                 <Field v-model="formData.store_type_id" as="select" id="store_type" name="store_type"
                                     class="form-input w-full px-4 py-2 border rounded-lg text-gray-700 focus:ring-blue-500">
                                     <option disabled selected value="">Pilih Tipe Toko</option>
-                                    <option v-for="type in storeTypes" :key="type.code"
-                                        :value="type.code">
+                                    <option v-for="type in storeTypes" :key="type.code" :value="type.code">
                                         {{ type.label }}
                                     </option>
                                 </Field>
@@ -85,9 +88,41 @@
                                 </Field>
                                 <ErrorMessage name="subcabang_id" class="text-rose-500" />
                             </div>
+                            <div class="mb-4">
+                                <label for="owner" class="block text-gray-700 text-sm font-semibold mb-2">Nama Owner
+                                    *</label>
+                                <Field v-model="formData.owner" :type="fieldTypes.text" id="owner" name="owner"
+                                    class="form-input w-full px-4 py-2 border rounded-lg text-gray-700 focus:ring-blue-500"
+                                    placeholder="Masukkan nama owner" aria-label="owner" aria-describedby="owner" />
+                                <ErrorMessage name="owner" class="text-rose-500" />
+                            </div>
+                            <div class="mb-4">
+                                <label for="nik_owner" class="block text-gray-700 text-sm font-semibold mb-2">
+                                    NIK Owner
+                                    <span class="text-gray-400 font-normal text-xs">(Diisi jika ada)</span>
+                                </label>
+                                <Field v-model="formData.nik_owner" :type="fieldTypes.text" id="nik_owner"
+                                    name="nik_owner" maxlength="16"
+                                    class="form-input w-full px-4 py-2 border rounded-lg text-gray-700 focus:ring-blue-500"
+                                    placeholder="Diisi jika ada" aria-label="nik_owner" aria-describedby="nik_owner" />
+                                <ErrorMessage name="nik_owner" class="text-rose-500" />
+                            </div>
+                            <div class="mb-4">
+                                <label for="email_owner" class="block text-gray-700 text-sm font-semibold mb-2">
+                                    Email Owner
+                                    <span class="text-gray-400 font-normal text-xs">(Diisi jika ada)</span>
+                                </label>
+                                <Field v-model="formData.email_owner" :type="fieldTypes.email" id="email_owner"
+                                    name="email_owner"
+                                    class="form-input w-full px-4 py-2 border rounded-lg text-gray-700 focus:ring-blue-500"
+                                    placeholder="Diisi jika ada" aria-label="email_owner"
+                                    aria-describedby="email_owner" />
+                                <ErrorMessage name="email_owner" class="text-rose-500" />
+                            </div>
                             <br>
                             <button type="submit"
-                                class="w-full bg-blue-500 text-white px-4 py-2 rounded-lg hover:bg-blue-600 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-opacity-50"><ion-icon slot="start" :icon="checkmarkCircleSharp"></ion-icon> Daftarkan
+                                class="w-full bg-blue-500 text-white px-4 py-2 rounded-lg hover:bg-blue-600 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-opacity-50"><ion-icon
+                                    slot="start" :icon="checkmarkCircleSharp"></ion-icon> Daftarkan
                             </button>
                             <p class="text-gray-600 text-xs text-center mt-4">
                                 Dengan menekan tombol Daftarkan, maka toko bisa terdaftar dalam Call Plan Anda.
@@ -105,16 +140,16 @@
 
 <script setup>
 import * as Yup from 'yup';
-import {checkmarkCircleSharp} from 'ionicons/icons';
+import { checkmarkCircleSharp } from 'ionicons/icons';
 import HeaderSection from './../components/HeaderSection.vue'
 import { onMounted, ref } from 'vue';
 import { refreshAccessTokenHandler } from '@/services/auth';
 import axios from 'axios';
-import { API_URL, fieldTypes, savedStoreData } from '@/services/globalVariables';
-import { redirectToOwnerFormPage, redirectToRegisterStorePage } from '@/services/redirectHandlers';
+import { API_URL, fieldTypes } from '@/services/globalVariables';
+import { redirectToHomePage, redirectToRegisterStorePage } from '@/services/redirectHandlers';
 import { presentLoading, stopLoading } from '@/services/loadingHandlers';
 import { catchToast, catchToastError } from '@/services/toastHandlers';
-import { alertController,IonIcon,IonRefresher,IonRefresherContent } from '@ionic/vue';
+import { alertController, IonIcon, IonRefresher, IonRefresherContent } from '@ionic/vue';
 import { Form, Field, ErrorMessage } from 'vee-validate';
 
 const storeTypes = ref([]);
@@ -130,7 +165,11 @@ const formData = ref({
     store_fax: null,
     store_type_id: null,
     subcabang_id: null,
-    userFullname: user.fullname
+    owner: null,
+    nik_owner: null,
+    email_owner: null,
+    userFullname: user.fullname,
+    userId: user.user_id,
 });
 
 const validation = Yup.object().shape({
@@ -143,25 +182,49 @@ const validation = Yup.object().shape({
     store_address: Yup.string()
         .required("Alamat toko tidak boleh kosong!"),
     store_phone: Yup.string()
-        .required('Nomor Telepon toko tidak boleh kosong!')
+        .nullable()
+        .transform((value) => value === '' ? null : value)
         .min(11, 'Nomor Telepon toko tidak boleh kurang dari 11 digit')
-        .matches(/^[0-9]{11,12}$/, 'Nomor telepon harus terdiri dari 11-12 digit angka'),
+        .matches(/^[0-9]{11,12}$/, {
+            message: 'Nomor telepon harus terdiri dari 11-12 digit angka',
+            excludeEmptyString: true
+        }),
     store_fax: Yup.string()
-        .required('Nomor fax toko tidak boleh kosong!')
-        .max(10, 'Nomor fax toko tidak boleh lebih dari 10-11 Digit')
-        .matches(/^[0-9]{1,12}$/, 'Nomor Fax harus terdiri dari 1-12 digit angka'),
+        .nullable()
+        .transform((value) => value === '' ? null : value)
+        .max(12, 'Nomor fax toko tidak boleh lebih dari 12 digit')
+        .matches(/^[0-9]{1,12}$/, {
+            message: 'Nomor Fax harus terdiri dari 1-12 digit angka',
+            excludeEmptyString: true
+        }),
     store_type: Yup.string()
         .required('Mohon Pilih Tipe Terlebih Dahulu!'),
     subcabang_id: Yup.string()
         .required('Mohon Pilih Cabang Terlebih Dahulu!'),
+    owner: Yup.string()
+        .required('Nama owner tidak boleh kosong!')
+        .max(255, 'Nama owner tidak boleh lebih dari 255 karakter'),
+    nik_owner: Yup.string()
+        .nullable()
+        .transform((value) => value === '' ? null : value)
+        .length(16, 'NIK harus terdiri dari 16 digit')
+        .matches(/^[0-9]{16}$/, {
+            message: 'NIK owner harus terdiri dari 16 digit angka',
+            excludeEmptyString: true
+        }),
+    email_owner: Yup.string()
+        .nullable()
+        .transform((value) => value === '' ? null : value)
+        .max(100, 'Email owner tidak boleh lebih dari 100 karakter')
+        .email('Format email owner tidak valid'),
 
 });
 
 const handleRefresh = () => {
-  window.location.reload();
-  setTimeout(() => {
-    event.target.complete();
-  }, 2000);
+    window.location.reload();
+    setTimeout(() => {
+        event.target.complete();
+    }, 2000);
 };
 
 async function storeDataAlert() {
@@ -198,6 +261,9 @@ function clearForm() {
         store_fax: null,
         store_type_id: null,
         subcabang_id: null,
+        owner: null,
+        nik_owner: null,
+        email_owner: null,
         userFullname: null,
     };
 }
@@ -214,20 +280,20 @@ async function saveStoreData() {
 
         presentLoading();
 
-        const response = await axios.post(`${API_URL.value}/api/v2/stores`, formData.value, {
+        const payload = {
+            ...formData.value,
+            store_fax: formData.value.store_fax ? formData.value.store_fax : null,
+        };
+
+        const response = await axios.post(`${API_URL.value}/api/v2/stores`, payload, {
             headers: headers,
         });
 
         stopLoading();
 
-        savedStoreData.value = response.data.resource.store_id;
-
-        console.log(savedStoreData.value);
-        sessionStorage.setItem('store_id', savedStoreData.value);
         catchToast(response.data.message, 3000);
         clearForm();
-        // this.formData.reset();
-        redirectToOwnerFormPage(savedStoreData.value);
+        redirectToHomePage();
     } catch (error) {
         if (error.response && error.response.data.status == 401) {
             catchToastError(error.response.data.message, 3000);
@@ -268,31 +334,47 @@ async function fetchStoreTypes(query = '') {
     }
 }
 
-async function fetchStoreCabangs(query = '') {
+// async function fetchStoreCabangs(query = '') {
+//     try {
+//         refreshAccessTokenHandler();
+
+//         const tokens = localStorage.getItem("tokens") ? JSON.parse(localStorage.getItem("tokens")) : null;
+
+//         const headers = {
+//             'Authorization': `Bearer ${tokens.access_token}`,
+//         }
+
+//         const response = await axios.get(`${API_URL.value}/api/v2/store-cabangs`, {
+//             headers: headers,
+//             params: {
+//                 q: query
+//             },
+//         });
+
+//         storeCabangs.value = response.data.resource;
+//     } catch (error) {
+//         catchToastError("Failed to fetch store cabangs", 3000);
+
+//         console.error(error);
+//     }
+// }
+
+async function fetchStoreCabangs() {
     try {
         refreshAccessTokenHandler();
+        const tokens = JSON.parse(localStorage.getItem("tokens"));
+        const headers = { 'Authorization': `Bearer ${tokens.access_token}` };
 
-        const tokens = localStorage.getItem("tokens") ? JSON.parse(localStorage.getItem("tokens")) : null;
-
-        const headers = {
-            'Authorization': `Bearer ${tokens.access_token}`,
-        }
-
-        const response = await axios.get(`${API_URL.value}/api/v2/store-cabangs`, {
+        const response = await axios.get(`${API_URL.value}/api/v2/cabangsByUser/${user.user_id}`, {
             headers: headers,
-            params: {
-                q: query
-            },
         });
 
         storeCabangs.value = response.data.resource;
     } catch (error) {
         catchToastError("Failed to fetch store cabangs", 3000);
-
         console.error(error);
     }
 }
-
 
 onMounted(() => {
     presentLoading();
