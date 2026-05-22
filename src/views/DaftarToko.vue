@@ -124,6 +124,7 @@ import { refreshAccessTokenHandler } from "@/services/auth";
 import { useRoute } from "vue-router";
 import { catchToast, catchToastError } from "@/services/toastHandlers";
 import { IonRefresher, IonRefresherContent } from "@ionic/vue";
+import { presentLoading, stopLoading } from '@/services/loadingHandlers';
 
 const route = useRoute();
 const currentPageRouteName = computed(() => route.name);
@@ -186,6 +187,8 @@ async function fetchStoresData() {
     // const response = await axios.get(`${API_URL.value}/api/v2/stores`, { headers });
     const response = await axios.get(`${API_URL.value}/api/v2/storesByUser/${user_id.user_id}`, { headers });
     storesData.value = response.data.resource;
+    console.log("USER:", user_id);
+console.log("USER ID:", user_id?.user_id);
   } catch (error) {
     console.error("Failed to fetch store data.", error);
   }
@@ -230,15 +233,15 @@ async function saveStoreChanges() {
     if (
       !selectedStore.value.store_name ||
       !selectedStore.value.store_address ||
-      !selectedStore.value.store_phone ||
-      !selectedStore.value.owner ||
-      !selectedStore.value.nik_owner ||
-      !selectedStore.value.email_owner
+      //!selectedStore.value.store_phone ||
+      !selectedStore.value.owner 
+      // !selectedStore.value.nik_owner ||
+      // !selectedStore.value.email_owner
     ) {
       catchToastError("Semua field wajib diisi", 3000);
       return;
     }
-
+    await presentLoading();
     const tokens = JSON.parse(localStorage.getItem("tokens"));
 
     const headers = {
@@ -247,13 +250,14 @@ async function saveStoreChanges() {
 
     const storeData = {
       store_name: selectedStore.value.store_name,
-      store_alias: selectedStore.value.store_name, // WAJIB
+      store_alias: selectedStore.value.store_name,
       store_address: selectedStore.value.store_address,
-      store_phone: selectedStore.value.store_phone,
+      store_phone: selectedStore.value.store_phone || null,
       credit_limit: selectedStore.value.credit_limit,
       owner: selectedStore.value.owner,
-      nik_owner: selectedStore.value.nik_owner,
-      email_owner: selectedStore.value.email_owner,
+      nik_owner: selectedStore.value.nik_owner || null,
+      email_owner: selectedStore.value.email_owner || null,
+      userFullname: user_id.fullname,
     };
 
     await axios.put(
@@ -270,6 +274,9 @@ async function saveStoreChanges() {
   } catch (error) {
     console.log(error);
     catchToastError("Gagal update", 2000);
+  }
+  finally {
+    stopLoading();
   }
 }
 

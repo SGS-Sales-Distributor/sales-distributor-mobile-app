@@ -13,6 +13,20 @@
         <div class="mt-4 sm:mx-auto sm:w-full sm:max-w-sm">
           <vee-form novalidate class="space-y-4" method="post" @submit="AlertRegister"
             :validation-schema="formValidate">
+            <div>
+              <label for="customer_code" class="block text-sm font-medium leading-6 text-grey-900">Pilih
+                Perusahaan</label>
+            </div>
+            <div class="mt-2">
+              <vee-field v-model="formData.customer_code" as="select" name="customer_code" id="customer_code"
+                class="block w-full bg-transparent rounded-md ring-1 ring-inset ring-white-300 py-2.5 px-2.5 text-white-900 shadow-sm focus:ring-2 focus:ring-inset focus:ring-blue-500 focus:outline-0 disabled:border-0 placeholder:text-white-400 transition-all sm:text-md sm:leading-6">
+                <option disabled selected value="">Pilih Perusahaan</option>
+                <option v-for="customer in customers" :key="customer.customer_code" :value="customer.customer_code">
+                  {{ customer.customer_name }}
+                </option>
+              </vee-field>
+              <vee-error-message name="customer_code" class="mt-4 text-rose-500" />
+            </div>
             <!-- choose area -->
             <div>
               <label for="area" class="block text-sm font-medium leading-6 text-grey-900">Pilih Area</label>
@@ -22,9 +36,9 @@
                 class="block w-full bg-transparent rounded-md ring-1 ring-inset ring-white-300 py-2.5 px-2.5 text-white-900 shadow-sm focus:ring-2 focus:ring-inset focus:ring-blue-500 focus:outline-0 disabled:border-0 placeholder:text-white-400 transition-all sm:text-md sm:leading-6">
                 <option disabled selected value="">Pilih Area</option>
                 <option v-for="area in Lokasi" :key="area.id" :value="(data = {
-                    kode_lokasi: area.kode_lokasi,
-                    cabangId: area.idCabang,
-                  })
+                  kode_lokasi: area.kode_lokasi,
+                  cabangId: area.idCabang,
+                })
                   ">
                   {{ area.nama_cabang }}
                 </option>
@@ -214,6 +228,7 @@ import { alertController } from "@ionic/vue";
 
 const Lokasi = ref([]);
 const jabatan = ref([]);
+const customers = ref([]);
 // const saveUserData = ref([]);
 
 const formData = ref({
@@ -222,7 +237,7 @@ const formData = ref({
   //     kode_lokasi: null,
   //     cabangId: null,
   // },
-
+  customer_code: null,
   fullname: null,
   phone: null,
   email: null,
@@ -238,6 +253,7 @@ const formValidate = Yup.object().shape({
   // nik: Yup.string()
   //     .required('NIK diperlukan, tidak dapat kosong!')
   //     .max(20, 'NIK tidak boleh lebih dari 20 karakter'),
+  customer_code: Yup.string().required('Mohon Pilih Perusahaan Terlebih Dahulu!'),
   kode_lokasi: Yup.object().shape({
     kode_lokasi: Yup.string().required("Mohon Pilih Salah Satu Area !"),
   }),
@@ -267,6 +283,16 @@ const formValidate = Yup.object().shape({
     .min(8, "Student Unique ID Number should have 8 characters in minimum")
     .oneOf([Yup.ref("password")], "Konfirmasi Password Tidak Sama."),
 });
+
+async function Customers() {
+  try {
+    const response = await axios.get(`${API_URL.value}/api/v2/customers`);
+    customers.value = response.data.resource;
+  } catch (error) {
+    catchToastError("Failed to fetch customers", 3000);
+    console.log(error.message);
+  }
+}
 
 async function kodeLokasi() {
   try {
@@ -346,6 +372,7 @@ async function JabatanAll() {
 
 onMounted(() => {
   presentLoading();
+  Customers();
   kodeLokasi();
   stopLoading();
   JabatanAll();

@@ -6,94 +6,29 @@
         <ion-card color="">
           <ion-card-content>
             <label for="dari">Dari Tanggal : </label>
-            <ion-item button @click="showPopover = true" style="color: black">
-              <ion-text slot="start">
-                {{
-                  selectedDate
-                    ? formatDate(selectedDate, "DD MMMM YYYY")
-                    : "Pilih Tanggal"
-                }}</ion-text
-              >
-            </ion-item>
-
-            <!-- Popover -->
-            <ion-popover
-              :is-open="showPopover"
-              side="bottom"
-              alignment="center"
-              style="--width: 300px; --max-width: 90vw"
-            >
-              <ion-content class="ion-padding" style="width: 300px">
-                <ion-datetime
-                  ref="datetimeRef"
-                  presentation="date"
-                  v-model="selectedDate"
-                  @ionChange="showPopover = false"
-                ></ion-datetime>
-                <ion-button expand="block" size="small" @click="confirmDate"
-                  >OK</ion-button
-                >
-              </ion-content>
-            </ion-popover>
+            <ionInput type="date" v-model="dariTanggal" name="dariTanggal" id="dariTanggal"
+              class="form-input w-full px-4 py-2 border rounded-lg text-gray-700 focus:ring-red-500">
+            </ionInput>
             <label for="sampai">Sampai Tanggal : </label>
-            <ion-item button @click="showPopover2 = true" style="color: black">
-              <ion-text slot="start">
-                {{
-                  selectedDateEnd
-                    ? formatDate(selectedDateEnd, "DD MMMM YYYY")
-                    : "Pilih Tanggal"
-                }}</ion-text
-              >
-            </ion-item>
-
-            <!-- Popover -->
-            <ion-popover
-              :is-open="showPopover2"
-              side="bottom"
-              alignment="center"
-              style="--width: 300px; --max-width: 90vw"
-            >
-              <ion-content class="ion-padding" style="width: 300px">
-                <ion-datetime
-                  ref="datetimeRef"
-                  presentation="date"
-                  v-model="selectedDateEnd"
-                  @ionChange="showPopover2 = false"
-                ></ion-datetime>
-                <ion-button expand="block" size="small" @click="confirmDate2"
-                  >OK</ion-button
-                >
-              </ion-content>
-            </ion-popover>
-            <br />
-            <button
-              type="button"
+            <ionInput type="date" v-model="sampaiTanggal" name="sampaiTanggal" id="sampaiTanggal"
+              class="form-input w-full px-4 py-2 border rounded-lg text-gray-700 focus:ring-red-500">
+            </ionInput>
+            <br>
+            <button type="button"
               class="w-full bg-blue-500 text-white px-4 py-2 rounded-lg hover:bg-blue-600 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-opacity-50"
-              @click="getDataVisit"
-            >
-              <ion-icon slot="start" :icon="checkmarkCircleSharp"></ion-icon>
-              Lihat
-            </button>
+              @click="getDataVisit"><ion-icon slot="start" :icon="checkmarkCircleSharp"></ion-icon>
+              Lihat</button>
           </ion-card-content>
         </ion-card>
       </div>
       <div v-if="!storeInfoDistri" class="relative overflow-x-auto">
-        <ion-card class="py-2 odd:bg-blue-500 even:bg-sky-400"
-          >Belum Ada Data</ion-card
-        >
+        <ion-card class="py-2 odd:bg-blue-500 even:bg-sky-400">Belum Ada Data</ion-card>
       </div>
-      <div
-        v-for="(visit, index) in storeInfoDistri"
-        :key="index + 1"
-        class="relative overflow-x-auto"
-        v-else
-      >
+      <div v-for="(visit, index) in storeInfoDistri" :key="index + 1" class="relative overflow-x-auto" v-else>
         <ion-card class="py-2 odd:bg-blue-500 even:bg-sky-400">
           <ion-card-header class="bg-gray-50">
             <div class="flex flex-col w-full h-full space-y-2">
-              <div
-                class="flex flex-row w-full h-full justify-between space-x-2"
-              >
+              <div class="flex flex-row w-full h-full justify-between space-x-2">
                 <label for="date-day" class="flex-initial w-56 font-semibold">{{
                   formatDateList(visit.attendee_date)
                 }}</label>
@@ -102,34 +37,19 @@
                 </p>
               </div>
 
-              <div
-                v-if="visit.idNotVisit !== null"
-                class="flex flex-row w-full justify-between space-x-2"
-              >
-                <label for="nama-toko" class="flex-initial w-56 font-semibold"
-                  >Masuk</label
-                >
+              <div v-if="visit.idNotVisit !== null" class="flex flex-row w-full justify-between space-x-2">
+                <label for="nama-toko" class="flex-initial w-56 font-semibold">Masuk</label>
                 <p>{{ visit.attendee_time_in }}</p>
               </div>
               <div class="flex flex-row w-full justify-between space-x-2">
-                <label for="nama-toko" class="flex-initial w-56 font-semibold"
-                  >Pulang</label
-                >
+                <label for="nama-toko" class="flex-initial w-56 font-semibold">Pulang</label>
                 <p>
-                  {{
-                    visit.attendee_time_out !== null
-                      ? visit.attendee_time_out
-                      : "Kosong"
-                  }}
+                  {{ visit.attendee_time_out !== null ? visit.attendee_time_out : "Kosong" }}
                 </p>
               </div>
-              <div
-                class="flex flex-row w-full h-full justify-center items-center space-x-2"
-              >
-                <ion-button @click="lihatData(visit.id)"
-                  ><ion-icon slot="start" :icon="arrowRedo"></ion-icon>
-                  Detail</ion-button
-                >
+              <div class="flex flex-row w-full h-full justify-center items-center space-x-2">
+                <ion-button @click="lihatData(visit.id)"><ion-icon slot="start" :icon="arrowRedo"></ion-icon>
+                  Detail</ion-button>
               </div>
             </div>
             <ion-modal :is-open="showModal" @didDismiss="closeModal">
@@ -146,21 +66,14 @@
                   <!-- Foto Absen Masuk -->
                   <p class="text-center mt-2 font-medium"><b>Absen Masuk</b></p>
                   <div class="rounded-xl overflow-hidden shadow-lg">
-                    <ion-img
-                      v-if="selectedFotoIn !== null"
-                      :src="selectedFotoIn"
-                      alt="Foto Absen Masuk"
-                    />
+                    <ion-img v-if="selectedFotoIn !== null" :src="selectedFotoIn" alt="Foto Absen Masuk" />
                     <p v-else class="text-center mt-2 font-medium">
                       Foto Tidak Tersedia
                     </p>
-                    <ion-button
-                      v-if="locationLat !== null && locationLong !== null"
+                    <ion-button v-if="locationLat !== null && locationLong !== null"
                       class="flex flex-row justify-center items-center space-x-2"
                       :href="`https://www.google.com/maps/search/?api=1&query=${locationLong},${locationLat}`"
-                      target="_system"
-                      rel="noopener noreferrer"
-                    >
+                      target="_system" rel="noopener noreferrer">
                       <ion-icon slot="start" :icon="eye"></ion-icon>
                       Lihat Lokasi
                     </ion-button>
@@ -174,21 +87,14 @@
                     <b>Absen Pulang</b>
                   </p>
                   <div class="rounded-xl overflow-hidden shadow-lg">
-                    <ion-img
-                      v-if="selectedFotoOut !== null"
-                      :src="selectedFotoOut"
-                      alt="Foto Absen Pulang"
-                    />
+                    <ion-img v-if="selectedFotoOut !== null" :src="selectedFotoOut" alt="Foto Absen Pulang" />
                     <p v-else class="text-center mt-2 font-medium">
                       Foto Tidak Tersedia
                     </p>
-                    <ion-button
-                      v-if="locationLatOut !== null && locationLongOut !== null"
+                    <ion-button v-if="locationLatOut !== null && locationLongOut !== null"
                       class="flex flex-row justify-center items-center space-x-2"
-                      :href="`https://google.com/maps?q=${locationLongOut},${locationLatOut}`"
-                      target="_blank"
-                      rel="noopener noreferrer"
-                    >
+                      :href="`https://google.com/maps?q=${locationLongOut},${locationLatOut}`" target="_blank"
+                      rel="noopener noreferrer">
                       Lihat Lokasi
                     </ion-button>
                     <p v-else class="text-center mt-2 font-medium">
@@ -251,8 +157,8 @@ const today = new Date();
 const m = String(today.getMonth() + 1).padStart(2, "0");
 const d = String(today.getDate()).padStart(2, "0");
 const y = String(today.getFullYear());
-const selectedDate = ref(null);
-const selectedDateEnd = ref(null);
+const dariTanggal = ref(null);
+const sampaiTanggal = ref(null);
 const showPopover = ref(false);
 const showPopover2 = ref(false);
 const detailAbsence = ref();
@@ -344,6 +250,19 @@ const ionInfinite = (event) => {
   }
 };
 
+const normalizeAbsenceImageUrl = (path) => {
+  if (!path) return "";
+
+  const imagePath = String(path).trim();
+
+  // kalau sudah full URL
+  if (imagePath.startsWith("http")) {
+    return imagePath;
+  }
+
+  return `${API_URL.value}/images/${imagePath}`;
+};
+
 async function lihatData(id) {
   try {
     const response = await axios.get(
@@ -353,8 +272,8 @@ async function lihatData(id) {
 
     showModal.value = true;
     detailAbsence.value = response.data.resource;
-    selectedFotoIn.value = detailAbsence.value.images_in;
-    selectedFotoOut.value = detailAbsence.value.images_out;
+    selectedFotoIn.value = normalizeAbsenceImageUrl(detailAbsence.value.images_in);
+    selectedFotoOut.value = normalizeAbsenceImageUrl(detailAbsence.value.images_out);
     locationLat.value = detailAbsence.value.attendee_latitude_in;
     locationLong.value = detailAbsence.value.attendee_longitude_in;
     locationLatOut.value = detailAbsence.value.attendee_latitude_out;
@@ -378,9 +297,9 @@ const handleRefresh = () => {
 };
 
 async function getDataVisit() {
-  if (!selectedDate.value) {
+  if (!dariTanggal.value) {
     catchToastError("Dari Tanggal Belum Dipilih", 2000);
-  } else if (!selectedDateEnd.value) {
+  } else if (!sampaiTanggal.value) {
     catchToastError("Sampai Tanggal Belum Dipilih", 2000);
   } else {
     try {
@@ -391,8 +310,8 @@ async function getDataVisit() {
       const userId = localStorage.getItem("user")
         ? JSON.parse(localStorage.getItem("user"))
         : "";
-      const mulai = formatDate(selectedDate.value, "YYYY-MM-DD");
-      const sampai = formatDate(selectedDateEnd.value, "YYYY-MM-DD");
+      const mulai = formatDate(dariTanggal.value, "YYYY-MM-DD");
+      const sampai = formatDate(sampaiTanggal.value, "YYYY-MM-DD");
 
       const headers = {
         "Content-Type": "application/json",
@@ -441,7 +360,9 @@ onMounted(() => {
 
 .foto-absen {
   max-width: 100%;
-  border-radius: 8px; /* lebih besar dari 8px */
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15); /* shadow lembut */
+  border-radius: 8px;
+  /* lebih besar dari 8px */
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+  /* shadow lembut */
 }
 </style>

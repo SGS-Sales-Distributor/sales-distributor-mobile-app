@@ -142,6 +142,10 @@
             <img :src="photoUrl" alt="Captured Check In Photo"
               style="max-width: 100%; height: 180px; border-radius: 10px" />
           </div>
+          <div v-if="checkInImageUrls.length === 1 && !renderModCheckInBtn"
+            class="px-4 py-2 text-center text-sm text-blue-600 font-semibold">
+            📷 Ambil 1 foto lagi untuk check-in
+          </div>
         </div>
         <div v-if="checkOutImageUrls.length > 0" class="grid grid-cols-2 gap-4 px-4 pb-2">
           <div v-for="(photoUrl, index) in checkOutImageUrls" :key="`checkout-${index}`"
@@ -150,6 +154,10 @@
             <span class="mb-2 text-sm font-semibold text-gray-700">Foto Check-Out</span>
             <img :src="photoUrl" alt="Captured Check Out Photo"
               style="max-width: 100%; height: 180px; border-radius: 10px" />
+          </div>
+          <div v-if="checkOutImageUrls.length === 1 && !renderModeCheckOutBtn"
+            class="px-4 py-2 text-center text-sm text-blue-600 font-semibold">
+            📷 Ambil 1 foto lagi untuk check-out
           </div>
         </div>
         <!-- <div v-if="hasCapturedImage" class="mb-4 m-4">
@@ -199,8 +207,14 @@
           </ion-row>
         </ion-grid>
 
-        <ion-searchbar v-if="visibleStores.length > 0" :debounce="300" @ionInput="searchStoreHandler($event)"
-          placeholder="Cari nama toko..." color="light"></ion-searchbar>
+        <ion-searchbar v-if="storeInfoDistri.length > 0 || currentSearchQuery" :value="currentSearchQuery"
+          :debounce="300" @ionInput="searchStoreHandler($event)" placeholder="Cari nama toko..."
+          color="light"></ion-searchbar>
+
+        <div v-if="currentSearchQuery && visibleStores.length === 0"
+          class="px-4 py-3 text-center text-sm text-gray-500">
+          Toko call plan hari ini tidak ditemukan.
+        </div>
 
         <div v-for="(store, index) in visibleStores" :key="index + 1" class="relative overflow-x-auto">
           <ion-card v-if="statusGPS" class="py-2 odd:bg-blue-500 even:bg-sky-400">
@@ -282,7 +296,7 @@
             </ion-card-content>
           </ion-card>
         </div>
-        <ion-infinite-scroll @ionInfinite="ionInfinite">
+        <ion-infinite-scroll :disabled="!hasMorePages" @ionInfinite="ionInfinite">
           <ion-infinite-scroll-content loading-text="Load more stores..."
             loading-spinner="bubbles"></ion-infinite-scroll-content>
         </ion-infinite-scroll>
@@ -358,20 +372,43 @@ const checkOutImageUrls = ref([]);
 const checkOutImageLocations = ref([]);
 const keteranganIn = ref("");
 const keteranganOut = ref("");
-
+const currentSearchQuery = ref("")
 const storeInfoDistri = ref([]);
 const hasCapturedImage = computed(() => {
   return (
     checkInImageUrls.value.length > 0 || checkOutImageUrls.value.length > 0
   );
 });
-
+const currentPage = ref(1)
+const hasMorePages = ref(true)
 const lastIndex = ref(5);
+
+function normalizeSearchText(value) {
+  return String(value ?? "")
+    .toLowerCase()
+    .replace(/\s+/g, " ")
+    .trim()
+}
+
 const visibleStores = computed(() => {
-  return storeInfoDistri.value && storeInfoDistri.value.length > 0
-    ? storeInfoDistri.value.slice(0, lastIndex.value)
-    : [];
-});
+  if (!currentSearchQuery.value) return storeInfoDistri.value
+  const q = normalizeSearchText(currentSearchQuery.value)
+  return [...storeInfoDistri.value]
+    .filter((s) => normalizeSearchText(s.nama_toko).includes(q))
+    .sort((a, b) => {
+      const aName = normalizeSearchText(a.nama_toko)
+      const bName = normalizeSearchText(b.nama_toko)
+      const aStarts = aName.startsWith(q) ? 0 : 1
+      const bStarts = bName.startsWith(q) ? 0 : 1
+
+      if (aStarts !== bStarts) {
+        return aStarts - bStarts
+      }
+
+      return aName.localeCompare(bName)
+    })
+})
+
 const reachedEnd = computed(() => {
   return (
     Array.isArray(storeInfoDistri.value) &&
@@ -379,31 +416,36 @@ const reachedEnd = computed(() => {
   );
 });
 
-const ionInfinite = (event) => {
-  if (!reachedEnd.value) {
-    setTimeout(() => {
-      lastIndex.value += 5;
-
-      event.target.complete();
-    }, 500);
-  } else {
-    event.target.disabled = true;
+const ionInfinite = async (event) => {
+  if (currentSearchQuery.value) {
+    event.target.complete()
+    return
   }
-};
 
-const handleRefresh = () => {
-  window.location.reload();
-  setTimeout(() => {
-    event.target.complete();
-  }, 1000);
+  if (!hasMorePages.value) {
+    event.target.disabled = true
+    event.target.complete()
+    return
+  }
+  currentPage.value++
+  await fetchStoresData(currentSearchQuery.value, currentPage.value)
+  event.target.complete()
+}
+
+
+
+const handleRefresh = async (event) => {
+  currentPage.value = 1
+  hasMorePages.value = true
+  await fetchStoresData("", 1)
+  event.target.complete()
 };
 
 function searchStoreHandler(event) {
-  const query = event.target.value.toLowerCase();
-
-  fetchStoresData(query);
+  currentSearchQuery.value = String(
+    event?.detail?.value ?? event?.target?.value ?? ""
+  )
 }
-
 function showDetailStoreCard() {
   isStoreDetailCardVisible.value = true;
   syncVisitButtons();
@@ -542,13 +584,13 @@ async function passCheckOutAlert() {
     .then((a) => a.present());
 }
 
-// rest api (backend server)
-async function fetchStoresData(query = "") {
+async function fetchStoresData(query = "", page = 1) {
   try {
-    await presentLoading();
-    refreshAccessTokenHandler();
-    lastIndex.value = 5;
+    console.log("fetchStoresData called:", { query, page })
+    await presentLoading()
+    refreshAccessTokenHandler()
 
+    // ← ini yang hilang, harus didefinisikan di dalam fungsi
     const tokens = localStorage.getItem("tokens")
       ? JSON.parse(localStorage.getItem("tokens"))
       : null;
@@ -568,49 +610,41 @@ async function fetchStoresData(query = "") {
         params: {
           q: query,
           userId: userId.user_id,
+          page: page,
         },
       }
-    );
+    )
 
-    storeInfoDistri.value = Array.isArray(response.data.resource.data)
+    const incoming = Array.isArray(response.data.resource.data)
       ? response.data.resource.data
-      : [];
+      : []
 
-    let canAbsenVisit = true;
-    Object.keys(storeInfoDistri.value).forEach((key) => {
-      const value = storeInfoDistri.value[key];
+    if (page === 1) {
+      storeInfoDistri.value = incoming // reset saat search baru / load awal
+    } else {
+      storeInfoDistri.value = [...storeInfoDistri.value, ...incoming] // append untuk infinite scroll
+    }
 
-      if (value.waktu_keluar == null || value.waktu_masuk == null) {
-        value.enableAbsenBtn = false;
-        canAbsenVisit = false;
-      } else {
-        value.enableAbsenBtn = true;
-      }
+    // Cek apakah masih ada halaman berikutnya dari Laravel paginator
+    hasMorePages.value = response.data.resource.next_page_url !== null
 
-      if (value.waktu_keluar !== null && value.waktu_masuk !== null) {
-        value.enableAbsenBtn = true;
-      }
+    // Re-enable infinite scroll saat data baru dimuat
+    const infiniteEl = document.querySelector("ion-infinite-scroll")
+    if (infiniteEl && hasMorePages.value) {
+      infiniteEl.disabled = false
+    }
 
-      // console.log(value.waktu_masuk);
-      if (value.waktu_masuk !== null) {
-        value.enablePurchaseOrderBtn = false;
-      } else {
-        value.enablePurchaseOrderBtn = true;
-      }
+    // Set enableAbsenBtn per toko
+    storeInfoDistri.value.forEach((store) => {
+      const sudahLengkap = store.waktu_masuk !== null && store.waktu_keluar !== null
+      store.enableAbsenBtn = sudahLengkap
+    })
 
-      // catchToastError(statusGPS.value);
-      // if (!statusGPS.value) {
-      //   value.enablePurchaseOrderBtn = true;
-      //   value.enableAbsenBtn = true;
-      // }
-    });
   } catch (error) {
-    // catchToastError('Failed to fetch store data', 3000);
-    catchToastWarn("Belum Ada Call Plan Hari Ini!", 3000);
-
-    console.error("Failed to fetch store data: ", error);
+    catchToastWarn("Belum Ada Call Plan Hari Ini!", 3000)
+    console.error("Failed to fetch store data: ", error)
   } finally {
-    await stopLoading();
+    await stopLoading()
   }
 }
 
@@ -687,21 +721,21 @@ async function uploadCheckInImage(userNumber) {
       }
     );
 
-    await fetchStoresData();
-
     checkInImageUrls.value = [];
     checkInImageLocations.value = [];
     imageUrl.value = null;
-    storeInfoDistri.value = null;
-    detailStoreInfoDistri.value = null;
     keteranganIn.value = "";
-    disabledCheckOut.value = true;
+    renderModCheckInBtn.value = false;
+
+    // Refresh list toko
+    await fetchStoresData();
+
+    // Tutup detail card (jangan null-kan storeInfoDistri!)
+    closeDetailCardBtnHandler();
 
     catchToast("Sukses upload gambar untuk absensi check-in", 3000);
   } catch (error) {
     catchToastError("Gagal upload gambar untuk absensi check-in", 3000);
-
-    // console.error('Gagal upload gambar untuk absensi check-in', error);
     console.log(error?.response?.data?.message || error.message);
   } finally {
     await stopLoading();
@@ -739,21 +773,22 @@ async function uploadCheckOutImage(userNumber) {
         headers: headers,
       }
     );
-
-    await fetchStoresData();
-
+    // Reset state
     checkOutImageUrls.value = [];
     checkOutImageLocations.value = [];
     imageUrl.value = null;
-    storeInfoDistri.value = null;
-    detailStoreInfoDistri.value = null;
     keteranganOut.value = "";
+    renderModeCheckOutBtn.value = false;
+
+    // Refresh list toko (JANGAN set storeInfoDistri = null)
+    await fetchStoresData();
+
+    closeDetailCardBtnHandler();
 
     catchToast("Sukses upload gambar untuk absensi check-out", 3000);
     redirectToHomePage();
   } catch (error) {
     catchToastError("Gagal upload gambar untuk absensi check-out", 3000);
-
     console.error("Gagal upload gambar untuk absensi check-out", error);
   } finally {
     await stopLoading();
@@ -811,19 +846,19 @@ async function takeCheckInPicture() {
     });
 
     if (image && image.webPath) {
-      renderModCheckInBtn.value = true;
       checkInImageUrls.value.push(image.webPath.toString());
       checkInImageLocations.value.push(
         await fetch(image.webPath).then((r) => r.blob())
       );
+
+      if (checkInImageUrls.value.length === 2) {
+        renderModCheckInBtn.value = true;
+      }
     } else {
       catchToastError("Failed to capture photo or image path is missing", 3000);
-
-      console.error("Failed to capture photo or image path is missing");
     }
   } catch (error) {
     catchToastError("Error when capturing photo", 3000);
-
     console.error("Error when capturing photo: ", error);
   }
 }
@@ -843,36 +878,32 @@ async function takeCheckOutPicture() {
     });
 
     if (image && image.webPath) {
-      renderModeCheckOutBtn.value = true;
       checkOutImageUrls.value.push(image.webPath.toString());
       checkOutImageLocations.value.push(
         await fetch(image.webPath).then((r) => r.blob())
       );
+
+      if (checkOutImageUrls.value.length === 2) {
+        renderModeCheckOutBtn.value = true;
+      }
     } else {
       catchToastError("Failed to capture photo or image path is missing", 3000);
-
-      console.error("Failed to capture photo or image path is missing");
     }
   } catch (error) {
     catchToastError("Error when capturing photo", 3000);
-
     console.error("Error when capturing photo: ", error);
   }
 }
 
 onMounted(async () => {
-  currentRoute.value = null;
-  await presentLoading();
+  currentRoute.value = null
 
-  refreshAccessTokenHandler();
-  printCurrentPosition();
-  if (user != null || user != "") {
-    await fetchStoresData();
+  refreshAccessTokenHandler()
+  await checkLocationAccess()
+  if (statusGPS.value && user.value) {
+    await fetchStoresData()
   }
-  await checkLocationAccess();
-
-  await stopLoading();
-});
+})
 </script>
 
 <style scoped>

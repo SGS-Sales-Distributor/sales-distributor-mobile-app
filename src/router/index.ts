@@ -26,6 +26,9 @@ import AbsenceOut from "@/views/AbsenceOut.vue";
 import HistoryAbsen from "@/views/HistoryAbsen.vue";
 import SalesReport from "@/views/SalesReport.vue";
 import StockActual from "@/views/StockActual.vue";
+import OutletRequestPage from '@/views/OutletRequestPage.vue'
+import InboxRequestPage from '@/views/InboxRequestPage.vue'
+import CabangRequestPage from '@/views/CabangRequest.vue'
 
 const routes: Array<RouteRecordRaw> = [
   {
@@ -172,6 +175,21 @@ const routes: Array<RouteRecordRaw> = [
         path: "/stock-actual",
         name: "StockActual",
         component: StockActual,
+      },
+      {
+        path: '/outlet-request',
+        name: 'OutletRequest',
+        component: OutletRequestPage,
+      },
+      {
+        path: '/inbox-request',
+        name: 'InboxRequest',
+        component: InboxRequestPage,
+      },
+      {
+        path: '/cabang-request',
+        name: 'CabangRequest',
+        component: CabangRequestPage,
       },
 
     ],
